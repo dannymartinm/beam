@@ -207,9 +207,14 @@ jobs:
     strategy:
       matrix:
         os_python: [
+          {"os": "ubuntu-latest", "python": "cp36-* cp37-* cp38-*"},
           {"os": "macos-latest", "python": "cp36-* cp37-* cp38-*"},
+          {"os": "windows-latest", "python": "cp36-* cp37-* cp38-*"},
         ]
         arch: [auto]
+        include:
+          - os_python: {"os": "ubuntu-latest", "python": "cp36-* cp37-* cp38-*"}
+            arch: aarch64
     steps:
     - name: Download python source distribution from artifacts
       uses: actions/download-artifact@v2
@@ -239,13 +244,12 @@ jobs:
       run: cibuildwheel --print-build-identifiers && cibuildwheel --output-dir wheelhouse
       shell: bash
     - name: Install brew on MacOS
-      if: startsWith(matrix.os_python.os, 'macos')
       run: |
         /bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"
         echo 'eval "$(/home/linuxbrew/.linuxbrew/bin/brew shellenv)"' >> $HOME/.profile
     - name: Install sha512sum on MacOS
       if: startsWith(matrix.os_python.os, 'macos')
-      run: /bin/bash -lc brew install coreutils
+      run: /bin/bash -lc 'brew install coreutils'
     - name: Add checksums
       working-directory: apache-beam-source/wheelhouse/
       run: |
