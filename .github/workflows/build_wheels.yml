@@ -210,8 +210,6 @@ jobs:
           {"os": "macos-latest", "python": "cp36-* cp37-* cp38-*"},
         ]
         arch: [auto]
-        include:
-            arch: aarch64
     steps:
     - name: Download python source distribution from artifacts
       uses: actions/download-artifact@v2
