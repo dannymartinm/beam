@@ -243,9 +243,6 @@ jobs:
         CIBW_BEFORE_BUILD: pip install cython
       run: cibuildwheel --print-build-identifiers && cibuildwheel --output-dir wheelhouse
       shell: bash
-    - name: Install brew on MacOS
-      if: startsWith(matrix.os_python.os, 'macos')
-      run: |
     - name: Install sha512sum on MacOS
       if: startsWith(matrix.os_python.os, 'macos')
       run: 
