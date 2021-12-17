@@ -234,14 +234,6 @@ jobs:
     - uses: docker/setup-qemu-action@v1
       if: ${{matrix.arch == 'aarch64'}}
       name: Set up QEMU
-    - name: Install brew on MacOS
-      if: startsWith(matrix.os_python.os, 'macos')
-      run: |
-        /bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"
-        echo 'eval "$(/home/linuxbrew/.linuxbrew/bin/brew shellenv)"' >> $HOME/.profile
-    - name: Install sha512sum on MacOS
-      if: startsWith(matrix.os_python.os, 'macos')
-      run: /bin/bash -lc 'brew install coreutils'
     - name: Install cibuildwheel
       run: pip install cibuildwheel==1.11.0
     - name: Build wheel
@@ -251,6 +243,15 @@ jobs:
         CIBW_BEFORE_BUILD: pip install cython
       run: cibuildwheel --print-build-identifiers && cibuildwheel --output-dir wheelhouse
       shell: bash
+    - name: Install brew on MacOS
+      if: startsWith(matrix.os_python.os, 'macos')
+      run: |
+    - name: Install sha512sum on MacOS
+      if: startsWith(matrix.os_python.os, 'macos')
+      run: 
+        /bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"
+        eval "$(/home/linuxbrew/.linuxbrew/bin/brew shellenv)"
+        brew install coreutils
     - name: Add checksums
       working-directory: apache-beam-source/wheelhouse/
       run: |
