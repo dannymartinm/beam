@@ -81,4 +81,4 @@ pyenv(){
   clean
 }
 
-pyenvi
+pyenv
