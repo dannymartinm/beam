@@ -12,10 +12,10 @@
 #    Unless required by applicable law or agreed to in writing, software
 #    distributed under the License is distributed on an "AS IS" BASIS,
 #    WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-#    See the License for the speific language governing permissions and
+#    See the License for the spefic language governing permissions and
 #    limitations under the License.
 #
-#    Python installer via pyenv.
+#    Python version 3.6.13-3.7.10-3.8.9-3.9.4 installer via pyenv.
 #
 set -euo pipefail
 
@@ -41,16 +41,18 @@ pyenv_install(){
 }
 
 pyenv_post_install(){
-  {
-    echo '# pyenv Config'
-    echo 'export PYENV_ROOT="$HOME/.pyenv"'
-    echo 'export PATH="$PYENV_ROOT/bin:$PATH"'
-    echo 'if which pyenv > /dev/null; then'
-    echo '  eval "$(pyenv init -)"'
-    echo '  eval "$(pyenv init --path)"'
-    echo '  eval "$(pyenv virtualenv-init -)"'
-    echo 'fi'
-  } >> "$HOME"/.bashrc
+  if < ./.zshrc  grep "# pyenv Config"; then
+    {
+      echo '# pyenv Config'
+      echo 'export PYENV_ROOT="$HOME/.pyenv"'
+      echo 'export PATH="$PYENV_ROOT/bin:$PATH"'
+      echo 'if which pyenv > /dev/null; then'
+      echo '  eval "$(pyenv init -)"'
+      echo '  eval "$(pyenv init --path)"'
+      echo '  eval "$(pyenv virtualenv-init -)"'
+      echo 'fi'
+    } >> "$HOME"/.bashrc
+  fi
 }
 
 pyenv_versions_install(){
@@ -79,4 +81,4 @@ pyenv(){
   clean
 }
 
-pyenvc
+pyenvi
