@@ -15,7 +15,7 @@
 #    See the License for the speific language governing permissions and
 #    limitations under the License.
 #
-#    Python version 3.6.13-3.7.10-3.8.9-3.9.4 installer via pyenv.
+#    Python installer via pyenv.
 #
 set -euo pipefail
 
@@ -41,18 +41,16 @@ pyenv_install(){
 }
 
 pyenv_post_install(){
-  if < ./.zshrc  grep "# pyenv Config"; then
-    {
-      echo '# pyenv Config'
-      echo 'export PYENV_ROOT="$HOME/.pyenv"'
-      echo 'export PATH="$PYENV_ROOT/bin:$PATH"'
-      echo 'if which pyenv > /dev/null; then'
-      echo '  eval "$(pyenv init -)"'
-      echo '  eval "$(pyenv init --path)"'
-      echo '  eval "$(pyenv virtualenv-init -)"'
-      echo 'fi'
-    } >> "$HOME"/.bashrc
-  fi
+  {
+    echo '# pyenv Config'
+    echo 'export PYENV_ROOT="$HOME/.pyenv"'
+    echo 'export PATH="$PYENV_ROOT/bin:$PATH"'
+    echo 'if which pyenv > /dev/null; then'
+    echo '  eval "$(pyenv init -)"'
+    echo '  eval "$(pyenv init --path)"'
+    echo '  eval "$(pyenv virtualenv-init -)"'
+    echo 'fi'
+  } >> "$HOME"/.bashrc
 }
 
 pyenv_versions_install(){
@@ -81,4 +79,4 @@ pyenv(){
   clean
 }
 
-pyenv
+pyenvc
