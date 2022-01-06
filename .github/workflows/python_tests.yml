@@ -23,7 +23,7 @@ on:
   schedule:
     - cron: '10 2 * * *'
   push:
-    branches: ['master', 'release-*']
+    branches: ['master', 'release-*', 'beam-12812-githubactions']
     tags: 'v*'
   pull_request:
     branches: ['master', 'release-*']
@@ -45,6 +45,8 @@ jobs:
     outputs:
       gcp-variables-set: ${{ steps.check_gcp_variables.outputs.gcp-variables-set }}
     steps:
+      - name: Clean GitHub workspace
+        run: if [ -d "$GITHUB_WORKSPACE" ]; then sudo rm -rf $GITHUB_WORKSPACE/* ; fi
       - uses: actions/checkout@v2
       - name: "Check are GCP variables set"
         run: "./scripts/ci/ci_check_are_gcp_variables_set.sh"
@@ -68,6 +70,8 @@ jobs:
       - check_gcp_variables
     runs-on: self-hosted
     steps:
+      - name: Clean GitHub workspace
+        run: if [ -d "$GITHUB_WORKSPACE" ]; then sudo rm -rf $GITHUB_WORKSPACE/* ; fi
       - name: Checkout code
         uses: actions/checkout@v2
       - name: Install python
@@ -107,6 +111,9 @@ jobs:
           - os: windows-latest
             params: {"py_ver": "3.8", "tox_env": "py38"}
     steps:
+      - name: Clean GitHub workspace
+        if: startsWith(matrix.os, 'self')
+        run: if [ -d "$GITHUB_WORKSPACE" ]; then sudo rm -rf $GITHUB_WORKSPACE/* ; fi
       - name: Checkout code
         uses: actions/checkout@v2
       - name: Install python
@@ -152,6 +159,12 @@ jobs:
           - os: windows-latest
             python: 3.8
     steps:
+      - name: Clean GitHub workspace
+        if: startsWith(matrix.os, 'self')
+        run: if [ -d "$GITHUB_WORKSPACE" ]; then sudo rm -rf $GITHUB_WORKSPACE/* ; fi
+      - name: Clean GitHub workspace Windows
+        if: startsWith(matrix.os, 'windows')
+        run: echo TODO commands to clean workspace in self-hosted-windows
       - name: Checkout code
         uses: actions/checkout@v2
       - name: Install python
@@ -185,6 +198,12 @@ jobs:
           - os: windows-latest
             python: 3.8
     steps:
+      - name: Clean GitHub workspace
+        if: startsWith(matrix.os, 'self')
+        run: if [ -d "$GITHUB_WORKSPACE" ]; then sudo rm -rf $GITHUB_WORKSPACE/* ; fi
+      - name: Clean GitHub workspace Windows
+        if: startsWith(matrix.os, 'windows')
+        run: echo TODO commands to clean workspace in self-hosted-windows
       - name: Checkout code
         uses: actions/checkout@v2
       - name: Install python
