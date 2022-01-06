@@ -41,7 +41,7 @@ pyenv_install(){
 }
 
 pyenv_post_install(){
-  if < ./.bashrc  grep "# pyenv Config"; then
+  if ! < "$HOME"/.bashrc grep -q "# pyenv Config" ; then
     {
       echo '# pyenv Config'
       echo 'export PYENV_ROOT="$HOME/.pyenv"'
