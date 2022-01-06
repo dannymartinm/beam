@@ -15,7 +15,7 @@
 #    See the License for the speific language governing permissions and
 #    limitations under the License.
 #
-#    Python version 3.6.13-3.7.10-3.8.9-3.9.4 installer via pyenv.
+#    Python installer via pyenv.
 #
 set -euo pipefail
 
