@@ -19,8 +19,10 @@
 #
 set -euo pipefail
 
+# Variable containing the python versions to install
 python_versions_arr=("3.6.13" "3.7.10" "3.8.9" "3.9.4")
 
+# Install pyenv dependencies.
 pyenv_dep(){
   sudo apt-get update -y
   sudo apt-get install -y make build-essential libssl-dev zlib1g-dev \
@@ -28,6 +30,7 @@ libbz2-dev libreadline-dev libsqlite3-dev wget curl llvm \
 libncursesw5-dev xz-utils tk-dev libxml2-dev libxmlsec1-dev libffi-dev liblzma-dev
 }
 
+# Install pyenv, delete previous version if needed.
 pyenv_install(){
   if [[ -d "$HOME"/.pyenv/ ]]; then
     sudo rm -r "$HOME"/.pyenv
@@ -40,6 +43,7 @@ pyenv_install(){
   "$HOME"/pyenv_installer.sh
 }
 
+# Setting pyenv in User environment, PATH.
 pyenv_post_install(){
   if ! < "$HOME"/.bashrc grep -q "# pyenv Config" ; then
     {
@@ -55,6 +59,7 @@ pyenv_post_install(){
   fi
 }
 
+# Install python versions with pyenv
 pyenv_versions_install(){
   arr=("$@")
   for version in "${arr[@]}"; do
@@ -62,16 +67,19 @@ pyenv_versions_install(){
   done
 }
 
+# Setting python versions globally 
 python_versions_setglobally(){
   "$HOME"/.pyenv/bin/pyenv global "$@"
 }
 
+# Remove pyenv script installer
 clean(){
   sudo rm "$HOME"/pyenv_installer.sh
   echo -e "\nRestart your shell so the path changes take effect"
   echo "    'exec $SHELL'" 
 }
 
+# Install pyenv environment with python versions
 pyenv(){
   pyenv_dep
   pyenv_install
