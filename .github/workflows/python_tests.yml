@@ -48,7 +48,7 @@ jobs:
       - name: Clean GitHub workspace
         if: startsWith(matrix.os, 'windows')
         shell: pwsh
-        run: if(Test-Path -Path $GITHUB_WORKSPACE){ Remove-Item $GITHUB_WORKSPACE -Recurse}
+        run: if(Test-Path  $GITHUB_WORKSPACE){ Remove-Item $GITHUB_WORKSPACE -Recurse}
       - name: Clean GitHub workspace linux
         if: startsWith(matrix.os, 'linux')
         run: if [ -d "$GITHUB_WORKSPACE" ]; then sudo rm -rf $GITHUB_WORKSPACE/* ; fi
@@ -78,7 +78,7 @@ jobs:
       - name: Clean GitHub workspace
         if: startsWith(matrix.os, 'windows')
         shell: pwsh
-        run: if(Test-Path -Path $GITHUB_WORKSPACE){ Remove-Item $GITHUB_WORKSPACE -Recurse}
+        run: if(Test-Path  $GITHUB_WORKSPACE){ Remove-Item $GITHUB_WORKSPACE -Recurse}
       - name: Clean GitHub workspace linux
         if: startsWith(matrix.os, 'linux')
         run: if [ -d "$GITHUB_WORKSPACE" ]; then sudo rm -rf $GITHUB_WORKSPACE/* ; fi
@@ -109,7 +109,7 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        os: [self-hosted, windows-latest]
+        os: [windows-latest]
         params: [
           {"py_ver": "3.6", "tox_env": "py36"},
           {"py_ver": "3.7", "tox_env": "py37"},
@@ -124,7 +124,7 @@ jobs:
       - name: Clean GitHub workspace
         if: startsWith(matrix.os, 'windows')
         shell: pwsh
-        run: if(Test-Path -Path $GITHUB_WORKSPACE){ Remove-Item $GITHUB_WORKSPACE -Recurse}
+        run: if(Test-Path  $GITHUB_WORKSPACE){ Remove-Item $GITHUB_WORKSPACE -Recurse}
       - name: Clean GitHub workspace linux
         if: startsWith(matrix.os, 'linux')
         run: if [ -d "$GITHUB_WORKSPACE" ]; then sudo rm -rf $GITHUB_WORKSPACE/* ; fi
@@ -166,7 +166,7 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        os: [self-hosted, windows-latest]
+        os: [windows-latest]
         python: [3.6, 3.7, 3.8]
         exclude:
           # TODO remove exclusion after issue with protobuf is solved
@@ -177,7 +177,7 @@ jobs:
       - name: Clean GitHub workspace
         if: startsWith(matrix.os, 'windows')
         shell: pwsh
-        run: if(Test-Path -Path $GITHUB_WORKSPACE){ Remove-Item $GITHUB_WORKSPACE -Recurse}
+        run: if(Test-Path  $GITHUB_WORKSPACE){ Remove-Item $GITHUB_WORKSPACE -Recurse}
       - name: Clean GitHub workspace linux
         if: startsWith(matrix.os, 'linux')
         run: if [ -d "$GITHUB_WORKSPACE" ]; then sudo rm -rf $GITHUB_WORKSPACE/* ; fi
@@ -206,7 +206,7 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        os: [self-hosted, windows-latest]
+        os: [windows-latest]
         python: [3.6, 3.7, 3.8]
         exclude:
           # TODO remove exclusion after issue with protobuf is solved
@@ -217,7 +217,7 @@ jobs:
       - name: Clean GitHub workspace
         if: startsWith(matrix.os, 'windows')
         shell: pwsh
-        run: if(Test-Path -Path $GITHUB_WORKSPACE){ Remove-Item $GITHUB_WORKSPACE -Recurse}
+        run: if(Test-Path  $GITHUB_WORKSPACE){ Remove-Item $GITHUB_WORKSPACE -Recurse}
       - name: Clean GitHub workspace linux
         if: startsWith(matrix.os, 'linux')
         run: if [ -d "$GITHUB_WORKSPACE" ]; then sudo rm -rf $GITHUB_WORKSPACE/* ; fi
