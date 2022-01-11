@@ -47,7 +47,7 @@ jobs:
     steps:
       - name: Clean GitHub workspace
         if: startsWith(matrix.os, 'windows')
-          shell: powershell
+          shell: pwsh
           run: if(Test-Path -Path $GITHUB_WORKSPACE){ Remove-Item $GITHUB_WORKSPACE -Recurse}
         run: if [ -d "$GITHUB_WORKSPACE" ]; then sudo rm -rf $GITHUB_WORKSPACE/* ; fi
       - uses: actions/checkout@v2
