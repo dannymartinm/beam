@@ -47,8 +47,7 @@ jobs:
     steps:
       - name: Clean GitHub workspace
         if: startsWith(matrix.os, 'windows')
-        run: if(Test-Path -Path $GITHUB_WORKSPACE){ Remove-Item $GITHUB_WORKSPACE -Recurse}
-        if: startsWith(matrix.os, 'self')
+          run: if(Test-Path -Path $GITHUB_WORKSPACE){ Remove-Item $GITHUB_WORKSPACE -Recurse}
         run: if [ -d "$GITHUB_WORKSPACE" ]; then sudo rm -rf $GITHUB_WORKSPACE/* ; fi
       - uses: actions/checkout@v2
       - name: "Check are GCP variables set"
@@ -74,10 +73,10 @@ jobs:
     runs-on: self-hosted
     steps:
       - name: Clean GitHub workspace
-        if: startsWith(matrix.os, 'self')
-        run: if [ -d "$GITHUB_WORKSPACE" ]; then sudo rm -rf $GITHUB_WORKSPACE/* ; fi
         if: startsWith(matrix.os, 'windows')
-        run: if(Test-Path -Path $GITHUB_WORKSPACE){ Remove-Item $GITHUB_WORKSPACE -Recurse}
+          run: if(Test-Path -Path $GITHUB_WORKSPACE){ Remove-Item $GITHUB_WORKSPACE -Recurse}
+
+          run: if [ -d "$GITHUB_WORKSPACE" ]; then sudo rm -rf $GITHUB_WORKSPACE/* ; fi
       - name: Checkout code
         uses: actions/checkout@v2
       - name: Install python
@@ -118,10 +117,10 @@ jobs:
             params: {"py_ver": "3.8", "tox_env": "py38"}
     steps:
       - name: Clean GitHub workspace
-        if: startsWith(matrix.os, 'self')
-        run: if [ -d "$GITHUB_WORKSPACE" ]; then sudo rm -rf $GITHUB_WORKSPACE/* ; fi
         if: startsWith(matrix.os, 'windows')
-        run: if(Test-Path -Path $GITHUB_WORKSPACE){ Remove-Item $GITHUB_WORKSPACE -Recurse}
+          run: if(Test-Path -Path $GITHUB_WORKSPACE){ Remove-Item $GITHUB_WORKSPACE -Recurse}
+        run: if [ -d "$GITHUB_WORKSPACE" ]; then sudo rm -rf $GITHUB_WORKSPACE/* ; fi
+        
       - name: Checkout code
         uses: actions/checkout@v2
       - name: Install python
@@ -168,11 +167,9 @@ jobs:
             python: 3.8
     steps:
       - name: Clean GitHub workspace
-        if: startsWith(matrix.os, 'self')
-        run: if [ -d "$GITHUB_WORKSPACE" ]; then sudo rm -rf $GITHUB_WORKSPACE/* ; fi
         if: startsWith(matrix.os, 'windows')
-        run: if(Test-Path -Path $GITHUB_WORKSPACE){ Remove-Item $GITHUB_WORKSPACE -Recurse}
-        run: echo TODO commands to clean workspace in self-hosted-windows
+          run: if(Test-Path -Path $GITHUB_WORKSPACE){ Remove-Item $GITHUB_WORKSPACE -Recurse}
+        run: if [ -d "$GITHUB_WORKSPACE" ]; then sudo rm -rf $GITHUB_WORKSPACE/* ; fi
       - name: Checkout code
         uses: actions/checkout@v2
       - name: Install python
@@ -207,11 +204,9 @@ jobs:
             python: 3.8
     steps:
       - name: Clean GitHub workspace
-        if: startsWith(matrix.os, 'self')
-        run: if [ -d "$GITHUB_WORKSPACE" ]; then sudo rm -rf $GITHUB_WORKSPACE/* ; fi
         if: startsWith(matrix.os, 'windows')
-        run: if(Test-Path -Path $GITHUB_WORKSPACE){ Remove-Item $GITHUB_WORKSPACE -Recurse}
-      
+          run: if(Test-Path -Path $GITHUB_WORKSPACE){ Remove-Item $GITHUB_WORKSPACE -Recurse}
+        run: if [ -d "$GITHUB_WORKSPACE" ]; then sudo rm -rf $GITHUB_WORKSPACE/* ; fi
       - name: Checkout code
         uses: actions/checkout@v2
       - name: Install python
