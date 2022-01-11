@@ -21,9 +21,9 @@ RUN powershell Invoke-WebRequest -Uri https://github.com/actions/runner/releases
     Expand-Archive -LiteralPath $PWD\actions-runner-win-x64-2.285.1.zip -DestinationPath $PWD
 
 COPY entrypoint.ps1 ./entrypoint.ps1
-COPY .env ./.env
 
 ENTRYPOINT [ "powershell" ]
+
 CMD [ "./entrypoint.ps1" ]
 
 
