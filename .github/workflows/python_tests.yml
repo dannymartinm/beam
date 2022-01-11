@@ -45,10 +45,10 @@ jobs:
     outputs:
       gcp-variables-set: ${{ steps.check_gcp_variables.outputs.gcp-variables-set }}
     steps:
-      - name: Clean GitHub workspace
-        if: startsWith(matrix.os, 'windows')
-        shell: powershell #Todo: remove hardcoded github workspace path
-        run: if(Test-Path  -Path 'C:/actions/_work'){ Remove-Item 'C:/actions/_work' -Recurse} 
+      #- name: Clean GitHub workspace
+      #  if: startsWith(matrix.os, 'windows')
+      #  shell: powershell #Todo: remove hardcoded github workspace path
+      #  run: if(Test-Path  -Path 'C:/actions/_work'){ Remove-Item 'C:/actions/_work' -Recurse} 
       - name: Clean GitHub workspace linux
         if: startsWith(matrix.os, 'linux')
         run: if [ -d "$GITHUB_WORKSPACE" ]; then sudo rm -rf $GITHUB_WORKSPACE/* ; fi
@@ -75,10 +75,10 @@ jobs:
       - check_gcp_variables
     runs-on: self-hosted
     steps:
-      - name: Clean GitHub workspace
-        if: startsWith(matrix.os, 'windows')
-        shell: powershell
-        run: if(Test-Path -Path 'C:/actions/_work'){ Remove-Item 'C:/actions/_work' -Recurse}
+      #- name: Clean GitHub workspace
+      #  if: startsWith(matrix.os, 'windows')
+      #  shell: powershell
+      #  run: if(Test-Path -Path 'C:/actions/_work'){ Remove-Item 'C:/actions/_work' -Recurse}
       - name: Clean GitHub workspace linux
         if: startsWith(matrix.os, 'linux')
         run: if [ -d "$GITHUB_WORKSPACE" ]; then sudo rm -rf $GITHUB_WORKSPACE/* ; fi
@@ -121,10 +121,10 @@ jobs:
           - os: windows-latest
             params: {"py_ver": "3.8", "tox_env": "py38"}
     steps:
-      - name: Clean GitHub workspace
-        if: startsWith(matrix.os, 'windows')
-        shell: powershell
-        run: if(Test-Path -Path 'C:/actions/_work' ){ Remove-Item 'C:/actions/_work' -Recurse} 
+      #- name: Clean GitHub workspace
+      #  if: startsWith(matrix.os, 'windows')
+      #  shell: powershell
+      #  run: if(Test-Path -Path 'C:/actions/_work' ){ Remove-Item 'C:/actions/_work' -Recurse} 
       - name: Clean GitHub workspace linux
         if: startsWith(matrix.os, 'linux')
         run: if [ -d "$GITHUB_WORKSPACE" ]; then sudo rm -rf $GITHUB_WORKSPACE/* ; fi
@@ -174,10 +174,10 @@ jobs:
           - os: windows-latest
             python: 3.8
     steps:
-      - name: Clean GitHub workspace
-        if: startsWith(matrix.os, 'windows')
-        shell: powershell
-        run: if(Test-Path  -Path 'C:/actions/_work'){ Remove-Item 'C:/actions/_work' -Recurse}
+      #- name: Clean GitHub workspace
+      #  if: startsWith(matrix.os, 'windows')
+      #  shell: powershell
+      #  run: if(Test-Path  -Path 'C:/actions/_work'){ Remove-Item 'C:/actions/_work' -Recurse}
       - name: Clean GitHub workspace linux
         if: startsWith(matrix.os, 'linux')
         run: if [ -d "$GITHUB_WORKSPACE" ]; then sudo rm -rf $GITHUB_WORKSPACE/* ; fi
@@ -214,10 +214,10 @@ jobs:
           - os: windows-latest
             python: 3.8
     steps:
-      - name: Clean GitHub workspace
-        if: startsWith(matrix.os, 'windows')
-        shell: powershell
-        run: if(Test-Path  -Path 'C:/actions/_work'){ Remove-Item 'C:/actions/_work' -Recurse}
+     # - name: Clean GitHub workspace
+     #   if: startsWith(matrix.os, 'windows')
+     #   shell: powershell
+     #   run: if(Test-Path  -Path 'C:/actions/_work'){ Remove-Item 'C:/actions/_work' -Recurse}
       - name: Clean GitHub workspace linux
         if: startsWith(matrix.os, 'linux')
         run: if [ -d "$GITHUB_WORKSPACE" ]; then sudo rm -rf $GITHUB_WORKSPACE/* ; fi
