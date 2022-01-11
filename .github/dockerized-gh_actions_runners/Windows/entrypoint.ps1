@@ -48,7 +48,8 @@ function Remove {
     ./config.cmd remove --unattended --token "$RUNNER_TOKEN"
 }
 
-Set-PsEnv
+Write-Output "Starting process"
+
 $registration_url="https://api.github.com/repos/$Env:GITHUB_REPO/beam/actions/runners/registration-token"
 Write-Output "Requesting registration URL at '${registration_url}'"
 $GITHUB_TOKEN= Write-Output $Env:GITHUB_TOKEN
@@ -60,6 +61,8 @@ $payload= Invoke-WebRequest  ${registration_url} -UseBasicParsing -Method 'POST'
 [Environment]::SetEnvironmentVariable("RUNNER_TOKEN", $payload.token)
 Write-Output $env:RUNNER_TOKEN
 
-./config.cmd --name $env:COMPUTERNAME --token $payload.token --url https://github.com/$Env:GITHUB_REPO/beam --work _work --unattended --replace --labels windows,windows-latest
+$hostname= $env:COMPUTERNAME+[guid]::NewGuid()
+
+./config.cmd --name $hostname --token $payload.token --url https://github.com/$Env:GITHUB_REPO/beam --work _work --unattended --replace --labels windows,windows-latest
 
 ./run.cmd
