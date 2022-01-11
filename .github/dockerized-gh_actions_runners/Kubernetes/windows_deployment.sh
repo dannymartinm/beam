@@ -5,7 +5,6 @@ IMG=$( echo "$IMAGE" | base64 -d  )
 REPO=$( echo "$GITHUB_REPO"| base64 -d )
 TOKEN=$( echo "$GITHUB_TOKEN" | base64 -d )
 
-echo $IMG , $REPO, $TOKEN
 
 sed -e "s|_IMAGE|$IMG|g" -e "s|_GITHUB_REPO|$REPO|g" -e "s|_GITHUB_TOKEN|$TOKEN|g" github-actions-windows-deployment.yml > bash_deployment.yml
 
