@@ -18,7 +18,7 @@ spec:
         kubernetes.io/os: windows
       containers:
       - name: iis-server
-        image: elink21/windowsrunner:latest
+        image:  #todo: replace with gcr, for now im using docker hub img
         env:
         - name: GITHUB_REPO
           value: "Modify with your own repo"
