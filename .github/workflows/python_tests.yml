@@ -46,6 +46,9 @@ jobs:
       gcp-variables-set: ${{ steps.check_gcp_variables.outputs.gcp-variables-set }}
     steps:
       - name: Clean GitHub workspace
+        if: startsWith(matrix.os, 'windows')
+        run: if(Test-Path -Path $GITHUB_WORKSPACE){ Remove-Item $GITHUB_WORKSPACE -Recurse}
+        if: startsWith(matrix.os, 'self')
         run: if [ -d "$GITHUB_WORKSPACE" ]; then sudo rm -rf $GITHUB_WORKSPACE/* ; fi
       - uses: actions/checkout@v2
       - name: "Check are GCP variables set"
@@ -71,7 +74,10 @@ jobs:
     runs-on: self-hosted
     steps:
       - name: Clean GitHub workspace
+        if: startsWith(matrix.os, 'self')
         run: if [ -d "$GITHUB_WORKSPACE" ]; then sudo rm -rf $GITHUB_WORKSPACE/* ; fi
+        if: startsWith(matrix.os, 'windows')
+        run: if(Test-Path -Path $GITHUB_WORKSPACE){ Remove-Item $GITHUB_WORKSPACE -Recurse}
       - name: Checkout code
         uses: actions/checkout@v2
       - name: Install python
@@ -114,6 +120,8 @@ jobs:
       - name: Clean GitHub workspace
         if: startsWith(matrix.os, 'self')
         run: if [ -d "$GITHUB_WORKSPACE" ]; then sudo rm -rf $GITHUB_WORKSPACE/* ; fi
+        if: startsWith(matrix.os, 'windows')
+        run: if(Test-Path -Path $GITHUB_WORKSPACE){ Remove-Item $GITHUB_WORKSPACE -Recurse}
       - name: Checkout code
         uses: actions/checkout@v2
       - name: Install python
@@ -137,7 +145,7 @@ jobs:
       - name: Run tests basic windows
         if: startsWith(matrix.os, 'windows')
         working-directory: ./sdks/python
-        run: tox -c tox.ini -e ${{ matrix.params.tox_env }}-win
+        run: tox -c toxwin.ini -e ${{ matrix.params.tox_env }}-win
       - name: Upload test logs
         uses: actions/upload-artifact@v2
         if: always()
@@ -162,8 +170,8 @@ jobs:
       - name: Clean GitHub workspace
         if: startsWith(matrix.os, 'self')
         run: if [ -d "$GITHUB_WORKSPACE" ]; then sudo rm -rf $GITHUB_WORKSPACE/* ; fi
-      - name: Clean GitHub workspace Windows
         if: startsWith(matrix.os, 'windows')
+        run: if(Test-Path -Path $GITHUB_WORKSPACE){ Remove-Item $GITHUB_WORKSPACE -Recurse}
         run: echo TODO commands to clean workspace in self-hosted-windows
       - name: Checkout code
         uses: actions/checkout@v2
@@ -201,9 +209,9 @@ jobs:
       - name: Clean GitHub workspace
         if: startsWith(matrix.os, 'self')
         run: if [ -d "$GITHUB_WORKSPACE" ]; then sudo rm -rf $GITHUB_WORKSPACE/* ; fi
-      - name: Clean GitHub workspace Windows
         if: startsWith(matrix.os, 'windows')
-        run: echo TODO commands to clean workspace in self-hosted-windows
+        run: if(Test-Path -Path $GITHUB_WORKSPACE){ Remove-Item $GITHUB_WORKSPACE -Recurse}
+      
       - name: Checkout code
         uses: actions/checkout@v2
       - name: Install python
