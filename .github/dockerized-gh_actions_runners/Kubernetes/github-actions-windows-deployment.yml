@@ -1,28 +1,28 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: iis
+  name: windows-actions-deployment
   labels:
-    app: iis
+    app: windows-actions-runners
 spec:
   replicas: 3
   selector:
     matchLabels:
-      app: iis
+      app: windows-actions-runners
   template:
     metadata:
       labels:
-        app: iis
+        app: windows-actions-runners
     spec:
       nodeSelector:
         kubernetes.io/os: windows
       containers:
-      - name: iis-server
-        image:  #todo: replace with gcr, for now im using docker hub img
+      - name: windows-actions-server
+        image: imagetoreplace
         env:
         - name: GITHUB_REPO
-          value: "Modify with your own repo"
+          value: "repo"
         - name: GITHUB_TOKEN
-          value: "Modify with your token"
+          value: "token"
         ports:
         - containerPort: 80
