@@ -47,8 +47,10 @@ jobs:
     steps:
       - name: Clean GitHub workspace
         if: startsWith(matrix.os, 'windows')
-          shell: pwsh
-          run: if(Test-Path -Path $GITHUB_WORKSPACE){ Remove-Item $GITHUB_WORKSPACE -Recurse}
+        shell: pwsh
+        run: if(Test-Path -Path $GITHUB_WORKSPACE){ Remove-Item $GITHUB_WORKSPACE -Recurse}
+      - name: Clean GitHub workspace linux
+        if: startsWith(matrix.os, 'linux')
         run: if [ -d "$GITHUB_WORKSPACE" ]; then sudo rm -rf $GITHUB_WORKSPACE/* ; fi
       - uses: actions/checkout@v2
       - name: "Check are GCP variables set"
@@ -75,9 +77,11 @@ jobs:
     steps:
       - name: Clean GitHub workspace
         if: startsWith(matrix.os, 'windows')
-          run: if(Test-Path -Path $GITHUB_WORKSPACE){ Remove-Item $GITHUB_WORKSPACE -Recurse}
-
-          run: if [ -d "$GITHUB_WORKSPACE" ]; then sudo rm -rf $GITHUB_WORKSPACE/* ; fi
+        shell: pwsh
+        run: if(Test-Path -Path $GITHUB_WORKSPACE){ Remove-Item $GITHUB_WORKSPACE -Recurse}
+      - name: Clean GitHub workspace linux
+        if: startsWith(matrix.os, 'linux')
+        run: if [ -d "$GITHUB_WORKSPACE" ]; then sudo rm -rf $GITHUB_WORKSPACE/* ; fi
       - name: Checkout code
         uses: actions/checkout@v2
       - name: Install python
@@ -119,7 +123,10 @@ jobs:
     steps:
       - name: Clean GitHub workspace
         if: startsWith(matrix.os, 'windows')
-          run: if(Test-Path -Path $GITHUB_WORKSPACE){ Remove-Item $GITHUB_WORKSPACE -Recurse}
+        shell: pwsh
+        run: if(Test-Path -Path $GITHUB_WORKSPACE){ Remove-Item $GITHUB_WORKSPACE -Recurse}
+      - name: Clean GitHub workspace linux
+        if: startsWith(matrix.os, 'linux')
         run: if [ -d "$GITHUB_WORKSPACE" ]; then sudo rm -rf $GITHUB_WORKSPACE/* ; fi
         
       - name: Checkout code
@@ -169,7 +176,10 @@ jobs:
     steps:
       - name: Clean GitHub workspace
         if: startsWith(matrix.os, 'windows')
-          run: if(Test-Path -Path $GITHUB_WORKSPACE){ Remove-Item $GITHUB_WORKSPACE -Recurse}
+        shell: pwsh
+        run: if(Test-Path -Path $GITHUB_WORKSPACE){ Remove-Item $GITHUB_WORKSPACE -Recurse}
+      - name: Clean GitHub workspace linux
+        if: startsWith(matrix.os, 'linux')
         run: if [ -d "$GITHUB_WORKSPACE" ]; then sudo rm -rf $GITHUB_WORKSPACE/* ; fi
       - name: Checkout code
         uses: actions/checkout@v2
@@ -206,7 +216,10 @@ jobs:
     steps:
       - name: Clean GitHub workspace
         if: startsWith(matrix.os, 'windows')
-          run: if(Test-Path -Path $GITHUB_WORKSPACE){ Remove-Item $GITHUB_WORKSPACE -Recurse}
+        shell: pwsh
+        run: if(Test-Path -Path $GITHUB_WORKSPACE){ Remove-Item $GITHUB_WORKSPACE -Recurse}
+      - name: Clean GitHub workspace linux
+        if: startsWith(matrix.os, 'linux')
         run: if [ -d "$GITHUB_WORKSPACE" ]; then sudo rm -rf $GITHUB_WORKSPACE/* ; fi
       - name: Checkout code
         uses: actions/checkout@v2
