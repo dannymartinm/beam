@@ -48,7 +48,7 @@ jobs:
       - name: Clean GitHub workspace
         if: startsWith(matrix.os, 'windows')
         shell: powershell
-        run: if(Test-Path  $GITHUB_WORKSPACE){ Remove-Item $GITHUB_WORKSPACE -Recurse}
+        run: if(Test-Path  -Path 'C:/actions/_work'){ Remove-Item $GITHUB_WORKSPACE -Recurse}
       - name: Clean GitHub workspace linux
         if: startsWith(matrix.os, 'linux')
         run: if [ -d "$GITHUB_WORKSPACE" ]; then sudo rm -rf $GITHUB_WORKSPACE/* ; fi
@@ -78,7 +78,7 @@ jobs:
       - name: Clean GitHub workspace
         if: startsWith(matrix.os, 'windows')
         shell: powershell
-        run: if(Test-Path  $GITHUB_WORKSPACE){ Remove-Item $GITHUB_WORKSPACE -Recurse}
+        run: if(Test-Path -Path 'C:/actions/_work'){ Remove-Item $GITHUB_WORKSPACE -Recurse}
       - name: Clean GitHub workspace linux
         if: startsWith(matrix.os, 'linux')
         run: if [ -d "$GITHUB_WORKSPACE" ]; then sudo rm -rf $GITHUB_WORKSPACE/* ; fi
@@ -124,7 +124,7 @@ jobs:
       - name: Clean GitHub workspace
         if: startsWith(matrix.os, 'windows')
         shell: powershell
-        run: if(Test-Path  $GITHUB_WORKSPACE){ Remove-Item $GITHUB_WORKSPACE -Recurse}
+        run: if(Test-Path -Path 'C:/actions/_work' ){ Remove-Item $GITHUB_WORKSPACE -Recurse}
       - name: Clean GitHub workspace linux
         if: startsWith(matrix.os, 'linux')
         run: if [ -d "$GITHUB_WORKSPACE" ]; then sudo rm -rf $GITHUB_WORKSPACE/* ; fi
@@ -177,7 +177,7 @@ jobs:
       - name: Clean GitHub workspace
         if: startsWith(matrix.os, 'windows')
         shell: powershell
-        run: if(Test-Path  $GITHUB_WORKSPACE){ Remove-Item $GITHUB_WORKSPACE -Recurse}
+        run: if(Test-Path  -Path 'C:/actions/_work'){ Remove-Item $GITHUB_WORKSPACE -Recurse}
       - name: Clean GitHub workspace linux
         if: startsWith(matrix.os, 'linux')
         run: if [ -d "$GITHUB_WORKSPACE" ]; then sudo rm -rf $GITHUB_WORKSPACE/* ; fi
@@ -217,7 +217,7 @@ jobs:
       - name: Clean GitHub workspace
         if: startsWith(matrix.os, 'windows')
         shell: powershell
-        run: if(Test-Path  $GITHUB_WORKSPACE){ Remove-Item $GITHUB_WORKSPACE -Recurse}
+        run: if(Test-Path  -Path 'C:/actions/_work'){ Remove-Item $GITHUB_WORKSPACE -Recurse}
       - name: Clean GitHub workspace linux
         if: startsWith(matrix.os, 'linux')
         run: if [ -d "$GITHUB_WORKSPACE" ]; then sudo rm -rf $GITHUB_WORKSPACE/* ; fi
