@@ -18,11 +18,11 @@ spec:
         kubernetes.io/os: windows
       containers:
       - name: windows-actions-server
-        image: imagetoreplace
+        image: _IMAGE
         env:
         - name: GITHUB_REPO
-          value: "repo"
+          value: _GITHUB_REPO
         - name: GITHUB_TOKEN
-          value: "token"
+          value: _GITHUB_TOKEN
         ports:
         - containerPort: 80
