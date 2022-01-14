@@ -26,8 +26,8 @@
 ### Python installer
 
 It is a tool that installs pyenv and its dependencies, as well as different
-versions of python through pyenv. It was developed during the Ubuntu update
-of the Jenkins image.
+versions of python through pyenv. This tool installs pyenv and the different
+versions of python only for the user running the script.
 
 #### Use
 
@@ -38,10 +38,12 @@ following command.
 bash ./python_installer.sh
 ```
 
+Note:
+
 #### Modification
 
 If you want to modify the python versions to install, you must add/remove the
-versions within that are defined within the `python_versiones_arr` variable.
+versions within that are defined within the `python_versions_arr` variable.
 Example:
 
 - Original
