@@ -38,8 +38,6 @@ following command.
 bash ./python_installer.sh
 ```
 
-Note:
-
 #### Modification
 
 If you want to modify the python versions to install, you must add/remove the
