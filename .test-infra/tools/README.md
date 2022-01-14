@@ -29,10 +29,6 @@ It is a tool that installs pyenv and its dependencies, as well as different
 versions of python through pyenv. It was developed during the Ubuntu update
 of the Jenkins image.
 
-**Warning:** This tool was conceived to install pyenv and python versions in a clean
-environment. If you want to use this install in other cases, we recommend
-that you make the required modifications manually and then run the tool.
-
 #### Use
 
 To use the tool, they only have to download the script and execute it with the
