@@ -221,6 +221,7 @@ jobs:
             arch: aarch64
     steps:
     - name: Clean GitHub workspace
+      shell: bash
       run: if [ -d "$GITHUB_WORKSPACE" ]; then rm -rf $GITHUB_WORKSPACE/* ; fi
     - name: Download python source distribution from artifacts
       uses: actions/download-artifact@v2
