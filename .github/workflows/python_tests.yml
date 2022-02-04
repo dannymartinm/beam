@@ -98,7 +98,7 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        os: [[self-hosted, ubuntu-20.04], macos-latest, windows-latest]
+        os: [[self-hosted, ubuntu-20.04], macos-latest, [self-hosted,windows]]
         params: [
           {"py_ver": "3.6", "tox_env": "py36"},
           {"py_ver": "3.7", "tox_env": "py37"},
@@ -107,7 +107,7 @@ jobs:
         exclude:
           # TODO remove exclusion after issue with protobuf is solved
           # https://github.com/protocolbuffers/protobuf/issues/7765
-          - os: windows-latest
+          - os: [self-hosted,windows]
             params: {"py_ver": "3.8", "tox_env": "py38"}
     steps:
       - name: Clean GitHub workspace
@@ -130,7 +130,7 @@ jobs:
         run: tox -c tox.ini -e ${{ matrix.params.tox_env }}
         # Commented by the moment to run memory&cpu resources.
       - name: Run tests basic windows
-        if: startsWith(matrix.os, 'windows')
+        if: contains(matrix.os, 'windows')
         working-directory: ./sdks/python
         run: tox -c tox.ini -e ${{ matrix.params.tox_env }}-win
       - name: Upload test logs
@@ -146,12 +146,12 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        os: [[self-hosted, ubuntu-20.04], macos-latest, windows-latest]
+        os: [[self-hosted, ubuntu-20.04], macos-latest, [self-hosted,windows]]
         python: [3.6, 3.7, 3.8]
         exclude:
           # TODO remove exclusion after issue with protobuf is solved
           # https://github.com/protocolbuffers/protobuf/issues/7765
-          - os: windows-latest
+          - os: [self-hosted,windows]
             python: 3.8
     steps:
       - name: Clean GitHub workspace
@@ -182,12 +182,12 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        os: [[self-hosted, ubuntu-20.04], macos-latest, windows-latest]
+        os: [[self-hosted, ubuntu-20.04], macos-latest, [self-hosted,windows]]
         python: [3.6, 3.7, 3.8]
         exclude:
           # TODO remove exclusion after issue with protobuf is solved
           # https://github.com/protocolbuffers/protobuf/issues/7765
-          - os: windows-latest
+          - os: [self-hosted,windows]
             python: 3.8
     steps:
       - name: Clean GitHub workspace

@@ -213,7 +213,7 @@ jobs:
         os_python: [
           {"os": [self-hosted, ubuntu-20.04], "python": "cp36-* cp37-* cp38-*"},
           {"os": [macos-latest], "python": "cp36-* cp37-* cp38-*"},
-          {"os": [windows-latest], "python": "cp36-* cp37-* cp38-*"},
+          {"os": [self-hosted,windows], "python": "cp36-* cp37-* cp38-*"},
         ]
         arch: [auto]
         include:
@@ -294,7 +294,7 @@ jobs:
     if: needs.check_gcp_variables.outputs.gcp-variables-set == 'true' && github.event_name != 'pull_request'
     strategy:
       matrix:
-        os : [[self-hosted, ubuntu-20.04], macos-latest, windows-latest]
+        os : [[self-hosted, ubuntu-20.04], macos-latest, [self-hosted,windows]]
     steps:
     - name: Download wheels from artifacts
       uses: actions/download-artifact@v2
