@@ -220,6 +220,8 @@ jobs:
           - os_python: {"os": [self-hosted, ubuntu-20.04], "python": "cp36-* cp37-* cp38-*"}
             arch: aarch64
     steps:
+    - name: Clean GitHub workspace
+      run: if [ -d "$GITHUB_WORKSPACE" ]; then rm -rf $GITHUB_WORKSPACE/* ; fi
     - name: Download python source distribution from artifacts
       uses: actions/download-artifact@v2
       with:
