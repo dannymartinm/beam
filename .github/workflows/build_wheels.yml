@@ -220,9 +220,9 @@ jobs:
           - os_python: {"os": [self-hosted, ubuntu-20.04], "python": "cp36-* cp37-* cp38-*"}
             arch: aarch64
     steps:
-    - name: Clean GitHub workspace
-      shell: bash
-      run: if [ -d "$GITHUB_WORKSPACE" ]; then rm -rf $GITHUB_WORKSPACE/* ; fi
+    - name: Clean GitHub workspace windows
+      if: contains(matrix.os_python.os, 'windows')
+      run: if ((Test-Path C:\actionsDir\_work\beam\beam\apache-beam-source\wheelhouse)) { Get-ChildItem -Path C:\actionsDir\_work\beam\beam\apache-beam-source\wheelhouse -Include *.* -File -Recurse | foreach { $_.Delete()}}
     - name: Download python source distribution from artifacts
       uses: actions/download-artifact@v2
       with:
