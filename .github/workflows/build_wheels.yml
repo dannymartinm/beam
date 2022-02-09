@@ -59,7 +59,7 @@ jobs:
           GCP_TESTING_BUCKET: "not-needed-here"
 
   build_source:
-    runs-on: [self-hosted, ubuntu-ubuntu-20.04]
+    runs-on: [self-hosted, ubuntu-20.04]
     name: Build python source distribution
     outputs:
       is_rc: ${{ steps.is_rc.outputs.is_rc }}
