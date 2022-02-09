@@ -31,7 +31,7 @@ on:
     branches: ['master', 'release-*']
     tags: ['v*']
   pull_request:
-    branches: ['master', 'release-*', 'dannymartinm/beam-12812-githubactions-windows']
+    branches: ['master', 'release-*', 'beam-12812-githubactions-windows']
     tags: ['v*']
     paths: ['sdks/java/**', 'model/**', 'runners/**', 'examples/java/**',
             'examples/kotlin/**', 'release/**', 'buildSrc/**']
