@@ -59,7 +59,7 @@ jobs:
           GCP_TESTING_BUCKET: "not-needed-here"
 
   build_source:
-    runs-on: ubuntu-latest
+    runs-on: [self-hosted, ubuntu-ubuntu-20.04]
     name: Build python source distribution
     outputs:
       is_rc: ${{ steps.is_rc.outputs.is_rc }}
@@ -375,4 +375,3 @@ jobs:
           github_token: ${{ secrets.GITHUB_TOKEN }}
           force: true
           branch: nightly-${{ github.ref }}
-          
