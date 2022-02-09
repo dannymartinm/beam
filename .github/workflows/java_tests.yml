@@ -28,7 +28,7 @@ on:
   schedule:
     - cron: '10 2 * * *'
   push:
-    branches: ['master', 'release-*','beam-12812-githubactions-windows']
+    branches: ['master', 'release-*']
     tags: ['v*']
   pull_request:
     branches: ['master', 'release-*']
@@ -65,7 +65,7 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        os: [[self-hosted, ubuntu-20.04], macos-latest, [self-hosted,windows]]
+        os: [[self-hosted, ubuntu-20.04], macos-latest, [self-hosted,windows-server-2019]]
     steps:
       - name: Clean GitHub workspace
         if: contains(matrix.os, 'ubuntu-20.04')
@@ -127,7 +127,7 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        os: [[self-hosted, ubuntu-20.04], macos-latest, [self-hosted,windows]]
+        os: [[self-hosted, ubuntu-20.04], macos-latest, [self-hosted,windows-server-2019]]
     steps:
       - name: Clean GitHub workspace
         if: contains(matrix.os, 'ubuntu-20.04')
@@ -177,7 +177,7 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        os: [[self-hosted, ubuntu-20.04], macos-latest, [self-hosted,windows]]
+        os: [[self-hosted, ubuntu-20.04], macos-latest, [self-hosted,windows-server-2019]]
     steps:
       - name: Clean GitHub workspace
         if: contains(matrix.os, 'ubuntu-20.04')
