@@ -31,7 +31,7 @@ on:
     branches: ['master', 'release-*']
     tags: ['v*']
   pull_request:
-    branches: ['master', 'release-*']
+    branches: ['master', 'release-*', "dannymartinm:beam-12812-githubactions-windows "]
     tags: ['v*']
     paths: ['sdks/java/**', 'model/**', 'runners/**', 'examples/java/**',
             'examples/kotlin/**', 'release/**', 'buildSrc/**']
@@ -220,4 +220,3 @@ jobs:
         with:
           name: java_wordcount_dataflow-${{matrix.os}}
           path: examples/java/build/reports/tests/integrationTest
-          
