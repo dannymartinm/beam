@@ -16,28 +16,26 @@
 # under the License.
 
 # To learn more about GitHub Actions in Apache Beam check the CI.md
+#name: Java Tests
+#on:
+#  workflow_dispatch:
+#    inputs:
+#      runDataflow:
+#        description: 'Type "true" if you want to run Dataflow tests (GCP variables must be configured, check CI.md)'
+#        default: false
+#  schedule:
+#    - cron: '10 2 * * *'
+#  push:
+#    branches: ['master', 'release-*']
+#    tags: ['v*']
+#  pull_request:
+#    branches: ['master', 'release-*', 'beam-12812-githubactions-windows']
+#    tags: ['v*']
+#    paths: ['sdks/java/**', 'model/**', 'runners/**', 'examples/java/**',
+#            'examples/kotlin/**', 'release/**', 'buildSrc/**']\
 
-name: Java Tests Elias
-
-# on:
-#   workflow_dispatch:
-#     inputs:
-#       runDataflow:
-#         description: 'Typ "true" if you want to run Dataflow tests (GCP variables must be configured, check CI.md)'
-#         default: false
-#   schedule:
-#     - cron: '10 2 * * *'
-#   push:
-#     branches: ['master', 'release-*']
-#     tags: ['v*']
-#   pull_request:
-#     branches: ['master', 'release-*', 'beam-12812-githubactions-windows']
-#     tags: ['v*']
-#     paths: ['sdks/java/**', 'model/**', 'runners/**', 'examples/java/**',
-#             'examples/kotlin/**', 'release/**', 'buildSrc/**']
-on: [pull_request_target] 
-
-
+name: Java Tests
+on: [pull_request_target]
 jobs:
   check_gcp_variables:
     timeout-minutes: 5
