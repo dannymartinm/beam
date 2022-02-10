@@ -33,3 +33,5 @@ jobs:
         repo-token: "${{ secrets.GITHUB_TOKEN }}"
         configuration-path: '.github/autolabeler.yml'
         sync-labels: true # Remove labels when matching files are reverted
+    - name: Test step
+      run: echo "Test step"
