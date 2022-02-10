@@ -16,7 +16,7 @@
 # This workflow will triage pull requests and apply a label based on the
 # paths that are modified in the pull request.
 
-name: LabelPrs
+name: LabelPr
 on: [pull_request_target]
 
 jobs:
