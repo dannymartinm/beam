@@ -17,7 +17,7 @@
 
 # To learn more about GitHub Actions in Apache Beam check the CI.md
 
-name: Java Tests
+name: Java Tests Elias
 
 # on:
 #   workflow_dispatch:
