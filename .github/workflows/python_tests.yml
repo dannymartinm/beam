@@ -103,12 +103,13 @@ jobs:
           {"py_ver": "3.6", "tox_env": "py36"},
           {"py_ver": "3.7", "tox_env": "py37"},
           {"py_ver": "3.8", "tox_env": "py38"},
+          {"py_ver": "3.9", "tox_env": "py39"},
         ]
-        exclude:
+        #exclude:
           # TODO remove exclusion after issue with protobuf is solved
           # https://github.com/protocolbuffers/protobuf/issues/7765
-          - os: [self-hosted,windows-server-2019]
-            params: {"py_ver": "3.8", "tox_env": "py38"}
+          #- os: [self-hosted,windows-server-2019]
+          #  params: {"py_ver": "3.8", "tox_env": "py38"}
     steps:
       - name: Clean GitHub workspace
         if: contains(matrix.os, 'ubuntu-20.04')
