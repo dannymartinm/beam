@@ -24,10 +24,10 @@ on:
     - cron: '10 2 * * *'
   push:
     branches: ['master', 'release-*']
-    tags: 'v*'
+    tags: ['v*']
   pull_request:
     branches: ['master', 'release-*']
-    tags: 'v*'
+    tags: ['v*']
     paths: ['sdks/python/**', 'model/**', 'release/**']
   workflow_dispatch:
 
@@ -213,7 +213,7 @@ jobs:
         os_python: [
           {"os": [self-hosted, ubuntu-20.04], "python": "cp36-* cp37-* cp38-*"},
           {"os": [macos-latest], "python": "cp36-* cp37-* cp38-*"},
-          {"os": [self-hosted,windows], "python": "cp36-* cp37-* cp38-*"},
+          {"os": [self-hosted,windows-server-2019], "python": "cp36-* cp37-* cp38-*"},
         ]
         arch: [auto]
         include:
@@ -221,7 +221,7 @@ jobs:
             arch: aarch64
     steps:
     - name: Clean wheels folder (Windows)
-      if: contains(matrix.os_python.os, 'windows')
+      if: contains(matrix.os_python.os, 'windows-server-2019')
       run: if ((Test-Path C:\actionsDir\_work\beam\beam\apache-beam-source\wheelhouse)) { Get-ChildItem -Path C:\actionsDir\_work\beam\beam\apache-beam-source\wheelhouse -Include *.* -File -Recurse | foreach { $_.Delete()}}
     - name: Download python source distribution from artifacts
       uses: actions/download-artifact@v2
@@ -251,7 +251,7 @@ jobs:
       run: cibuildwheel --print-build-identifiers && cibuildwheel --output-dir wheelhouse
       shell: bash
     - name: Install sha512sum on MacOS
-      if: startsWith(matrix.os_python.os, 'macos')
+      if: contains(matrix.os_python.os, 'macos-latest')
       run: brew install coreutils
     - name: Add checksums
       working-directory: apache-beam-source/wheelhouse/
@@ -297,7 +297,7 @@ jobs:
     if: needs.check_gcp_variables.outputs.gcp-variables-set == 'true' && github.event_name != 'pull_request'
     strategy:
       matrix:
-        os : [[self-hosted, ubuntu-20.04], macos-latest, [self-hosted,windows]]
+        os : [[self-hosted, ubuntu-20.04], macos-latest, [self-hosted,windows-server-2019]]
     steps:
     - name: Download wheels from artifacts
       uses: actions/download-artifact@v2

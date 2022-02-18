@@ -22,11 +22,10 @@ on:
 jobs:
   stale:
 
-    runs-on: ubuntu-latest
+    runs-on: [self-hosted, ubuntu-20.04]
     permissions:
       issues: write
       pull-requests: write
-
     steps:
     - uses: actions/stale@v3
       with:

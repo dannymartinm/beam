@@ -37,6 +37,7 @@ on:
 
 
 jobs:
+
   check_gcp_variables:
     timeout-minutes: 5
     name: "Check GCP variables"
@@ -98,17 +99,13 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        os: [[self-hosted, ubuntu-20.04], macos-latest, [self-hosted,windows]]
+        os: [[self-hosted, ubuntu-20.04], macos-latest, [self-hosted,windows-server-2019]]
         params: [
           {"py_ver": "3.6", "tox_env": "py36"},
           {"py_ver": "3.7", "tox_env": "py37"},
           {"py_ver": "3.8", "tox_env": "py38"},
+          {"py_ver": "3.9", "tox_env": "py39"},
         ]
-        exclude:
-          # TODO remove exclusion after issue with protobuf is solved
-          # https://github.com/protocolbuffers/protobuf/issues/7765
-          - os: [self-hosted,windows]
-            params: {"py_ver": "3.8", "tox_env": "py38"}
     steps:
       - name: Clean GitHub workspace
         if: contains(matrix.os, 'ubuntu-20.04')
@@ -130,7 +127,7 @@ jobs:
         run: tox -c tox.ini -e ${{ matrix.params.tox_env }}
         # Commented by the moment to run memory&cpu resources.
       - name: Run tests basic windows
-        if: contains(matrix.os, 'windows')
+        if: contains(matrix.os, 'windows-server-2019')
         working-directory: ./sdks/python
         run: tox -c tox.ini -e ${{ matrix.params.tox_env }}-win
       - name: Upload test logs
@@ -146,13 +143,8 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        os: [[self-hosted, ubuntu-20.04], macos-latest, [self-hosted,windows]]
-        python: [3.6, 3.7, 3.8]
-        exclude:
-          # TODO remove exclusion after issue with protobuf is solved
-          # https://github.com/protocolbuffers/protobuf/issues/7765
-          - os: [self-hosted,windows]
-            python: 3.8
+        os: [[self-hosted, ubuntu-20.04], macos-latest, [self-hosted,windows-server-2019]]
+        python: [3.6, 3.7, 3.8, 3.9]
     steps:
       - name: Clean GitHub workspace
         if: contains(matrix.os, 'ubuntu-20.04')
@@ -182,13 +174,8 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        os: [[self-hosted, ubuntu-20.04], macos-latest, [self-hosted,windows]]
-        python: [3.6, 3.7, 3.8]
-        exclude:
-          # TODO remove exclusion after issue with protobuf is solved
-          # https://github.com/protocolbuffers/protobuf/issues/7765
-          - os: [self-hosted,windows]
-            python: 3.8
+        os: [[self-hosted, ubuntu-20.04], macos-latest, [self-hosted,windows-server-2019]]
+        python: [3.6, 3.7, 3.8, 3.9]
     steps:
       - name: Clean GitHub workspace
         if: contains(matrix.os, 'ubuntu-20.04')
