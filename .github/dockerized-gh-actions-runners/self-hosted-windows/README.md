@@ -41,7 +41,7 @@ Be sure that you are using a service account that has permissions to access your
 
 #### How to launch an instance group?
 
-Use the specifications located in the paren READ.ME for dockerized-github-actions and deploy a managed instance group using the previously generated instance template.
+Use the specifications located in the parent README for dockerized-github-actions and deploy a managed instance group using the previously generated instance template.
 
 
 ### How to launch the runners removal cloud function?
