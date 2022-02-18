@@ -45,7 +45,6 @@ Ubuntu Self-hosted runners are implemented using Google Kubernetes Engine with t
     * CPU utilization: 70%
 * Vertical Pod Autoscaling: updateMode: "Auto"
 
-## Windows
 
 ## Windows
 Windows Virtual machines have the following specifications
@@ -72,5 +71,10 @@ At first glance we considered to implement Windows runners using K8s, however th
 ![Diagram](diagrams/self-hosted-runners-architecture.png)
 
 ## Cronjob - Delete Unused Self-hosted Runners
+
+Depending on the termination event, sometimes the removal script for offline runners is not triggered correctly from inside the VMs or K8s pod, because of that an additional pipeline was created in order to clean up the list of GitHub runners in the group.
+
+This was implemented using a Cloud function subscribed to a Pub/Sub Topic, the topic is triggered through a Cloud Scheduler that is executed once per day, the function consumes a Github API to delete offline self-hosted runners from the organization retrieving the token with it's service account to secrets manager.
+
 
 ![Delete Offline Self-hosted Runners](diagrams/self-hosted-runners-delete-function.png)
