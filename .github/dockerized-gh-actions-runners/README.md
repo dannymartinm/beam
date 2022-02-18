@@ -47,6 +47,26 @@ Ubuntu Self-hosted runners are implemented using Google Kubernetes Engine with t
 
 ## Windows
 
+## Windows
+Windows Virtual machines have the following specifications
+
+#### VM specifications 
+* Machine Type: n2-standard-2
+* Disk Size: 70 GB 
+* CPU: 2 vCPUs
+* Memory : 8 GB
+
+#### Instance group settings
+* Region: us-west1 (multizone)
+* Scale-out metric: 70% of CPU Usage.
+* Cooldown period: 300s
+
+#### Notes:
+At first glance we considered to implement Windows runners using K8s, however this was not optimal because of the following reasons:
+
+* VS Build tools are required for certain workflows, unfortunately official images that support this dependency are huge in size, reaching 20GB easily which is not an ideal case for k8S management.
+* Windows Subsystem For Linux(WSL) is a feature that allows to execute bash scripts inside Windows which removes tech debt by avoiding writing steps in powershell, but this feature is disabled with payload removed in Windows containers.
+
 
 ## Self-Hosted Runners Architecture
 ![Diagram](diagrams/self-hosted-runners-architecture.png)
