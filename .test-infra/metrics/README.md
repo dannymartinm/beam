@@ -106,8 +106,8 @@ these volumes. (List volumes via `docker volume ls`)
 ## Kubernetes setup
 
 ### Cluster Specification:
-  GKE Version: 1.18.20
-  Runtime: Docker
+  GKE Version: 1.20.12
+  Runtime: Containerd
   Authenticaction method: OAuth Client Certificate.
   
 
