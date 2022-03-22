@@ -94,5 +94,3 @@ spec:
         emptyDir: {}
 
 
-      - name: storage
-        emptyDir: {}
