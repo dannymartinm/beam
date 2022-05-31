@@ -447,7 +447,7 @@ if (project.hasProperty("javaLinkageArtifactIds")) {
 
   val linkageCheckerJava by configurations.creating
   dependencies {
-    linkageCheckerJava("com.google.cloud.tools:dependencies:1.5.6")
+    linkageCheckerJava("com.google.cloud.tools:dependencies:1.5.12")
   }
 
   // We need to evaluate all the projects first so that we can find depend on all the
