@@ -304,7 +304,7 @@ if __name__ == '__main__':
             'needle>=0.5.0,<1',
             'chromedriver-binary>=100,<101',
             # use a fixed major version of PIL for different python versions
-            'pillow>=7.1.1,<8',
+            'pillow>=7.1.1,<10',
           ],
           'aws': ['boto3 >=1.9'],
           'azure': [
