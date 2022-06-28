@@ -302,7 +302,7 @@ if __name__ == '__main__':
             'nbconvert>=6.2.0,<7',
             # headless chrome based integration tests
             'needle>=0.5.0,<1',
-            'chromedriver-binary>=100,<101',
+            'chromedriver-binary>=100,<105',
             # use a fixed major version of PIL for different python versions
             'pillow>=7.1.1,<8',
           ],
