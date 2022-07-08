@@ -7,11 +7,11 @@ async function getRunnerToken() {
     try {
 
         let authOptions = {
-            appId: process.env.APP_ID,
-            privateKey: process.env.PEM_KEY,
-            clientId: process.env.CLIENT_ID,
-            clientSecret: process.env.CLIENT_NAME,
-            installationId: process.env.APP_INSTALLATION_ID
+            appId: process.env.APP_SECRET,
+            privateKey: process.env.PEM_SECRET,
+            clientId: process.env.CLIENT_ID_SECRET,
+            clientSecret: process.env.CLIENT_SECRET,
+            installationId: process.env.APP_INSTALLATION_SECRET
         }
 
         const octokit = new Octokit({
@@ -19,7 +19,7 @@ async function getRunnerToken() {
             auth: authOptions
         });
 
-        let access = await octokit.request(`POST /app/installations/${process.env.APP_INSTALLATION_ID}}/access_tokens`, {
+        let access = await octokit.request(`POST /app/installations/${process.env.APP_INSTALLATION_SECRET}}/access_tokens`, {
             repositories: [
                 'beam'
             ],

@@ -1,5 +1,5 @@
 {
-    "name": "remove-offline-runners",
+    "name": "monitor-runner-status",
     "version": "1.0.0",
     "description": "Monitor the status of the runners and return filtered insights",
     "main": "",

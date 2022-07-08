@@ -5,11 +5,11 @@ import { createAppAuth } from "@octokit/auth-app";
 async function monitorRunnerStatus() {
     try {
         let authOptions = {
-            appId: process.env.APP_ID,
-            privateKey: process.env.PEM_KEY,
-            clientId: process.env.CLIENT_ID,
-            clientSecret: process.env.CLIENT_NAME,
-            installationId: process.env.APP_INSTALLATION_ID
+            appId: process.env.APP_SECRET,
+            privateKey: process.env.PEM_SECRET,
+            clientId: process.env.CLIENT_ID_SECRET,
+            clientSecret: process.env.CLIENT_SECRET,
+            installationId: process.env.APP_INSTALLATION_SECRET
         }
 
         const octokit = new Octokit({
@@ -51,7 +51,7 @@ async function monitorRunnerStatus() {
             let onlineRunners = osRunners.filter(runner => {
                 return runner.status == "online";
             });
-            
+
             status[os] = {
                 "totalRunners": osRunners.length,
                 "onlineRunners": onlineRunners.length,
