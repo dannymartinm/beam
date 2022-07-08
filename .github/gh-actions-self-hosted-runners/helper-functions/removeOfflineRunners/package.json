@@ -1,7 +1,7 @@
 {
     "name": "remove-offline-runners",
     "version": "1.0.0",
-    "description": "Monitor the status of the runners and return filtered insights",
+    "description": "Removes offline runners from list",
     "main": "",
     "type": "module",
     "dependencies": {
