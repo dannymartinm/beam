@@ -15,13 +15,19 @@
 //  specific language governing permissions and limitations
 //  under the License.
 
+//This function provides registration tokens for windows and linux self-hosted
+//runners, a service account with the appropiated permissions should be used to 
+// invoke the Cloud Function.
+
 import functions from '@google-cloud/functions-framework';
 import { Octokit } from "octokit";
 import { createAppAuth } from "@octokit/auth-app";
 
 
 async function getRunnerToken() {
+    
     try {
+        //Set your GH App values as environment variables
         let authOptions = {
             appId: process.env.APP_ID,
             privateKey: process.env.PEM_KEY,
@@ -35,6 +41,7 @@ async function getRunnerToken() {
             auth: authOptions
         });
 
+        
         let access = await octokit.request(`POST /app/installations/${process.env.APP_INSTALLATION_ID}}/access_tokens`, {
             repositories: [
                 'beam'
@@ -44,6 +51,7 @@ async function getRunnerToken() {
             }
         });
 
+        //In order to access the registration token endpoint, an additional Auth token must be used
         let authToken = access.data.token;
         let auth = " token " + authToken;
 
@@ -52,7 +60,6 @@ async function getRunnerToken() {
                 authorization: auth,
             },
         });
-
 
         return registrationToken.data;
     } catch (error) {

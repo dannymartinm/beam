@@ -14,12 +14,18 @@
 //  KIND, either express or implied.  See the License for the
 //  specific language governing permissions and limitations
 //  under the License.
+
+//This function will return the number of online and offline runners for
+// each OS (Windows, linux), an additional Github actions workflow will run
+// to request this Cloud Function and send alerts based on the status.
+
 import functions from '@google-cloud/functions-framework';
 import { Octokit } from "octokit";
 import { createAppAuth } from "@octokit/auth-app";
 
 async function monitorRunnerStatus() {
     try {
+        //Set your GH App values as environment variables
         let authOptions = {
             appId: process.env.APP_ID,
             privateKey: process.env.PEM_KEY,

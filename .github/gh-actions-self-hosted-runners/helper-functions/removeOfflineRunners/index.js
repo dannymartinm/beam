@@ -15,6 +15,9 @@
 //  specific language governing permissions and limitations
 //  under the License.
 
+// Unused offline self-hosted runners remains in the runners 
+// list unless it is explicitly removed, this function will periodically 
+// clean the list to only have active runners in the repo.
 import functions from '@google-cloud/functions-framework';
 import { Octokit } from "octokit";
 import { createAppAuth } from "@octokit/auth-app";
@@ -22,7 +25,7 @@ import { createAppAuth } from "@octokit/auth-app";
 
 async function removeOfflineRunners() {
     try {
-
+        //Set your GH App values as environment variables
         let authOptions = {
             appId: process.env.APP_ID,
             privateKey: process.env.PEM_KEY,
@@ -54,10 +57,12 @@ async function removeOfflineRunners() {
 
         });
 
+        //Getting offline runners only
         let offlineRunners = beamRunners.filter(runner => {
             return runner.status == "offline";
         })
 
+        //Deleting each offline runner in the list
         for (let runner of offlineRunners) {
             await octokit.request(`DELETE /orgs/${process.env.ORG}/actions/runners/${runner.id}`, {});
         }
