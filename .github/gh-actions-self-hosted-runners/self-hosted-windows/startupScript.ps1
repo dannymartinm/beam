@@ -24,7 +24,9 @@ $version= $response[0].name.substring(1,$response[0].name.Length-1)
 $ORG_NAME="apache"
 $ORG_RUNNER_GROUP="beam"
 $GCP_TOKEN=gcloud auth print-identity-token
-$TOKEN_PROVIDER="https://us-central1-apache-beam-testing.cloudfunctions.net/generateToken"
+
+
+$TOKEN_PROVIDER= #Replace variable manually 
 
 Set-Location C:/
 
