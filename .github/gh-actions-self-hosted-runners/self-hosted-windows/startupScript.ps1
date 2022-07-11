@@ -26,7 +26,7 @@ $ORG_RUNNER_GROUP="beam"
 $GCP_TOKEN=gcloud auth print-identity-token
 
 
-$TOKEN_PROVIDER= #Replace variable manually 
+$TOKEN_PROVIDER="https://$GCP_REGION-$GCP_PROJECT_ID.cloudfunctions.net/$CLOUD_FUNCTION_NAME" #Replace variables manually 
 
 Set-Location C:/
 
