@@ -22,7 +22,7 @@ $response= Invoke-RestMethod https://api.github.com/repos/actions/runner/tags
 $version= $response[0].name.substring(1,$response[0].name.Length-1)
 
 $ORG_NAME="apache"
-$ORG_RUNNER_GROUP="beam"
+$ORG_RUNNER_GROUP="Beam"
 $GCP_TOKEN=gcloud auth print-identity-token
 
 
