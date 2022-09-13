@@ -37,14 +37,24 @@ async function removeOfflineRunners() {
             authStrategy: createAppAuth,
             auth: authOptions
         });
-        let runners = await octokit.request(`GET /orgs/${process.env.ORG}/actions/runners`, {
-            org: process.env.ORG
-        });
+        let pageCounter=1
+        let runners=[]
+        let pageRunners=[]
+        do{
+            pageRunners= await octokit.request(`GET /orgs/${process.env.ORG}/actions/runners`, {
+                org: process.env.ORG,
+                per_page: 50,
+                page:pageCounter
+            });
+            runners=runners.concat(pageRunners.data.runners)
+            pageCounter++
+        } while(pageRunners.data.runners.length!=0)
+        
 
         //Filtering BEAM runners
-        let beamRunners = runners.data.runners.filter(runner => {
+        let beamRunners = runners.filter(runner => {
             for (let label of runner.labels) {
-                if (label.name == "Linux") {
+                if (label.name == "beam") {
                     return true;
                 }
             }

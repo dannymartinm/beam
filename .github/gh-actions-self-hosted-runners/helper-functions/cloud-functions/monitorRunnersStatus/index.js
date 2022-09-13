@@ -37,14 +37,28 @@ async function monitorRunnerStatus() {
             authStrategy: createAppAuth,
             auth: authOptions
         });
-        let runners = await octokit.request(`GET /orgs/${process.env.ORG}/actions/runners`, {
-            org: process.env.ORG,
-            per_page: 100, // In order to avoid cropped results we are explicitly setting this option in combination with a daily cleanup
-        });
+        let pageCounter=1
+        let runners=[]
+        let pageRunners=[]
+        do{
+            pageRunners= await octokit.request(`GET /orgs/${process.env.ORG}/actions/runners`, {
+                org: process.env.ORG,
+                per_page: 50,
+                page:pageCounter
+            });
+            runners=runners.concat(pageRunners.data.runners)
+            pageCounter++
+        } while(pageRunners.data.runners.length!=0)
+        
 
         //Filtering BEAM runners
-        let beamRunners = runners.data.runners.filter(runner => {
-            return runner.labels.find(label => label.name == "beam")
+        let beamRunners = runners.filter(runner => {
+            for (let label of runner.labels) {
+                if (label.name == "beam") {
+                    return true;
+                }
+            }
+            return false;
         });
 
         //Dividing status for each runner OS
