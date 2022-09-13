@@ -17,6 +17,7 @@
 
 const nodemailer = require("nodemailer");
 const axios = require('axios');
+
 const LINUX_MIN_RUNNERS=8; //We are going to be monitoring this values
 const WINDOWS_MIN_RUNNERS=8;
 
@@ -78,7 +79,6 @@ async function sendAlertEmail(status) {
 
 async function monitorRunnersStatus() {
     const status = await getRunnersStatus().catch(console.error);
-    console.log(status);
     if (status.Linux.onlineRunners <= LINUX_MIN_RUNNERS || status.Windows.onlineRunners <= WINDOWS_MIN_RUNNERS) {
         sendAlertEmail(status);
     } else {
