@@ -18,7 +18,7 @@
 const nodemailer = require("nodemailer");
 const axios = require('axios');
 const LINUX_MIN_RUNNERS=8; //We are going to be monitoring this values
-const WINDOWS_MIN_RUNNERS=;
+const WINDOWS_MIN_RUNNERS=8;
 
 async function getRunnersStatus() {
     let status = await axios.post(process.env["ENDPOINT"], {}, {
