@@ -22,6 +22,8 @@ import functions from '@google-cloud/functions-framework';
 import { Octokit } from "octokit";
 import { createAppAuth } from "@octokit/auth-app";
 
+const REQUIRED_ENV_VARS=["APP_ID","PEM_KEY","CLIENT_ID","CLIENT_SECRET","APP_INSTALLATION_ID","ORG"]
+
 function validateEnvSet(envVars) {
     envVars.forEach(envVar => {
         if (!process.env[envVar]) {
@@ -81,7 +83,7 @@ async function removeOfflineRunners() {
 
 
 functions.http('removeOfflineRunners', (req, res) => {
-    validateEnvSet(["APP_ID","PEM_KEY","CLIENT_ID","CLIENT_SECRET","APP_INSTALLATION_ID","ORG"])
+    validateEnvSet(REQUIRED_ENV_VARS)
     removeOfflineRunners().then((status) => {
         res.status(200).send(status);
     });

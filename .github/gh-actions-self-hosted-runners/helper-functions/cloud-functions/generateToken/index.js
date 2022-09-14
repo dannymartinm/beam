@@ -23,6 +23,9 @@ import functions from '@google-cloud/functions-framework';
 import { Octokit } from "octokit";
 import { createAppAuth } from "@octokit/auth-app";
 
+const REQUIRED_ENV_VARS=["APP_ID","PEM_KEY","CLIENT_ID","CLIENT_SECRET","APP_INSTALLATION_ID","ORG"]
+
+
 function validateEnvSet(envVars) {
     envVars.forEach(envVar => {
         if (!process.env[envVar]) {
@@ -67,8 +70,7 @@ async function getRunnerToken() {
 }
 
 functions.http('generateToken', (req, res) => {
-    validateEnvSet(["APP_ID","PEM_KEY","CLIENT_ID","CLIENT_SECRET","APP_INSTALLATION_ID","ORG"])
-
+    validateEnvSet(REQUIRED_ENV_VARS)
     getRunnerToken().then((registrationToken) => {
         res.status(200).send(registrationToken);
     });
