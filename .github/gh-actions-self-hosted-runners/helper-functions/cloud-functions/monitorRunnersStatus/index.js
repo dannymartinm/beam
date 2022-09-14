@@ -23,6 +23,15 @@ import functions from '@google-cloud/functions-framework';
 import { Octokit } from "octokit";
 import { createAppAuth } from "@octokit/auth-app";
 
+
+function validateEnvSet(envVars) {
+    envVars.forEach(envVar => {
+        if (!process.env[envVar]) {
+            throw new Error(`${envVar} environment variable not set.`)
+        }
+    });
+}
+
 async function monitorRunnerStatus() {
     try {
         //Set your GH App values as environment variables
@@ -30,7 +39,7 @@ async function monitorRunnerStatus() {
             appId: process.env.APP_ID,
             privateKey: process.env.PEM_KEY,
             clientId: process.env.CLIENT_ID,
-            clientSecret: process.env.CLIENT_NAME,
+            clientSecret: process.env.CLIENT_SECRET,
             installationId: process.env.APP_INSTALLATION_ID
         }
         const octokit = new Octokit({
@@ -53,12 +62,7 @@ async function monitorRunnerStatus() {
 
         //Filtering BEAM runners
         let beamRunners = runners.filter(runner => {
-            for (let label of runner.labels) {
-                if (label.name == "beam") {
-                    return true;
-                }
-            }
-            return false;
+            return runner.labels.find(label => label.name == "beam")
         });
 
         //Dividing status for each runner OS
@@ -84,6 +88,7 @@ async function monitorRunnerStatus() {
 }
 
 functions.http('monitorRunnerStatus', (req, res) => {
+    validateEnvSet(["APP_ID","PEM_KEY","CLIENT_ID","CLIENT_SECRET","APP_INSTALLATION_ID","ORG"])
     monitorRunnerStatus().then((status) => {
         res.status(200).send(status);
     });
