@@ -72,8 +72,6 @@ async function removeOfflineRunners() {
     }
 }
 
-
-
 functions.http('removeOfflineRunners', (req, res) => {
     validateEnvSet(REQUIRED_ENV_VARS)
     removeOfflineRunners().then((status) => {
