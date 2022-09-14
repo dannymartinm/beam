@@ -24,8 +24,6 @@ import { Octokit } from "octokit";
 import { createAppAuth } from "@octokit/auth-app";
 import { REQUIRED_ENV_VARS } from "../shared/constants" ;
 
-
-
 function validateEnvSet(envVars) {
     envVars.forEach(envVar => {
         if (!process.env[envVar]) {
@@ -55,7 +53,6 @@ async function monitorRunnerStatus() {
             },
         )
         
-
         //Filtering BEAM runners
         let beamRunners = runners.filter(runner => {
             return runner.labels.find(label => label.name == "beam")
