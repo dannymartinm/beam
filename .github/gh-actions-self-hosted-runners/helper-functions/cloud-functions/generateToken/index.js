@@ -22,8 +22,7 @@
 import functions from '@google-cloud/functions-framework';
 import { Octokit } from "octokit";
 import { createAppAuth } from "@octokit/auth-app";
-
-const REQUIRED_ENV_VARS=["APP_ID","PEM_KEY","CLIENT_ID","CLIENT_SECRET","APP_INSTALLATION_ID","ORG"]
+import { REQUIRED_ENV_VARS } from "../shared/constants" ;
 
 
 function validateEnvSet(envVars) {

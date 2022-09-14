@@ -21,8 +21,7 @@
 import functions from '@google-cloud/functions-framework';
 import { Octokit } from "octokit";
 import { createAppAuth } from "@octokit/auth-app";
-
-const REQUIRED_ENV_VARS=["APP_ID","PEM_KEY","CLIENT_ID","CLIENT_SECRET","APP_INSTALLATION_ID","ORG"]
+import { REQUIRED_ENV_VARS } from "../shared/constants" ;
 
 function validateEnvSet(envVars) {
     envVars.forEach(envVar => {
@@ -46,18 +45,11 @@ async function removeOfflineRunners() {
             authStrategy: createAppAuth,
             auth: authOptions
         });
-        let pageCounter=1
-        let runners=[]
-        let pageRunners=[]
-        do{
-            pageRunners= await octokit.request(`GET /orgs/${process.env.ORG}/actions/runners`, {
-                org: process.env.ORG,
-                per_page: 50,
-                page:pageCounter
-            });
-            runners=runners.concat(pageRunners.data.runners)
-            pageCounter++
-        } while(pageRunners.data.runners.length!=0)
+
+        const runners = await octokit.paginate("GET /orgs/${process.env.ORG}/actions/runners", {
+            org: process.env.ORG
+            },
+        )
         
 
         //Filtering BEAM runners
