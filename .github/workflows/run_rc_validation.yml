@@ -12,9 +12,9 @@ jobs:
       run: >
         set -a 
         . dummyVars.config
-        set +a
-        echo cat dummyVars.config
-        echo $dummyValue
+        set +
+    - name: Verifying source results
+      run: echo cat dummyVars.config
     - name: Set RELEASE_BRANCH env variable
       run: >
         RC_TAG="v${RELEASE_VER}-RC${RC_NUM}"
