@@ -7,7 +7,7 @@ jobs:
     runs-on: [self-hosted,ubuntu-20.04]
     steps:
     - name: Checking variables
-      run: |
+      run: >
       RC_TAG="v${RELEASE_VER}-RC${RC_NUM}"
       RELEASE_BRANCH="releasev${RELEASE_VER}"
       WORKING_BRANCH=v${RELEASE_VER}-RC${RC_NUM}_validations
