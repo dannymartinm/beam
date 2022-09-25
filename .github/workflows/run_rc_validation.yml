@@ -8,6 +8,9 @@ jobs:
     - name: Checkout code
       uses: actions/checkout@v3
 
+    - name: Check code
+      run: ls -a
+
     - name: Source Variables from file
       run: >
         set -a 
