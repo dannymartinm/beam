@@ -11,8 +11,8 @@ jobs:
     - name: Source Variables from file
       run: >
         set -a 
-        . dummyVars.config
-        set +
+        . ./dummyVars.config
+        set +a
     - name: Verifying source results
       run: echo $dummyValue
     - name: Set RELEASE_BRANCH env variable
