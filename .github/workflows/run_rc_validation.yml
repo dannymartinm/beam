@@ -1,13 +1,22 @@
 name: Run RC Validation
 on:
   workflow_dispatch:
-    
 jobs:
   run_rc_validation:
     runs-on: [self-hosted,ubuntu-20.04]
     steps:
+    - name: Checkout code
+      uses: checkout@v3
+
+    - name: Source Variables from file
+      run: >
+        set -a 
+        . dummyVars.config
+        set +a
+        echo cat dummyVars.config
+        echo $dummyValue
     - name: Set RELEASE_BRANCH env variable
-      run: |
+      run: >
         RC_TAG="v${RELEASE_VER}-RC${RC_NUM}"
         RELEASE_BRANCH="releasev${RELEASE_VER}"
         WORKING_BRANCH=v${RELEASE_VER}-RC${RC_NUM}_validations
