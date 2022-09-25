@@ -13,6 +13,7 @@ jobs:
         set -a 
         . ./dummyVars.config
         set +a
+        echo $dummyValue
     - name: Verifying source results
       run: echo $dummyValue
     - name: Set RELEASE_BRANCH env variable
