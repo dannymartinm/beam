@@ -6,7 +6,7 @@ jobs:
     runs-on: [self-hosted,ubuntu-20.04]
     steps:
     - name: Checkout code
-      uses: checkout@v3
+      uses: actions/checkout@v3
 
     - name: Source Variables from file
       run: >

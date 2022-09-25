@@ -29,7 +29,7 @@ jobs:
           RELEASE_BRANCH=release-${{env.RELEASE_VER}}
           echo "RELEASE_BRANCH=${RELEASE_BRANCH}" >> $GITHUB_ENV
       - name: Check out code
-      - uses: actions/checkout@v3
+        uses: actions/checkout@v3
         with:
           ref: ${{ env.RELEASE_BRANCH }}
       - name: Install gh cli
