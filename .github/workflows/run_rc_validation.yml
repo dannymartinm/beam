@@ -13,6 +13,9 @@ jobs:
         cat dummyVars.config >> $GITHUB_ENV
     - name: Verifying source results
       run: echo $dummyValue
+    - name: Install Kubectl
+      uses: azure/setup-kubectl@v3
+      run: kubectl version
     - name: Set RELEASE_BRANCH env variable
       run: >
         RC_TAG="v${RELEASE_VER}-RC${RC_NUM}"
