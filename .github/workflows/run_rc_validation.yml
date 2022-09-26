@@ -15,8 +15,10 @@ jobs:
       run: echo $dummyValue
     - name: Install Kubectl
       uses: azure/setup-kubectl@v3
-    - name: Verifying kubectl
-      run: kubectl version
+    - name: Install gnome_terminal
+      run:  apt-get install gnome-terminal
+    - name: Install hub
+      run: apt install hub
     - name: Set RELEASE_BRANCH env variable
       run: >
         RC_TAG="v${RELEASE_VER}-RC${RC_NUM}"
