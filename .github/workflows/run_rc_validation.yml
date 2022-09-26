@@ -7,16 +7,13 @@ jobs:
     steps:
     - name: Checkout code
       uses: actions/checkout@v3
-
-    - name: Check code
-      run: ls -a
-
+    
     - name: Source Variables from file
       run: >
         set -a 
         . ./dummyVars.config
         set +a
-        echo $dummyValue
+        sleep 40000
     - name: Verifying source results
       run: echo $dummyValue
     - name: Set RELEASE_BRANCH env variable
