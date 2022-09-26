@@ -7,7 +7,8 @@ jobs:
     steps:
     - name: Checkout code
       uses: actions/checkout@v3
-    
+    - name: Common tasks
+      uses: ./.github/actions/setup-rc-vars
     - name: Source Variables from file
       run: >
         cat dummyVars.config >> $GITHUB_ENV
@@ -18,7 +19,7 @@ jobs:
     - name: Install hub
       run: sudo apt install -y hub
     - name: Set RELEASE_BRANCH env variable
-      run: >
+      run: |
         RC_TAG="v${RELEASE_VER}-RC${RC_NUM}"
         RELEASE_BRANCH="releasev${RELEASE_VER}"
         WORKING_BRANCH=v${RELEASE_VER}-RC${RC_NUM}_validations
@@ -30,7 +31,7 @@ jobs:
         BACKUP_M2=settings_backup_$(date +"%Y%m%d%H%M%S").xml
         declare -a PYTHON_VERSIONS_TO_VALIDATE=("python3.8")
     - name: Verify ENV values
-      run: >
+      run: |
         echo ""
         echo "====================Checking Environment & Variables================="
         echo "PLEASE update RC_VALIDATE_CONFIGS in file script.config first."

@@ -1,0 +1,10 @@
+name: "Setup RC Variables"
+description: Setup Common RC Variables and dependecies
+runs:
+  using: composite
+  steps:
+    - id: test
+      shell: bash
+      run: |
+        echo "Set"
+    
