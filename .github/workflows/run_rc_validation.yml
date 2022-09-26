@@ -10,7 +10,7 @@ jobs:
     
     - name: Source Variables from file
       run: >
-        echo $(cat dummyVars.config) >> $GITHUB_ENV
+        cat dummyVars.config >> $GITHUB_ENV
     - name: Verifying source results
       run: echo $dummyValue
     - name: Set RELEASE_BRANCH env variable
