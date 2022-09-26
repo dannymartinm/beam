@@ -29,3 +29,14 @@ jobs:
         BACKUP_BASHRC=.bashrc_backup_$(date +"%Y%m%d%H%M%S")
         BACKUP_M2=settings_backup_$(date +"%Y%m%d%H%M%S").xml
         declare -a PYTHON_VERSIONS_TO_VALIDATE=("python3.8")
+    - name: Verify ENV values
+      run: >
+        echo ""
+        echo "====================Checking Environment & Variables================="
+        echo "PLEASE update RC_VALIDATE_CONFIGS in file script.config first."
+        echo ""
+        echo "running validations on release ${RELEASE_VER} RC${RC_NUM}."
+        echo "repo URL for this RC: ${REPO_URL}"
+        echo "using workspace: ${LOCAL_BEAM_DIR}"
+        echo "validate Python versions: "$(IFS=$' '; echo "${PYTHON_VERSIONS_TO_VALIDATE[*]}")
+        echo ""
