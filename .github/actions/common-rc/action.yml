@@ -15,9 +15,23 @@ runs:
         echo "HUB_ARTIFACTS_NAME=hub-linux-amd64-${HUB_VERSION}" >>  $GITHUB_ENV
     - name: install_kubectl
       shell: bash
-      uses: azure/setup-kubectl@v3
-    - name: install_gh
-      uses: ./.github/actions/setup-gh-cli-linux
+      run: |
+        sudo apt-get update
+        sudo apt-get install -y ca-certificates curl
+        sudo curl -fsSLo /usr/share/keyrings/kubernetes-archive-keyring.gpg https://packages.cloud.google.com/apt/doc/apt-key.gpg
+        echo "deb [signed-by=/usr/share/keyrings/kubernetes-archive-keyring.gpg] https://apt.kubernetes.io/ kubernetes-xenial main" | sudo tee /etc/apt/sources.list.d/kubernetes.list
+        sudo apt-get update
+        sudo apt-get install -y kubectl
+        kubectl version
+    - id: setup-gh-cli-linux
+      shell: bash
+      run: |
+        curl -fsSL https://cli.github.com/packages/githubcli-archive-keyring.gpg | sudo dd of=/usr/share/keyrings/githubcli-archive-keyring.gpg \
+        && sudo chmod go+r /usr/share/keyrings/githubcli-archive-keyring.gpg \
+        && echo "deb [arch=$(dpkg --print-architecture) signed-by=/usr/share/keyrings/githubcli-archive-keyring.gpg] https://cli.github.com/packages stable main" | sudo tee /etc/apt/sources.list.d/github-cli.list > /dev/null \
+        && sudo apt update \
+        && sudo apt install gh -y
+        gh --version
 
 
 
