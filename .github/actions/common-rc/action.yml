@@ -3,7 +3,7 @@ description: Setup Common RC Variables and dependecies
 runs:
   using: composite
   steps:
-    - id: Setting initial common variables
+    - id: set_common_vars
       shell: bash
       run: |
         echo "RC_TAG=v${RELEASE_VER}-RC${RC_NUM}" >>  $GITHUB_ENV
