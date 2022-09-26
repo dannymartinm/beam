@@ -20,7 +20,7 @@ jobs:
       run: sudo apt install -y hub
     - name: Set RELEASE_BRANCH env variable
       run: |
-        echo RC_TAG="v${RELEASE_VER}-RC${RC_NUM}"
+        RC_TAG="v${RELEASE_VER}-RC${RC_NUM}"
         RELEASE_BRANCH="releasev${RELEASE_VER}"
         WORKING_BRANCH=v${RELEASE_VER}-RC${RC_NUM}_validations
         GIT_REPO_URL=https://github.com/apache/beam.git

@@ -3,8 +3,14 @@ description: Setup Common RC Variables and dependecies
 runs:
   using: composite
   steps:
-    - id: test
+    - id: Setting initial common variables
       shell: bash
       run: |
-        echo "Set"
+        echo "RC_TAG=v${RELEASE_VER}-RC${RC_NUM}"
+        echo "RELEASE_BRANCH=releasev${RELEASE_VER}"
+        echo "WORKING_BRANCH=v${RELEASE_VER}-RC${RC_NUM}_validations"
+        echo "GIT_REPO_URL=https://github.com/apache/beam.git"
+        echo "PYTHON_RC_DOWNLOAD_URL=https://dist.apache.org/repos/dist/dev/beam"
+        echo "HUB_VERSION=2.12.0"
+        echo "HUB_ARTIFACTS_NAME=hub-linux-amd64-${HUB_VERSION}"
     
