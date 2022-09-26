@@ -16,9 +16,9 @@ jobs:
     - name: Install Kubectl
       uses: azure/setup-kubectl@v3
     - name: Install gnome_terminal
-      run:  sudo apt-get install gnome-terminal
+      run:  sudo apt-get install -y gnome-terminal
     - name: Install hub
-      run: sudo apt install hub
+      run: sudo apt install -y hub
     - name: Set RELEASE_BRANCH env variable
       run: >
         RC_TAG="v${RELEASE_VER}-RC${RC_NUM}"
