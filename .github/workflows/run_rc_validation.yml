@@ -30,7 +30,6 @@ jobs:
       run: |
         echo ""
         echo "====================Checking Environment & Variables================="
-        echo "PLEASE update RC_VALIDATE_CONFIGS in file script.config first."
         echo ""
         echo "running validations on release ${{github.event.inputs.RELEASE_VER}} RC${{github.event.inputs.RC_NUM}}."
         echo "repo URL for this RC: $GIT_REPO_URL"
