@@ -16,8 +16,8 @@ on:
         default: "1"
 env: # This should be a set of github secrets    
   USER_GCP_PROJECT: apache-beam-testing
-  USER_GCP_REGION: test
-  USER_GCP_ZONE: test
+  USER_GCP_REGION: us-central1
+  USER_GCP_ZONE: us-central1-a
 jobs:
   python_cross_validation:
     runs-on: [self-hosted,ubuntu-20.04]
@@ -40,7 +40,7 @@ jobs:
       with:
         python-version: '3.9'
         cache: 'pip' # caching pip dependencies
-    - name: Python Cross Validation
+    - name: Downloading Python Staging RC
       run: |
         echo ""
         echo "====================Starting Python Cross-language Validations==============="
@@ -59,7 +59,16 @@ jobs:
         `which pip` install --upgrade pip
         `which pip` install --upgrade setuptools
 
-        
-
+        KAFKA_CLUSTER_NAME=xlang-kafka-cluster-$RANDOM
+    - name: Setting Kafka Cluster Name
+      run: |
+        echo "KAFKA_CLUSTER_NAME=xlang-kafka-cluster-$RANDOM">> $GITHUB_ENV
+    - name: Creating Kafka Cluster
+      run: |
+        gcloud container clusters create --project=${USER_GCP_PROJECT} --region=${USER_GCP_REGION} --no-enable-ip-alias $KAFKA_CLUSTER_NAME
+        kubectl apply -R -f .test-infra/kubernetes/kafka-cluster
+        echo "* Please wait for 10 mins to let a Kafka cluster be launched on GKE."
+        echo "* Sleeping for 10 mins"
+        sleep 10m
     #From this point, steps 7 to last can be implemented as independent jobs
     # The ones that uses python_versions_to_validate should use matrix instead
