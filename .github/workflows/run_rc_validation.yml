@@ -69,7 +69,7 @@ jobs:
     #     kubectl apply -R -f .test-infra/kubernetes/kafka-cluster
     - name: Setting Python Environment
       run: |
-        echo "--------------------------Installing Python SDK-------------------------------
+        echo "--------------------------Installing Python SDK-------------------------------"
         pip install --upgrade pip setuptools wheel
         pip install apache-beam-${RELEASE_VER}.zip[gcp]
         
