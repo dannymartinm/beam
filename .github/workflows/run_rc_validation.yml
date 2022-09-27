@@ -69,6 +69,6 @@ jobs:
         kubectl apply -R -f .test-infra/kubernetes/kafka-cluster
         echo "* Please wait for 10 mins to let a Kafka cluster be launched on GKE."
         echo "* Sleeping for 10 mins"
-        sleep 10m
+        
     #From this point, steps 7 to last can be implemented as independent jobs
     # The ones that uses python_versions_to_validate should use matrix instead
