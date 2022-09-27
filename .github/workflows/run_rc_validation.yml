@@ -14,6 +14,8 @@ on:
         description: RC number
         required: true
         default: none
+env:
+  PYTHON_VERSIONS_TO_VALIDATE: ("3.8")      
 jobs:
   run_rc_validation:
     runs-on: [self-hosted,ubuntu-20.04]
