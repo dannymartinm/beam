@@ -35,7 +35,11 @@ jobs:
         echo "repo URL for this RC: $GIT_REPO_URL"
     - name: Install Kubectl 
       uses: azure/setup-kubectl@v3 
-
+    - name: Install Python
+    - uses: actions/setup-python@v4
+      with:
+        python-version: '3.9'
+        cache: 'pip' # caching pip dependencies
     - name: Python Cross Validation
       run: |
         echo ""
