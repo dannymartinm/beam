@@ -13,9 +13,11 @@ on:
       RC_NUM:
         description: RC number
         required: true
-        default: none
-env:
-  PYTHON_VERSIONS_TO_VALIDATE: ("3.8")      
+        default: "1"
+env: # This should be a set of github secrets    
+  USER_GCP_PROJECT: apache-beam-testing
+  USER_GCP_REGION: test
+  USER_GCP_ZONE: test
 jobs:
   run_rc_validation:
     runs-on: [self-hosted,ubuntu-20.04]
@@ -24,8 +26,6 @@ jobs:
       uses: actions/checkout@v3
     - name: Common tasks
       uses: ./.github/actions/common-rc
-    - name: Verifying source results
-      run: echo $dummyValue
     - name: Verify ENV values
       run: |
         echo ""
@@ -34,5 +34,6 @@ jobs:
         echo ""
         echo "running validations on release ${{github.event.inputs.RELEASE_VER}} RC${{github.event.inputs.RC_NUM}}."
         echo "repo URL for this RC: $GIT_REPO_URL"
-        echo "validate Python versions: "$(IFS=$' '; echo "${PYTHON_VERSIONS_TO_VALIDATE[*]}")
-        echo ""
+
+    #From this point, steps 7 to last can be implemented as independent jobs
+    # The ones that uses python_versions_to_validate should use matrix instead
