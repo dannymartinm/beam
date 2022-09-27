@@ -12,30 +12,7 @@ runs:
         echo "GIT_REPO_URL=https://github.com/apache/beam.git" >>  $GITHUB_ENV
         echo "PYTHON_RC_DOWNLOAD_URL=https://dist.apache.org/repos/dist/dev/beam" >>  $GITHUB_ENV
         
-    - name: install_kubectl
-      shell: bash
-      run: |
-        sudo apt-get update
-        sudo apt-get install -y ca-certificates curl
-        sudo curl -fsSLo /usr/share/keyrings/kubernetes-archive-keyring.gpg https://packages.cloud.google.com/apt/doc/apt-key.gpg
-        echo "deb [signed-by=/usr/share/keyrings/kubernetes-archive-keyring.gpg] https://apt.kubernetes.io/ kubernetes-xenial main" | sudo tee /etc/apt/sources.list.d/kubernetes.list
-        sudo apt-get update
-        sudo apt-get install -y kubectl
-        kubectl version
-    - id: setup-gh-cli-linux
-      shell: bash
-      run: |
-        curl -fsSL https://cli.github.com/packages/githubcli-archive-keyring.gpg | sudo dd of=/usr/share/keyrings/githubcli-archive-keyring.gpg \
-        && sudo chmod go+r /usr/share/keyrings/githubcli-archive-keyring.gpg \
-        && echo "deb [arch=$(dpkg --print-architecture) signed-by=/usr/share/keyrings/githubcli-archive-keyring.gpg] https://cli.github.com/packages stable main" | sudo tee /etc/apt/sources.list.d/github-cli.list > /dev/null \
-        && sudo apt update \
-        && sudo apt install gh -y
-        gh --version
-    - id: set_git_config
-      shell: bash
-      run: |
-        git config user.name $GITHUB_ACTOR
-        git config user.email actions@"$RUNNER_NAME".local
+
 
 
 
