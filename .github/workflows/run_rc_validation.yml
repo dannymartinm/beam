@@ -1,6 +1,19 @@
 name: Run RC Validation
 on:
   workflow_dispatch:
+    inputs:
+      RELEASE_VER:
+        description: Beam version of current release
+        required: true
+        default: vtest # remove default before merging
+      USER_GCS_BUCKET:
+        description: Bucket to upload results
+        required: false
+        default: none
+      RC_NUM:
+        description: RC number
+        required: true
+        default: none
 jobs:
   run_rc_validation:
     runs-on: [self-hosted,ubuntu-20.04]
