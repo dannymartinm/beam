@@ -72,12 +72,14 @@ jobs:
         echo "--------------------------Installing Python SDK-------------------------------"
         pip install --upgrade pip setuptools wheel
         pip install apache-beam-${RELEASE_VER}.zip[gcp]
+    - name: Waiting for Kafka cluster to be ready
+      run: kubectl wait --for=condition=Ready pod/kafka-0 --timeout=900s
     - name: Start xlang Kafka Taxi with Dataflow Runner 
       run: |
         echo "BOOTSTRAP_SERVERS=$(kubectl get svc outside-0 -o jsonpath='{.status.loadBalancer.ingress[0].ip}'):32400" >> $GITHUB_ENV
         echo "KAFKA_TAXI_DF_DATASET=${USER}_python_validations_$(date +%m%d)_$RANDOM" >> $GITHUB_ENV
         echo "KAFKA_EXPANSION_SERVICE_JAR=${REPO_URL}/org/apache/beam/beam-sdks-java-io-expansion-service/${RELEASE_VER}/beam-sdks-java-io-expansion-service-${RELEASE_VER}.jar"
-    - name: CHecking variables
+    - name: Checking variables
       run: >
         echo $BOOTSTRAP_SERVERS
         echo $KAFKA_TAXI_DF_DATASET
