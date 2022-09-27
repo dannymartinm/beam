@@ -6,13 +6,13 @@ runs:
     - name: set_common_vars
       shell: bash
       run: |
-        echo "RC_TAG=v${{github.event.inputs.RELEASE_VER}}-RC${{github.event.inputs.RC_NUM}}" >>  $GITHUB_ENV
+        echo "RC_TAG=v${{github.event.inputs.RELEASE_VER}}-RC${github.event.inputs.RC_NUM}" >>  $GITHUB_ENV
         echo "RELEASE_BRANCH=releasev${{github.event.inputs.RELEASE_VER}}" >>  $GITHUB_ENV
-        echo "WORKING_BRANCH=v${RELEASE_VER}-RC${{github.event.inputs.RC_NUM}}_validations" >>  $GITHUB_ENV
+        echo "WORKING_BRANCH=v$RELEASE_VER-RC${{github.event.inputs.RC_NUM}}_validations" >>  $GITHUB_ENV
         echo "GIT_REPO_URL=https://github.com/apache/beam.git" >>  $GITHUB_ENV
         echo "PYTHON_RC_DOWNLOAD_URL=https://dist.apache.org/repos/dist/dev/beam" >>  $GITHUB_ENV
         echo "HUB_VERSION=2.12.0" >>  $GITHUB_ENV
-        echo "HUB_ARTIFACTS_NAME=hub-linux-amd64-${HUB_VERSION}" >>  $GITHUB_ENV
+        echo "HUB_ARTIFACTS_NAME=hub-linux-amd64-$HUB_VERSION" >>  $GITHUB_ENV
     - name: install_kubectl
       shell: bash
       run: |
