@@ -5,7 +5,7 @@ on:
       RELEASE_VER:
         description: Beam version of current release
         required: true
-        default: vtest # remove default before merging
+        default: 2.41.0 # remove default before merging
       USER_GCS_BUCKET:
         description: Bucket to upload results
         required: false
@@ -19,7 +19,7 @@ env: # This should be a set of github secrets
   USER_GCP_REGION: test
   USER_GCP_ZONE: test
 jobs:
-  run_rc_validation:
+  python_cross_validation:
     runs-on: [self-hosted,ubuntu-20.04]
     steps:
     - name: Checkout code
@@ -33,6 +33,30 @@ jobs:
         echo ""
         echo "running validations on release ${{github.event.inputs.RELEASE_VER}} RC${{github.event.inputs.RC_NUM}}."
         echo "repo URL for this RC: $GIT_REPO_URL"
+    - name: Install Kubectl 
+      uses: azure/setup-kubectl@v3 
+      with:
+        version: 1.22
+    - name: Python Cross Validation
+      run: |
+        echo ""
+        echo "====================Starting Python Cross-language Validations==============="
+  
+
+        echo "---------------------Downloading Python Staging RC----------------------------"
+        wget ${PYTHON_RC_DOWNLOAD_URL}/${RELEASE_VER}/python/apache-beam-${RELEASE_VER}.zip
+        wget ${PYTHON_RC_DOWNLOAD_URL}/${RELEASE_VER}/python/apache-beam-${RELEASE_VER}.zip.sha512
+        if [[ ! -f apache-beam-${RELEASE_VER}.zip ]]; then
+          { echo "Fail to download Python Staging RC files." ;exit 1; }
+        fi
+
+        echo "--------------------------Verifying Hashes------------------------------------"
+        sha512sum -c apache-beam-${RELEASE_VER}.zip.sha512
+
+        `which pip` install --upgrade pip
+        `which pip` install --upgrade setuptools
+
+        
 
     #From this point, steps 7 to last can be implemented as independent jobs
     # The ones that uses python_versions_to_validate should use matrix instead
