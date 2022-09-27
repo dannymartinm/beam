@@ -31,6 +31,11 @@ runs:
         && sudo apt update \
         && sudo apt install gh -y
         gh --version
+    - id: set_git_config
+      shell: bash
+      run: |
+        git config user.name $GITHUB_ACTOR
+        git config user.email actions@"$RUNNER_NAME".local
 
 
 
