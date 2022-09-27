@@ -38,7 +38,7 @@ jobs:
     - name: Install Python
       uses: actions/setup-python@v4
       with:
-        python-version: '3.9'
+        python-version: '3.8'
         cache: 'pip' # caching pip dependencies
     - name: Downloading Python Staging RC
       run: |
@@ -63,12 +63,17 @@ jobs:
     - name: Setting Kafka Cluster Name
       run: |
         echo "KAFKA_CLUSTER_NAME=xlang-kafka-cluster-$RANDOM">> $GITHUB_ENV
-    - name: Creating Kafka Cluster
+    # - name: Creating Kafka Cluster
+    #   run: |
+    #     gcloud container clusters create --project=${USER_GCP_PROJECT} --region=${USER_GCP_REGION} --no-enable-ip-alias $KAFKA_CLUSTER_NAME
+    #     kubectl apply -R -f .test-infra/kubernetes/kafka-cluster
+    - name: Setting Python Environment
       run: |
-        gcloud container clusters create --project=${USER_GCP_PROJECT} --region=${USER_GCP_REGION} --no-enable-ip-alias $KAFKA_CLUSTER_NAME
-        kubectl apply -R -f .test-infra/kubernetes/kafka-cluster
-
-    - name: Delete Kafka Cluster
-      run: gcloud container clusters delete --project=${USER_GCP_PROJECT} --region=${USER_GCP_REGION} --async -q $KAFKA_CLUSTER_NAME
-    #From this point, steps 7 to last can be implemented as independent jobs
+        echo "--------------------------Installing Python SDK-------------------------------
+        pip install --upgrade pip setuptools wheel
+        pip install apache-beam-${RELEASE_VER}.zip[gcp]
+        
+    # - name: Delete Kafka Cluster
+    #   run: gcloud container clusters delete --project=${USER_GCP_PROJECT} --region=${USER_GCP_REGION} --async -q $KAFKA_CLUSTER_NAME
+    # #From this point, steps 7 to last can be implemented as independent jobs
     # The ones that uses python_versions_to_validate should use matrix instead
