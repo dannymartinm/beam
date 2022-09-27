@@ -35,6 +35,7 @@ jobs:
         echo "repo URL for this RC: $GIT_REPO_URL"
     - name: Install Kubectl 
       uses: azure/setup-kubectl@v3 
+
     - name: Python Cross Validation
       run: |
         echo ""
