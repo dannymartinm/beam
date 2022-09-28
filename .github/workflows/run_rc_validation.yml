@@ -18,6 +18,7 @@ env: # This should be a set of github secrets
   USER_GCP_PROJECT: apache-beam-testing
   USER_GCP_REGION: us-central1
   USER_GCP_ZONE: us-central1-a
+  REPO_URL: https://github.com/apache/beam.git
 jobs:
   python_cross_validation:
     runs-on: [self-hosted,ubuntu-20.04]
