@@ -88,8 +88,8 @@ jobs:
       run: kubectl wait --for=condition=Ready pod/kafka-0 --timeout=900s
     - name: Setting Taxi Variables
       run: |
-        echo "SQL_TAXI_TOPIC=${USER}_python_validations_$(date +%m%d)_$RANDOM" >> $GITHUB_ENV
-        echo "SQL_TAXI_SUBSCRIPTION=${USER}_python_validations_$(date +%m%d)_$RANDOM"  >> $GITHUB_ENV
+        echo "SQL_TAXI_TOPIC=${GITHUB_ACTOR}_python_validations_$(date +%m%d)_$RANDOM" >> $GITHUB_ENV
+        echo "SQL_TAXI_SUBSCRIPTION=${GITHUB_ACTOR}_python_validations_$(date +%m%d)_$RANDOM"  >> $GITHUB_ENV
         echo "SQL_EXPANSION_SERVICE_JAR=${REPO_URL}/org/apache/beam/beam-sdks-java-extensions-sql-expansion-service/${RELEASE_VER}/beam-sdks-java-extensions-sql-expansion-service-${RELEASE_VER}.jar" >> $GITHUB_ENV
     - name: Checking variables
       run: |
