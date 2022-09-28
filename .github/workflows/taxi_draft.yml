@@ -1,4 +1,4 @@
-name: Run RC Validation
+name: Taxi Draft Validation
 on:
   workflow_dispatch:
     inputs:
@@ -73,10 +73,10 @@ jobs:
     - name: Setting Kafka Cluster Name # TODO: change to random again once the tests are finished
       run: |
         echo "KAFKA_CLUSTER_NAME=xlang-kafka-cluster-12817">> $GITHUB_ENV 
-    - name: Creating Kafka Cluster
-      run: |
-        gcloud container clusters create --project=${USER_GCP_PROJECT} --region=${USER_GCP_REGION} --no-enable-ip-alias $KAFKA_CLUSTER_NAME
-        kubectl apply -R -f .test-infra/kubernetes/kafka-cluster
+#    - name: Creating Kafka Cluster
+#      run: |
+#        gcloud container clusters create --project=${USER_GCP_PROJECT} --region=${USER_GCP_REGION} --no-enable-ip-alias $KAFKA_CLUSTER_NAME
+#        kubectl apply -R -f .test-infra/kubernetes/kafka-cluster
     - name: Getting cluster credentials
       run: gcloud container clusters get-credentials ${KAFKA_CLUSTER_NAME} --region ${USER_GCP_REGION} --project ${USER_GCP_PROJECT}
     - name: Setting Python Environment
@@ -86,46 +86,11 @@ jobs:
         pip install apache-beam-${RELEASE_VER}.zip[gcp]
     - name: Waiting for Kafka cluster to be ready
       run: kubectl wait --for=condition=Ready pod/kafka-0 --timeout=900s
-    - name: Start xlang Kafka Taxi with Dataflow Runner 
+    - name: Setting Taxi Variables
       run: |
-        echo "BOOTSTRAP_SERVERS=$(kubectl get svc outside-0 -o jsonpath='{.status.loadBalancer.ingress[0].ip}'):32400" >> $GITHUB_ENV
-        echo "KAFKA_TAXI_DF_DATASET=${GITHUB_ACTOR}_python_validations_$(date +%m%d)_$RANDOM" >> $GITHUB_ENV
-        echo "KAFKA_EXPANSION_SERVICE_JAR=${REPO_URL}/org/apache/beam/beam-sdks-java-io-expansion-service/${RELEASE_VER}/beam-sdks-java-io-expansion-service-${RELEASE_VER}.jar" >> $GITHUB_ENV
+        echo "SQL_TAXI_TOPIC=${USER}_python_validations_$(date +%m%d)_$RANDOM" >> $GITHUB_ENV
+        echo "SQL_TAXI_SUBSCRIPTION=${USER}_python_validations_$(date +%m%d)_$RANDOM"  >> $GITHUB_ENV
+        echo "SQL_EXPANSION_SERVICE_JAR=${REPO_URL}/org/apache/beam/beam-sdks-java-extensions-sql-expansion-service/${RELEASE_VER}/beam-sdks-java-extensions-sql-expansion-service-${RELEASE_VER}.jar" >> $GITHUB_ENV
     - name: Checking variables
       run: |
-        echo $BOOTSTRAP_SERVERS
-        echo $KAFKA_TAXI_DF_DATASET
-        echo $KAFKA_EXPANSION_SERVICE_JAR
-    - name: Creating BigQuery Dataset
-      run: bq mk --project_id=${USER_GCP_PROJECT} ${KAFKA_TAXI_DF_DATASET}
-    - name: Running Xlang Kafka Taxi with Dataflow Runner
-      run: |
-        echo '*****************************************************';
-        echo '* Running Python XLang Kafka Taxi with DataflowRunner';
-        echo '*****************************************************';
-        echo "***************************************************************";
-        echo "* Please wait for at least 20 mins to let Dataflow job be launched and results get populated.";
-        timeout --preserve-status 20m python -m apache_beam.examples.kafkataxi.kafka_taxi \
-        --project=${USER_GCP_PROJECT} \
-        --region=${USER_GCP_REGION} \
-        --topic beam-runnerv2 \
-        --bootstrap_servers ${BOOTSTRAP_SERVERS} \
-        --bq_dataset ${KAFKA_TAXI_DF_DATASET} \
-        --runner DataflowRunner \
-        --num_workers 5 \
-        --temp_location=${USER_GCS_BUCKET}/temp/ \
-        --with_metadata \
-        --beam_services="{\"sdks:java:io:expansion-service:shadowJar\": \"${KAFKA_EXPANSION_SERVICE_JAR}\"}" \
-        --sdk_location apache-beam-${RELEASE_VER}.zip || true
-    - name: Checking executions results
-      run: |
-        echo $(bq --format=prettyjson head -n 10 ${KAFKA_TAXI_DF_DATASET}.xlang_kafka_taxi)          
-    - name: Remove BigQuery Dataset
-      if: always()
-      run: |
-        bq rm -f ${KAFKA_TAXI_DF_DATASET}.xlang_kafka_taxi
-        bq rm -f ${KAFKA_TAXI_DF_DATASET}
-    #- name: Delete Kafka Cluster
-    #  run: gcloud container clusters delete --project=${USER_GCP_PROJECT} --region=${USER_GCP_REGION} --async -q $KAFKA_CLUSTER_NAME
-    # #From this point, steps 7 to last can be implemented as independent jobs
-  # The ones that uses python_versions_to_validate should use matrix instead
+        echo "Variables"
