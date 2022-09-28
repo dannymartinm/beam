@@ -5,7 +5,7 @@ on:
       RELEASE_VER:
         description: Beam version of current release
         required: true
-        default: 2.41.0 # remove default before merging
+        default: 2.42.0 # remove default before merging
       USER_GCS_BUCKET:
         description: Bucket to upload results
         required: false
@@ -83,7 +83,7 @@ jobs:
       run: |
         echo "BOOTSTRAP_SERVERS=$(kubectl get svc outside-0 -o jsonpath='{.status.loadBalancer.ingress[0].ip}'):32400" >> $GITHUB_ENV
         echo "KAFKA_TAXI_DF_DATASET=${GITHUB_ACTOR}_python_validations_$(date +%m%d)_$RANDOM" >> $GITHUB_ENV
-        echo "KAFKA_EXPANSION_SERVICE_JAR=${REPO_URL}/org/apache/beam/beam-sdks-java-io-expansion-service/2.42.0/beam-sdks-java-io-expansion-service-2.42.0.jar" >> $GITHUB_ENV
+        echo "KAFKA_EXPANSION_SERVICE_JAR=${REPO_URL}/org/apache/beam/beam-sdks-java-io-expansion-service/${RELEASE_VER}/beam-sdks-java-io-expansion-service-${RELEASE_VER}.jar" >> $GITHUB_ENV
     - name: Checking variables
       run: |
         echo $BOOTSTRAP_SERVERS
