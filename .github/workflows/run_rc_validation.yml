@@ -105,7 +105,7 @@ jobs:
         echo '*****************************************************';
         echo "***************************************************************";
         echo "* Please wait for at least 20 mins to let Dataflow job be launched and results get populated.";
-        timeout 20m python -m apache_beam.examples.kafkataxi.kafka_taxi \
+        timeout 5m python -m apache_beam.examples.kafkataxi.kafka_taxi \
         --project=${USER_GCP_PROJECT} \
         --region=${USER_GCP_REGION} \
         --topic beam-runnerv2 \
