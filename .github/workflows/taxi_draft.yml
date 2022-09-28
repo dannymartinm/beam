@@ -98,4 +98,5 @@ jobs:
     - name: Removing Pub/Sub Topics
       if: always()
       run: |
-        echo "Removing after testing"
+        gcloud pubsub topics delete --project=${USER_GCP_PROJECT} ${SQL_TAXI_TOPIC}
+        gcloud pubsub subscriptions delete --project=${USER_GCP_PROJECT} ${SQL_TAXI_SUBSCRIPTION}
