@@ -116,7 +116,7 @@ jobs:
         --temp_location=${USER_GCS_BUCKET}/temp/ \
         --with_metadata \
         --beam_services="{\"sdks:java:io:expansion-service:shadowJar\": \"${KAFKA_EXPANSION_SERVICE_JAR}\"}" \
-        --sdk_location apache-beam-${RELEASE_VER}.zip; || true
+        --sdk_location apache-beam-${RELEASE_VER}.zip || true
     - name: Checking executions results
       run: |
         echo $(bq head -n 10 ${KAFKA_TAXI_DF_DATASET}.xlang_kafka_taxi)          
