@@ -106,7 +106,7 @@ jobs:
         --num_workers 5 \
         --temp_location=${USER_GCS_BUCKET}/temp/ \
         --with_metadata \
-        --beam_services="{'sdks:java:io:expansion-service:shadowJar': '${KAFKA_EXPANSION_SERVICE_JAR}'}" \
+        --beam_services="{"sdks:java:io:expansion-service:shadowJar": "${KAFKA_EXPANSION_SERVICE_JAR}"}" \
         --sdk_location apache-beam-${RELEASE_VER}.zip; \
     - name: Sleep Warning
       run: |
