@@ -62,7 +62,7 @@ jobs:
 
         KAFKA_CLUSTER_NAME=xlang-kafka-cluster-$RANDOM
     - name: Installing gcloud-auth-plugin
-      run: gcloud components install gke-gcloud-auth-plugin
+      run: sudo apt-get install google-cloud-sdk-gke-gcloud-auth-plugin
     - name: Setting Kafka Cluster Name # TODO: change to random again once the tests are finished
       run: |
         echo "KAFKA_CLUSTER_NAME=xlang-kafka-cluster-12817">> $GITHUB_ENV 
