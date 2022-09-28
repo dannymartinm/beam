@@ -107,7 +107,7 @@ jobs:
         --num_workers 5 \
         --temp_location=${USER_GCS_BUCKET}/temp/ \
         --output_topic projects/${USER_GCP_PROJECT}/topics/${SQL_TAXI_TOPIC} \
-        --beam_services=\"{\":sdks:java:extensions:sql:expansion-service:shadowJar\": \"${SQL_EXPANSION_SERVICE_JAR}\"}\" \
+        --beam_services="{\":sdks:java:extensions:sql:expansion-service:shadowJar\": \"${SQL_EXPANSION_SERVICE_JAR}\"}" \
         --sdk_location apache-beam-${RELEASE_VER}.zip || true
     - name: Removing Pub/Sub Topics
       if: always()
