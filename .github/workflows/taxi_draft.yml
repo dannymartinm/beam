@@ -91,6 +91,11 @@ jobs:
         echo "SQL_TAXI_TOPIC=${GITHUB_ACTOR}_python_validations_$(date +%m%d)_$RANDOM" >> $GITHUB_ENV
         echo "SQL_TAXI_SUBSCRIPTION=${GITHUB_ACTOR}_python_validations_$(date +%m%d)_$RANDOM"  >> $GITHUB_ENV
         echo "SQL_EXPANSION_SERVICE_JAR=${REPO_URL}/org/apache/beam/beam-sdks-java-extensions-sql-expansion-service/${RELEASE_VER}/beam-sdks-java-extensions-sql-expansion-service-${RELEASE_VER}.jar" >> $GITHUB_ENV
-    - name: Checking variables
+    - name: Creating Pub/Sub Topics
       run: |
-        echo "Variables"
+        gcloud pubsub topics create --project=${USER_GCP_PROJECT} ${SQL_TAXI_TOPIC}
+        gcloud pubsub subscriptions create --project=${USER_GCP_PROJECT} --topic=${SQL_TAXI_TOPIC} ${SQL_TAXI_SUBSCRIPTION}
+    - name: Removing Pub/Sub Topics
+      if: always
+      run: |
+        echo "Removing after testing"
