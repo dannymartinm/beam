@@ -89,31 +89,31 @@ jobs:
         echo $BOOTSTRAP_SERVERS
         echo $KAFKA_TAXI_DF_DATASET
         echo $KAFKA_EXPANSION_SERVICE_JAR
-    - name: BQ Make
+    - name: Creating BigQuery Dataset
       run: bq mk --project_id=${USER_GCP_PROJECT} ${KAFKA_TAXI_DF_DATASET}
-    - name: Running Xlang Kafka Taxi with Dataflow Runner
-      run: |
-        echo '*****************************************************';
-        echo '* Running Python XLang Kafka Taxi with DataflowRunner';
-        echo '*****************************************************';
-        python -m apache_beam.examples.kafkataxi.kafka_taxi \
-        --project=${USER_GCP_PROJECT} \
-        --region=${USER_GCP_REGION} \
-        --topic beam-runnerv2 \
-        --bootstrap_servers ${BOOTSTRAP_SERVERS} \
-        --bq_dataset ${KAFKA_TAXI_DF_DATASET} \
-        --runner DataflowRunner \
-        --num_workers 5 \
-        --temp_location=${USER_GCS_BUCKET}/temp/ \
-        --with_metadata \
-        --beam_services=\"{\\\"sdks:java:io:expansion-service:shadowJar\\\": \\\"${KAFKA_EXPANSION_SERVICE_JAR}\\\"}\" \
-        --sdk_location apache-beam-${RELEASE_VER}.zip; \
-    - name: Sleep Warning
-      run: |
-        echo "***************************************************************"
-        echo "* Please wait for at least 20 mins to let Dataflow job be launched and results get populated."
-        echo "* Sleeping for 20 mins"
-        sleep 20m  
+    # - name: Running Xlang Kafka Taxi with Dataflow Runner
+    #   run: |
+    #     echo '*****************************************************';
+    #     echo '* Running Python XLang Kafka Taxi with DataflowRunner';
+    #     echo '*****************************************************';
+    #     python -m apache_beam.examples.kafkataxi.kafka_taxi \
+    #     --project=${USER_GCP_PROJECT} \
+    #     --region=${USER_GCP_REGION} \
+    #     --topic beam-runnerv2 \
+    #     --bootstrap_servers ${BOOTSTRAP_SERVERS} \
+    #     --bq_dataset ${KAFKA_TAXI_DF_DATASET} \
+    #     --runner DataflowRunner \
+    #     --num_workers 5 \
+    #     --temp_location=${USER_GCS_BUCKET}/temp/ \
+    #     --with_metadata \
+    #     --beam_services=\"{\\\"sdks:java:io:expansion-service:shadowJar\\\": \\\"${KAFKA_EXPANSION_SERVICE_JAR}\\\"}\" \
+    #     --sdk_location apache-beam-${RELEASE_VER}.zip; \
+    # - name: Sleep Warning
+    #   run: |
+    #     echo "***************************************************************"
+    #     echo "* Please wait for at least 20 mins to let Dataflow job be launched and results get populated."
+    #     echo "* Sleeping for 20 mins"
+    #     sleep 20m  
     - name: Remove BigQuery Dataset
       run: |
         bq rm -f ${KAFKA_TAXI_DF_DATASET}
