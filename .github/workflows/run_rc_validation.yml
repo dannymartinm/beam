@@ -18,7 +18,7 @@ env: # This should be a set of github secrets
   USER_GCP_PROJECT: apache-beam-testing
   USER_GCP_REGION: us-central1
   USER_GCP_ZONE: us-central1-a
-  REPO_URL: https://repository.apache.org/content/repositories/orgapachebeam-1283/
+  REPO_URL: https://repository.apache.org/content/repositories/orgapachebeam-1284
 jobs:
   python_cross_validation:
     runs-on: [self-hosted,ubuntu-20.04]
@@ -89,6 +89,11 @@ jobs:
         echo $BOOTSTRAP_SERVERS
         echo $KAFKA_TAXI_DF_DATASET
         echo $KAFKA_EXPANSION_SERVICE_JAR
+    - name: BQ Make
+      run: bq mk --project_id=${USER_GCP_PROJECT} ${KAFKA_TAXI_DF_DATASET}
+
+      
+
     #- name: Delete Kafka Cluster
     #  run: gcloud container clusters delete --project=${USER_GCP_PROJECT} --region=${USER_GCP_REGION} --async -q $KAFKA_CLUSTER_NAME
     # #From this point, steps 7 to last can be implemented as independent jobs
