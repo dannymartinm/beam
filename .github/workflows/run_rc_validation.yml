@@ -77,14 +77,14 @@ jobs:
     - name: Start xlang Kafka Taxi with Dataflow Runner 
       run: |
         echo "BOOTSTRAP_SERVERS=$(kubectl get svc outside-0 -o jsonpath='{.status.loadBalancer.ingress[0].ip}'):32400" >> $GITHUB_ENV
-        echo "KAFKA_TAXI_DF_DATASET=${USER}_python_validations_$(date +%m%d)_$RANDOM" >> $GITHUB_ENV
-        echo "KAFKA_EXPANSION_SERVICE_JAR=${REPO_URL}/org/apache/beam/beam-sdks-java-io-expansion-service/${RELEASE_VER}/beam-sdks-java-io-expansion-service-${RELEASE_VER}.jar"
+        echo "KAFKA_TAXI_DF_DATASET=${GITHUB_ACTOR}_python_validations_$(date +%m%d)_$RANDOM" >> $GITHUB_ENV
+        echo "KAFKA_EXPANSION_SERVICE_JAR=${REPO_URL}/org/apache/beam/beam-sdks-java-io-expansion-service/${RELEASE_VER}/beam-sdks-java-io-expansion-service-${RELEASE_VER}.jar" >> $GITHUB_ENV
     - name: Checking variables
       run: >
         echo $BOOTSTRAP_SERVERS
         echo $KAFKA_TAXI_DF_DATASET
         echo $KAFKA_EXPANSION_SERVICE_JAR
-    - name: Delete Kafka Cluster
-      run: gcloud container clusters delete --project=${USER_GCP_PROJECT} --region=${USER_GCP_REGION} --async -q $KAFKA_CLUSTER_NAME
+    #- name: Delete Kafka Cluster
+    #  run: gcloud container clusters delete --project=${USER_GCP_PROJECT} --region=${USER_GCP_REGION} --async -q $KAFKA_CLUSTER_NAME
     # #From this point, steps 7 to last can be implemented as independent jobs
     # The ones that uses python_versions_to_validate should use matrix instead
