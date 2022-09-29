@@ -134,15 +134,12 @@ jobs:
         echo "SHARED_PUBSUB_TOPIC=leader_board-${GITHUB_ACTOR}-python-topic-$(date +%m%d)_$RANDOM" >> $GITHUB_ENV
     - name: Creating Pub Sub Topics
       run: gcloud pubsub topics create --project=${USER_GCP_PROJECT} ${SHARED_PUBSUB_TOPIC}
-    
-    
+
     - name: Running Pub/Sub Java injector
       run: |
-        echo '******************************************************';
-        echo '* Running Pubsub Java Injector';
-        echo '******************************************************';
-        mvn compile exec:java -Dexec.mainClass=org.apache.beam.examples.complete.game.injector.Injector -Dexec.args="${USER_GCP_PROJECT} ${SHARED_PUBSUB_TOPIC} none";
-
+        ls
+        cd word-count-beam
+        mvn compile exec:java -Dexec.mainClass=org.apache.beam.examples.complete.game.injector.Injector -Dexec.args='${USER_GCP_PROJECT} ${SHARED_PUBSUB_TOPIC} none';
     - name: Removing Pub Sub Topic
       if: always()
       run: | 
