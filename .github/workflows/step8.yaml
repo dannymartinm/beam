@@ -135,8 +135,7 @@ jobs:
     - name: Creating Pub Sub Topics
       run: gcloud pubsub topics create --project=${USER_GCP_PROJECT} ${SHARED_PUBSUB_TOPIC}
     
-    - name: Moving to wordcount Dir
-      run: cd word-count-beam
+    
     - name: Running Pub/Sub Java injector
       run: |
         echo '******************************************************';
