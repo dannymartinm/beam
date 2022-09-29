@@ -132,6 +132,8 @@ jobs:
     - name: Generate Pub Sub name
       run: |
         echo "SHARED_PUBSUB_TOPIC=leader_board-${GITHUB_ACTOR}-python-topic-$(date +%m%d)_$RANDOM" >> $GITHUB_ENV
+    - name: Creating Pub Sub Topics
+      run: gcloud pubsub topics create --project=${USER_GCP_PROJECT} ${SHARED_PUBSUB_TOPIC}
     - name: Removing Pub Sub Topic
       if: always()
       run: | 
