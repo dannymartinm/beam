@@ -109,8 +109,8 @@ jobs:
         echo "      </activation>" >> settings.xml
         echo "      <repositories>" >> settings.xml
         echo "        <repository>" >> settings.xml
-        echo "          <id>Release ${RELEASE_VER} RC${RC_NUM}</id>" >> settings.xml
-        echo "          <name>Release ${RELEASE_VER} RC${RC_NUM}</name>" >> settings.xml
+        echo "          <id>Release ${RELEASE_VER} RC${github.event.inputs.RC_NUM}</id>" >> settings.xml
+        echo "          <name>Release ${RELEASE_VER} RC${github.event.inputs.RC_NUM}</name>" >> settings.xml
         echo "          <url>${REPO_URL}</url>" >> settings.xml
         echo "        </repository>" >> settings.xml
         echo "      </repositories>" >> settings.xml
