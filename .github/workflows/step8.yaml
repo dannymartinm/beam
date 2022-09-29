@@ -129,3 +129,10 @@ jobs:
         -Dpackage=org.apache.beam.examples \
         -DinteractiveMode=false \
         -DarchetypeCatalog=internal
+    - name: Generate Pub Sub name
+      run: |
+        echo "SHARED_PUBSUB_TOPIC=leader_board-${USER}-python-topic-$(date +%m%d)_$RANDOM" >> $GITHUB_ENV
+    - name: Removing Pub Sub Topic
+      if: always()
+      run: | 
+        gcloud pubsub topics delete --project=${USER_GCP_PROJECT} ${SHARED_PUBSUB_TOPIC}
