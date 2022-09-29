@@ -141,8 +141,7 @@ jobs:
         echo '******************************************************';
         echo '* Running Pubsub Java Injector';
         echo '******************************************************';
-        mvn compile exec:java -Dexec.mainClass=org.apache.beam.examples.complete.game.injector.Injector \
-        -Dexec.args='${USER_GCP_PROJECT} ${SHARED_PUBSUB_TOPIC} none';
+        mvn compile exec:java -Dexec.mainClass=org.apache.beam.examples.complete.game.injector.Injector -Dexec.args="${USER_GCP_PROJECT} ${SHARED_PUBSUB_TOPIC} none";
 
     - name: Removing Pub Sub Topic
       if: always()
