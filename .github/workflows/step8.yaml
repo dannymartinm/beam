@@ -91,3 +91,30 @@ jobs:
         echo "---------------------Downloading Python Staging RC----------------------------"
         wget ${PYTHON_RC_DOWNLOAD_URL}/${RELEASE_VER}/python/apache-beam-${RELEASE_VER}.zip
         wget ${PYTHON_RC_DOWNLOAD_URL}/${RELEASE_VER}/python/apache-beam-${RELEASE_VER}.zip.sha512
+    - name: Verifying Hashes
+      run: |
+        echo "--------------------------Verifying Hashes------------------------------------"
+        sha512sum -c apache-beam-${RELEASE_VER}.zip.sha512
+    - name: Updating Settings
+      run: |
+        mkdir .m2
+        cd .m2
+        touch settings.xml
+        echo "<settings>" >> settings.xml
+        echo "  <profiles>" >> settings.xml
+        echo "    <profile>" >> settings.xml
+        echo "      <id>release-repo</id>" >> settings.xml
+        echo "      <activation>" >> settings.xml
+        echo "        <activeByDefault>true</activeByDefault>" >> settings.xml
+        echo "      </activation>" >> settings.xml
+        echo "      <repositories>" >> settings.xml
+        echo "        <repository>" >> settings.xml
+        echo "          <id>Release ${RELEASE_VER} RC${RC_NUM}</id>" >> settings.xml
+        echo "          <name>Release ${RELEASE_VER} RC${RC_NUM}</name>" >> settings.xml
+        echo "          <url>${REPO_URL}</url>" >> settings.xml
+        echo "        </repository>" >> settings.xml
+        echo "      </repositories>" >> settings.xml
+        echo "    </profile>" >> settings.xml
+        echo "  </profiles>" >> settings.xml
+        echo "</settings>" >> settings.xml
+        cat settings.xml
