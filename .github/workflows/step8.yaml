@@ -138,3 +138,12 @@ jobs:
       if: always()
       run: | 
         gcloud pubsub topics delete --project=${USER_GCP_PROJECT} ${SHARED_PUBSUB_TOPIC}
+    - name: Moving to wordcount Dir
+      run: cd word-count-beam
+    - name: Running Pub/Sub Java injector
+      run: |
+        echo '******************************************************';
+        echo '* Running Pubsub Java Injector';
+        echo '******************************************************';
+        mvn compile exec:java -Dexec.mainClass=org.apache.beam.examples.complete.game.injector.Injector \
+        -Dexec.args='${USER_GCP_PROJECT} ${SHARED_PUBSUB_TOPIC} none';
