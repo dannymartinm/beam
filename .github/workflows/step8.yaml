@@ -131,7 +131,7 @@ jobs:
         -DarchetypeCatalog=internal
     - name: Generate Pub Sub name
       run: |
-        echo "SHARED_PUBSUB_TOPIC=leader_board-${USER}-python-topic-$(date +%m%d)_$RANDOM" >> $GITHUB_ENV
+        echo "SHARED_PUBSUB_TOPIC=leader_board-${GITHUB_ACTOR}-python-topic-$(date +%m%d)_$RANDOM" >> $GITHUB_ENV
     - name: Removing Pub Sub Topic
       if: always()
       run: | 
