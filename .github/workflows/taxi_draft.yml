@@ -117,3 +117,4 @@ jobs:
       run: |
         gcloud pubsub topics delete --project=${USER_GCP_PROJECT} ${SQL_TAXI_TOPIC}
         gcloud pubsub subscriptions delete --project=${USER_GCP_PROJECT} ${SQL_TAXI_SUBSCRIPTION}
+  

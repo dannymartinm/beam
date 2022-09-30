@@ -147,10 +147,44 @@ jobs:
   #     if: always()
   #     run: | 
   #       gcloud pubsub topics delete --project=${USER_GCP_PROJECT} ${SHARED_PUBSUB_TOPIC}
-  direct_runner_leaderboard:
-    runs-on: [self-hosted, ubuntu-20.04]
+  # direct_runner_leaderboard:
+  #   runs-on: [self-hosted, ubuntu-20.04]
+  #   strategy:
+  #     matrix: 
+  #       py_version: [3.8]
+  #   needs: generate_shared_pubsub
+  #   steps:
+  #     - name: Checkout code
+  #       uses: actions/checkout@v3
+  #     - name: Install Python
+  #       uses: actions/setup-python@v4
+  #       with:
+  #         python-version: ${{matrix.py_version}}
+  #         cache: 'pip' # caching pip dependencies
+  #     - name: Set python env
+  #       uses: ./.github/actions/common-rc-validation
+  #     - name: Exporting leaderboard Dataset
+  #       run: echo "LEADERBOARD_DIRECT_DATASET=${GITHUB_ACTOR}_python_validations_$(date +%m%d)_$RANDOM" >> $GITHUB_ENV
+  #     - name: Creating Dataset
+  #       run: bq mk --project_id=${USER_GCP_PROJECT} ${LEADERBOARD_DIRECT_DATASET}
+  #     - name: Starting Leaderboard with DirectRunner
+  #       run: |
+  #         echo '*****************************************************';
+  #         echo '* Running Python Leaderboard with DirectRunner';
+  #         echo '*****************************************************';
+  #         timeout --preserve-status 1m python -m apache_beam.examples.complete.game.leader_board \
+  #         --project=${USER_GCP_PROJECT} \
+  #         --topic projects/${USER_GCP_PROJECT}/topics/${SHARED_PUBSUB_TOPIC} \
+  #         --dataset ${LEADERBOARD_DIRECT_DATASET} || true
+  #     - name: Removing Pub Sub Topic
+  #       if: always()
+  #       run: | 
+  #         bq rm -f $LEADERBOARD_DIRECT_DATASET
+  #         gcloud pubsub topics delete --project=${USER_GCP_PROJECT} ${SHARED_PUBSUB_TOPIC} 
+  dataflowrunner_leaderboard:
+    runs-on: [self-hosted,ubuntu-20.04]
     strategy:
-      matrix: 
+      matrix:
         py_version: [3.8]
     needs: generate_shared_pubsub
     steps:
@@ -163,21 +197,6 @@ jobs:
           cache: 'pip' # caching pip dependencies
       - name: Set python env
         uses: ./.github/actions/common-rc-validation
-      - name: Exporting leaderboard Dataset
-        run: echo "LEADERBOARD_DIRECT_DATASET=${GITHUB_ACTOR}_python_validations_$(date +%m%d)_$RANDOM" >> $GITHUB_ENV
-      - name: Creating Dataset
-        run: bq mk --project_id=${USER_GCP_PROJECT} ${LEADERBOARD_DIRECT_DATASET}
-      - name: Starting Leaderboard with DirectRunner
-        run: |
-          echo '*****************************************************';
-          echo '* Running Python Leaderboard with DirectRunner';
-          echo '*****************************************************';
-          timeout --preserve-status 1m python -m apache_beam.examples.complete.game.leader_board \
-          --project=${USER_GCP_PROJECT} \
-          --topic projects/${USER_GCP_PROJECT}/topics/${SHARED_PUBSUB_TOPIC} \
-          --dataset ${LEADERBOARD_DIRECT_DATASET} || true
-      - name: Removing Pub Sub Topic
-        if: always()
-        run: | 
-          bq rm -f $LEADERBOARD_DIRECT_DATASET
-          gcloud pubsub topics delete --project=${USER_GCP_PROJECT} ${SHARED_PUBSUB_TOPIC} 
+      
+    
+    
