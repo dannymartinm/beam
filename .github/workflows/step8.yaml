@@ -22,7 +22,7 @@ env: # This should be a set of github secrets
 jobs:
   generate_shared_pubsub:
     outputs:
-      SHARED_PUBSUB_TOPIC: ${{steps.generate_pub_sub_name.outputs.name}}
+      SHARED_PUBSUB_TOPI: ${{steps.generate_pub_sub_name.outputs.SHARED_PUBSUB_TOPIC}}
     runs-on: [self-hosted,ubuntu-20.04]
     steps:
     - id: generate_pub_sub_name
