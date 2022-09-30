@@ -17,9 +17,11 @@ on:
 env: # This should be a set of github secrets
   RELEASE_VER: ${{github.event.inputs.RELEASE_VER}}    
   USER_GCP_PROJECT: apache-beam-testing
+  PYTHON_RC_DOWNLOAD_URL: https://dist.apache.org/repos/dist/dev/beam
   USER_GCP_REGION: us-central1
   USER_GCP_ZONE: us-central1-a
   REPO_URL: https://repository.apache.org/content/repositories/orgapachebeam-1284
+  SHARED_PUBSUB_TOPIC: leader_board-${GITHUB_ACTOR}-python-topic-TEST
 jobs:
   generate_shared_pubsub:
     outputs:
