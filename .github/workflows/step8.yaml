@@ -22,14 +22,14 @@ env: # This should be a set of github secrets
 jobs:
   generate_shared_pubsub:
     outputs:
-      SHARED_PUBSUB_TOPIC: ${{steps.generate_pub_sub_name.outputs.SHARED_PUBSUB_TOPIC}}
+      SHARED_PUBSUB_TOPIC: ${{steps.generate_pub_sub_name.outputs.pubsub}}
     runs-on: [self-hosted,ubuntu-20.04]
     steps:
     - id: generate_pub_sub_name
       run: |
         echo "SHARED_PUBSUB_TOPIC=leader_board-${GITHUB_ACTOR}-python-topic-$(date +%m%d)_$RANDOM" >> $GITHUB_ENV
     - name: Sending PubSub name to env
-      run: echo "::set-output name=SHARED_PUBSUB_TOPIC::$SHARED_PUBSUB_TOPIC"
+      run: echo "::set-output name=pubsub::$SHARED_PUBSUB_TOPIC"
     - name: Creating Pub Sub Topics
       run: gcloud pubsub topics create --project=${USER_GCP_PROJECT} ${SHARED_PUBSUB_TOPIC}
 
