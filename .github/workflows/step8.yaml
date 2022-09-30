@@ -206,7 +206,7 @@ jobs:
           echo '*****************************************************';
           echo '* Running Python Leaderboard with DataflowRunner';
           echo '*****************************************************';
-          timeout 1m --preserve-status python -m apache_beam.examples.complete.game.leader_board \
+          timeout --preserve-status 1m python -m apache_beam.examples.complete.game.leader_board \
           --project=${USER_GCP_PROJECT} \
           --region=${USER_GCP_REGION} \
           --topic projects/${USER_GCP_PROJECT}/topics/${SHARED_PUBSUB_TOPIC} \
