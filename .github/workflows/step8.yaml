@@ -172,10 +172,10 @@ jobs:
           echo '*****************************************************';
           echo '* Running Python Leaderboard with DirectRunner';
           echo '*****************************************************';
-          python -m apache_beam.examples.complete.game.leader_board \
+          timeout 1m --preserve-status 20m python -m apache_beam.examples.complete.game.leader_board \
           --project=${USER_GCP_PROJECT} \
           --topic projects/${USER_GCP_PROJECT}/topics/${SHARED_PUBSUB_TOPIC} \
-          --dataset ${LEADERBOARD_DIRECT_DATASET};
+          --dataset ${LEADERBOARD_DIRECT_DATASET} || true
       - name: Removing Pub Sub Topic
         if: always()
         run: | 
