@@ -28,14 +28,14 @@ jobs:
 
   generate_shared_pubsub:
     outputs:
-      name: ${{ steps.generate_pub_sub_name.outputs.pubsub }}
+      name: ${{ steps.generate_pubsub_name.outputs.pubsub }}
     runs-on: [self-hosted,ubuntu-20.04]
     steps:
-    - id: generate_pub_sub_name
+    - name: Sending PubSub name to env
     #TODO: Change to random once everything is working
       run: |
         echo "SHARED_PUBSUB_TOPIC=leader_board-elink21-python-topic-TEST" >> $GITHUB_ENV 
-    - name: Sending PubSub name to env
+    - id: generate_pubsub_name 
       run: |
         echo "::set-output name=pubsub::leader_board-elink21-python-topic-TEST"
     - name: Creating Pub Sub Topics
