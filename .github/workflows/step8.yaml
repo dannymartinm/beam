@@ -20,8 +20,22 @@ env: # This should be a set of github secrets
   USER_GCP_ZONE: us-central1-a
   REPO_URL: https://repository.apache.org/content/repositories/orgapachebeam-1284
 jobs:
+  generate_shared_pubsub:
+    outputs:
+      SHARED_PUBSUB_TOPIC: ${{steps.generate_pub_sub_name.outputs.name}}
+    runs-on: [self-hosted,ubuntu-20.04]
+    steps:
+    - id: generate_pub_sub_name
+      run: |
+        echo "SHARED_PUBSUB_TOPIC=leader_board-${GITHUB_ACTOR}-python-topic-$(date +%m%d)_$RANDOM" >> $GITHUB_ENV
+        echo "::set-output name=SHARED_PUBSUB_TOPIC::$SHARED_PUBSUB_TOPIC"
+    - name: Creating Pub Sub Topics
+      run: gcloud pubsub topics create --project=${USER_GCP_PROJECT} ${SHARED_PUBSUB_TOPIC}
+
+
   python_cross_validation:
     runs-on: [self-hosted,ubuntu-20.04]
+    needs: generate_shared_pubsub
     steps:
     - name: Checkout code
       uses: actions/checkout@v3
@@ -34,8 +48,7 @@ jobs:
         echo ""
         echo "running validations on release ${{github.event.inputs.RELEASE_VER}} RC${{github.event.inputs.RC_NUM}}."
         echo "repo URL for this RC: $GIT_REPO_URL"
-    - name: Install Kubectl 
-      uses: azure/setup-kubectl@v3
+    
 
     - name: Setup Maven Action
       uses: s4u/setup-maven-action@v1.2.1
@@ -66,25 +79,12 @@ jobs:
         `which pip` install --upgrade pip
         `which pip` install --upgrade setuptools
 
-        KAFKA_CLUSTER_NAME=xlang-kafka-cluster-$RANDOM
-    - name: Installing gcloud-auth-plugin
-      run: sudo apt-get install google-cloud-sdk-gke-gcloud-auth-plugin
-    - name: Setting Kafka Cluster Name # TODO: change to random again once the tests are finished
-      run: |
-        echo "KAFKA_CLUSTER_NAME=xlang-kafka-cluster-12817">> $GITHUB_ENV 
-#    - name: Creating Kafka Cluster
-#      run: |
-#        gcloud container clusters create --project=${USER_GCP_PROJECT} --region=${USER_GCP_REGION} --no-enable-ip-alias $KAFKA_CLUSTER_NAME
-#        kubectl apply -R -f .test-infra/kubernetes/kafka-cluster
-#    - name: Getting cluster credentials
-#      run: gcloud container clusters get-credentials ${KAFKA_CLUSTER_NAME} --region ${USER_GCP_REGION} --project ${USER_GCP_PROJECT}
     - name: Setting Python Environment
       run: |
         echo "--------------------------Installing Python SDK-------------------------------"
         pip install --upgrade pip setuptools wheel
         pip install apache-beam-${RELEASE_VER}.zip[gcp]
-#    - name: Waiting for Kafka cluster to be ready
-#      run: kubectl wait --for=condition=Ready pod/kafka-0 --timeout=900s
+    
     - name: Donwloading Python RC
       run: |
         echo "---------------------Downloading Python Staging RC----------------------------"
@@ -94,6 +94,8 @@ jobs:
       run: |
         echo "--------------------------Verifying Hashes------------------------------------"
         sha512sum -c apache-beam-${RELEASE_VER}.zip.sha512
+    - name: Exporting Shared PubSub Topic
+      run: echo "SHARED_PUBSUB_TOPIC=${{needs.generate_shared_pubsub.outputs.SHARED_PUBSUB_TOPIC}}" >> $GITHUB_ENV
     - name: Updating Settings
       run: |
         mkdir .m2
@@ -129,12 +131,6 @@ jobs:
         -Dpackage=org.apache.beam.examples \
         -DinteractiveMode=false \
         -DarchetypeCatalog=internal
-    - name: Generate Pub Sub name
-      run: |
-        echo "SHARED_PUBSUB_TOPIC=leader_board-${GITHUB_ACTOR}-python-topic-$(date +%m%d)_$RANDOM" >> $GITHUB_ENV
-    - name: Creating Pub Sub Topics
-      run: gcloud pubsub topics create --project=${USER_GCP_PROJECT} ${SHARED_PUBSUB_TOPIC}
-
     - name: Running Pub/Sub Java injector
       run: |
         ls
