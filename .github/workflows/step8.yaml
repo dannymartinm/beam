@@ -28,7 +28,7 @@ jobs:
 
   generate_shared_pubsub:
     outputs:
-      SHARED_PUBSUB_TOPIC: ${{steps.generate_pub_sub_name.outputs.pubsub}}
+      name: ${{ steps.generate_pub_sub_name.outputs.pubsub }}
     runs-on: [self-hosted,ubuntu-20.04]
     steps:
     - id: generate_pub_sub_name

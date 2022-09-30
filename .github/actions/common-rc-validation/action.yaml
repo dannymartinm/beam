@@ -24,3 +24,6 @@ runs:
     - name: Installing python SDK
       shell: bash
       run: pip install apache-beam-${RELEASE_VER}.zip[gcp]
+    - name: Exporting Shared Pub Sub Topic
+      shell: bash
+      run: echo "SHARED_PUBSUB_TOPIC=${{needs.generate_shared_pubsub.outputs.name}}" >> $GITHUB_ENV
