@@ -173,7 +173,7 @@ jobs:
           timeout --preserve-status 10m python -m apache_beam.examples.complete.game.leader_board \
           --project=${USER_GCP_PROJECT} \
           --region=${USER_GCP_REGION} \
-          --topic projects/${USER_GCP_PROJECT}/topics/${SHARED_PUBSUB_TOPIC} \
+          --topic projects/${USER_GCP_PROJECT}/topics/${{needs.generate_shared_pubsub.outputs.name}} \
           --dataset ${LEADERBOARD_DF_DATASET} \
           --runner DataflowRunner \
           --temp_location=${USER_GCS_BUCKET}/temp/ \
@@ -218,7 +218,7 @@ jobs:
           echo '*****************************************************';
           timeout --preserve-status 25m python -m apache_beam.examples.complete.game.game_stats \
           --project=${USER_GCP_PROJECT} \
-          --topic projects/${USER_GCP_PROJECT}/topics/${SHARED_PUBSUB_TOPIC} \
+          --topic projects/${USER_GCP_PROJECT}/topics/${{needs.generate_shared_pubsub.outputs.name}} \
           --dataset ${GAMESTATS_DIRECT_DATASET} \
           --fixed_window_duration ${FIXED_WINDOW_DURATION} || true
       - name: Checking Results
