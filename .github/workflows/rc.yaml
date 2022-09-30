@@ -22,7 +22,6 @@ env: # This should be a set of github secrets
   USER_GCP_REGION: us-central1
   USER_GCP_ZONE: us-central1-a
   REPO_URL: https://repository.apache.org/content/repositories/orgapachebeam-1284
-  SHARED_PUBSUB_TOPIC: leader_board-elink21-python-topic-TEST
   FIXED_WINDOW_DURATION: 20
 jobs:
 
@@ -73,6 +72,7 @@ jobs:
         `which pip` install --upgrade setuptools
 
         KAFKA_CLUSTER_NAME=xlang-kafka-cluster-$RANDOM
+
     - name: Installing gcloud-auth-plugin
       run: sudo apt-get install google-cloud-sdk-gke-gcloud-auth-plugin
     - name: Setting Kafka Cluster Name # TODO: change to random again once the tests are finished
@@ -259,57 +259,59 @@ jobs:
       run: |
         ls
         cd word-count-beam
-        timeout --preserve-status 40m mvn compile exec:java -Dexec.mainClass=org.apache.beam.examples.complete.game.injector.Injector -Dexec.args="${USER_GCP_PROJECT} ${{needs.generate_shared_pubsub.outputs.name}} none" || true 
+        timeout --preserve-status 90m mvn compile exec:java -Dexec.mainClass=org.apache.beam.examples.complete.game.injector.Injector -Dexec.args="${USER_GCP_PROJECT} ${{needs.generate_shared_pubsub.outputs.name}} none" || true 
   
   
   
   
-  # direct_runner_leaderboard:
-  #   runs-on: [self-hosted, ubuntu-20.04]
-  #   strategy:
-  #     matrix: 
-  #       py_version: [3.8]
-  #   needs: generate_shared_pubsub
-  #   steps:
-  #     - name: Checkout code
-  #       uses: actions/checkout@v3
-  #     - name: Install Python
-  #       uses: actions/setup-python@v4
-  #       with:
-  #         python-version: ${{matrix.py_version}}
-  #         cache: 'pip' 
-  #     - name: Set python env
-  #       uses: ./.github/actions/common-rc-validation
-  #     - name: Exporting leaderboard Dataset
-  #       run: echo "LEADERBOARD_DIRECT_DATASET=${GITHUB_ACTOR}_python_validations_$(date +%m%d)_$RANDOM" >> $GITHUB_ENV
-  #     - name: Creating Dataset
-  #       run: bq mk --project_id=${USER_GCP_PROJECT} ${LEADERBOARD_DIRECT_DATASET}
-  #     - name: Starting Leaderboard with DirectRunner
-  #       run: |
-  #         echo '*****************************************************';
-  #         echo '* Running Python Leaderboard with DirectRunner';
-  #         echo '*****************************************************';
-  #         timeout --preserve-status 5m python -m apache_beam.examples.complete.game.leader_board \
-  #         --project=${USER_GCP_PROJECT} \
-  #         --topic projects/${USER_GCP_PROJECT}/topics/${{needs.generate_shared_pubsub.outputs.name}} \
-  #         --dataset ${LEADERBOARD_DIRECT_DATASET} || true
-  #     - name: Checking results
-  #       run: |
-  #         bq head -n 10 ${LEADERBOARD_DIRECT_DATASET}.leader_board_users
-  #         bq head -n 10 ${LEADERBOARD_DIRECT_DATASET}.leader_board_teams
-  #     - name: Removing BigQuery Dataset
-  #       if: always()
-  #       run: | 
-  #         bq rm -f ${LEADERBOARD_DIRECT_DATASET}.leader_board_users
-  #         bq rm -f ${LEADERBOARD_DIRECT_DATASET}.leader_board_teams
-  #         bq rm -f $LEADERBOARD_DIRECT_DATASET
+  direct_runner_leaderboard:
+    runs-on: [self-hosted, ubuntu-20.04]
+    strategy:
+      matrix: 
+        py_version: [3.8]
+    needs: generate_shared_pubsub
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+      - name: Install Python
+        uses: actions/setup-python@v4
+        with:
+          python-version: ${{matrix.py_version}}
+          cache: 'pip' 
+      - name: Set python env
+        uses: ./.github/actions/common-rc-validation
+      - name: Exporting leaderboard Dataset
+        run: echo "LEADERBOARD_DIRECT_DATASET=${GITHUB_ACTOR}_python_validations_$(date +%m%d)_$RANDOM" >> $GITHUB_ENV
+      - name: Creating Dataset
+        run: bq mk --project_id=${USER_GCP_PROJECT} ${LEADERBOARD_DIRECT_DATASET}
+      - name: Starting Leaderboard with DirectRunner
+        run: |
+          echo '*****************************************************';
+          echo '* Running Python Leaderboard with DirectRunner';
+          echo '*****************************************************';
+          timeout --preserve-status 5m python -m apache_beam.examples.complete.game.leader_board \
+          --project=${USER_GCP_PROJECT} \
+          --topic projects/${USER_GCP_PROJECT}/topics/${{needs.generate_shared_pubsub.outputs.name}} \
+          --dataset ${LEADERBOARD_DIRECT_DATASET} || true
+      - name: Checking results
+        run: |
+          bq head -n 10 ${LEADERBOARD_DIRECT_DATASET}.leader_board_users
+          bq head -n 10 ${LEADERBOARD_DIRECT_DATASET}.leader_board_teams
+      - name: Removing BigQuery Dataset
+        if: always()
+        run: | 
+          bq rm -f ${LEADERBOARD_DIRECT_DATASET}.leader_board_users
+          bq rm -f ${LEADERBOARD_DIRECT_DATASET}.leader_board_teams
+          bq rm -f $LEADERBOARD_DIRECT_DATASET
+
+
           
   dataflow_runner_leaderboard:
     runs-on: [self-hosted,ubuntu-20.04]
     strategy:
       matrix:
         py_version: [3.8]
-    needs: generate_shared_pubsub
+    needs: [generate_shared_pubsub, direct_runner_leaderboard]
     steps:
       - name: Checkout code
         uses: actions/checkout@v3
@@ -355,7 +357,7 @@ jobs:
     strategy:
       matrix:
         py_version: [3.8]
-    needs: generate_shared_pubsub
+    needs: [generate_shared_pubsub,dataflow_runner_leaderboard]
     steps:
       - name: Checkout code
         uses: actions/checkout@v3
@@ -393,55 +395,55 @@ jobs:
 
 
 
-  # dataflow_runner_gamestats:
-  #   runs-on: [self-hosted,ubuntu-20.04]
-  #   strategy:
-  #     matrix:
-  #       py_version: [3.8]
-  #   needs: generate_shared_pubsub
-  #   steps:
-  #     - name: Checkout code
-  #       uses: actions/checkout@v3
-  #     - name: Install Python
-  #       uses: actions/setup-python@v4
-  #       with:
-  #         python-version: ${{matrix.py_version}}
-  #         cache: 'pip' # caching pip dependencies
-  #     - name: Set python env
-  #       uses: ./.github/actions/common-rc-validation
-  #     - name: Exporting Gamestates Direct Dataset
-  #       run: echo "GAMESTATS_DF_DATASET=${GITHUB_ACTOR}_python_validations_$(date +%m%d)_$RANDOM" >> $GITHUB_ENV
-  #     - name: Creating Dataset
-  #       run: bq mk --project_id=${USER_GCP_PROJECT} ${GAMESTATS_DF_DATASET}
-  #     - name: Starting Gamestats with DirectRunner
-  #       run: |
-  #         echo '*****************************************************';
-  #         echo '* Running GameStats with DataflowRunner';
-  #         echo '*****************************************************';
-  #         timeout --preserve-status 30m python -m apache_beam.examples.complete.game.game_stats \
-  #         --project=${USER_GCP_PROJECT} \
-  #         --region=${USER_GCP_REGION} \
-  #         --topic projects/${USER_GCP_PROJECT}/topics/${{needs.generate_shared_pubsub.outputs.name}} \
-  #         --dataset ${GAMESTATS_DF_DATASET} \
-  #         --runner DataflowRunner \
-  #         --temp_location=${USER_GCS_BUCKET}/temp/ \
-  #         --sdk_location apache-beam-${RELEASE_VER}.zip \
-  #         --fixed_window_duration ${FIXED_WINDOW_DURATION} || true
-  #     - name: Checking Results
-  #       run: |
-  #         bq head -n 10 ${GAMESTATS_DF_DATASET}.game_stats_teams
-  #         bq head -n 10 ${GAMESTATS_DF_DATASET}.game_stats_sessions
-  #     - name: Removing BigQuery Dataset
-  #       if: always()
-  #       run: |
-  #         bq rm -f ${GAMESTATS_DF_DATASET}.game_stats_teams
-  #         bq rm -f ${GAMESTATS_DF_DATASET}.game_stats_sessions 
-  #         bq rm -f $GAMESTATS_DF_DATASET
+  dataflow_runner_gamestats:
+    runs-on: [self-hosted,ubuntu-20.04]
+    strategy:
+      matrix:
+        py_version: [3.8]
+    needs: [generate_shared_pubsub, direct_runner_gamestats]
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+      - name: Install Python
+        uses: actions/setup-python@v4
+        with:
+          python-version: ${{matrix.py_version}}
+          cache: 'pip' # caching pip dependencies
+      - name: Set python env
+        uses: ./.github/actions/common-rc-validation
+      - name: Exporting Gamestates Direct Dataset
+        run: echo "GAMESTATS_DF_DATASET=${GITHUB_ACTOR}_python_validations_$(date +%m%d)_$RANDOM" >> $GITHUB_ENV
+      - name: Creating Dataset
+        run: bq mk --project_id=${USER_GCP_PROJECT} ${GAMESTATS_DF_DATASET}
+      - name: Starting Gamestats with DirectRunner
+        run: |
+          echo '*****************************************************';
+          echo '* Running GameStats with DataflowRunner';
+          echo '*****************************************************';
+          timeout --preserve-status 30m python -m apache_beam.examples.complete.game.game_stats \
+          --project=${USER_GCP_PROJECT} \
+          --region=${USER_GCP_REGION} \
+          --topic projects/${USER_GCP_PROJECT}/topics/${{needs.generate_shared_pubsub.outputs.name}} \
+          --dataset ${GAMESTATS_DF_DATASET} \
+          --runner DataflowRunner \
+          --temp_location=${USER_GCS_BUCKET}/temp/ \
+          --sdk_location apache-beam-${RELEASE_VER}.zip \
+          --fixed_window_duration ${FIXED_WINDOW_DURATION} || true
+      - name: Checking Results
+        run: |
+          bq head -n 10 ${GAMESTATS_DF_DATASET}.game_stats_teams
+          bq head -n 10 ${GAMESTATS_DF_DATASET}.game_stats_sessions
+      - name: Removing BigQuery Dataset
+        if: always()
+        run: |
+          bq rm -f ${GAMESTATS_DF_DATASET}.game_stats_teams
+          bq rm -f ${GAMESTATS_DF_DATASET}.game_stats_sessions 
+          bq rm -f $GAMESTATS_DF_DATASET
   
-  # remove_shared_pubsub:
-  #   runs-on: [self-hosted,ubuntu-20.04]
-  #   needs: [generate_shared_pubsub,direct_runner_leaderboard, dataflow_runner_gamestats, dataflow_runner_leaderboard, direct_runner_gamestats]
-  #   if: always()
-  #   steps:
-  #     - name: Deleting Shared Pub Sub
-  #       run: gcloud pubsub topics delete --project=${USER_GCP_PROJECT}  ${{needs.generate_shared_pubsub.outputs.name}}
+  remove_shared_pubsub:
+    runs-on: [self-hosted,ubuntu-20.04]
+    needs: [generate_shared_pubsub,direct_runner_leaderboard, dataflow_runner_gamestats, dataflow_runner_leaderboard, direct_runner_gamestats]
+    if: always()
+    steps:
+      - name: Deleting Shared Pub Sub
+        run: gcloud pubsub topics delete --project=${USER_GCP_PROJECT}  ${{needs.generate_shared_pubsub.outputs.name}}
