@@ -30,7 +30,7 @@ jobs:
         echo "SHARED_PUBSUB_TOPIC=leader_board-${GITHUB_ACTOR}-python-topic-$(date +%m%d)_$RANDOM" >> $GITHUB_ENV
     - name: Sending PubSub name to env
       run: |
-        pubsub=$SHARED_PUBSUB_TOPIC"
+        pubsub=$SHARED_PUBSUB_TOPIC
         echo "::set-output name=pubsub::$pubsub"
     - name: Creating Pub Sub Topics
       run: gcloud pubsub topics create --project=${USER_GCP_PROJECT} ${SHARED_PUBSUB_TOPIC}
