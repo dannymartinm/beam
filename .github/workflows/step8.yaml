@@ -152,6 +152,8 @@ jobs:
         py_version: [3.8]
     needs: generate_shared_pubsub
     steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
       - name: Install Python
         uses: actions/setup-python@v4
         with:
