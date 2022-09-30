@@ -21,7 +21,7 @@ env: # This should be a set of github secrets
   USER_GCP_REGION: us-central1
   USER_GCP_ZONE: us-central1-a
   REPO_URL: https://repository.apache.org/content/repositories/orgapachebeam-1284
-  SHARED_PUBSUB_TOPIC: leader_board-${GITHUB_ACTOR}-python-topic-TEST
+  SHARED_PUBSUB_TOPIC: leader_board-elink21-python-topic-TEST
 jobs:
   generate_shared_pubsub:
     outputs:
