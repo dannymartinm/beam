@@ -1,4 +1,4 @@
-name: Run RC Validation
+name: Draft
 on:
   workflow_dispatch:
     inputs:
@@ -33,7 +33,6 @@ jobs:
         echo "====================Checking Environment & Variables================="
         echo ""
         echo "running validations on release ${{github.event.inputs.RELEASE_VER}} RC${{github.event.inputs.RC_NUM}}."
-        echo "repo URL for this RC: $GIT_REPO_URL"
     - name: Install Kubectl 
       uses: azure/setup-kubectl@v3
 
@@ -104,7 +103,6 @@ jobs:
         echo '* Running Python XLang Kafka Taxi with DataflowRunner';
         echo '*****************************************************';
         echo "***************************************************************";
-        echo "* Please wait for at least 20 mins to let Dataflow job be launched and results get populated.";
         timeout --preserve-status 20m python -m apache_beam.examples.kafkataxi.kafka_taxi \
         --project=${USER_GCP_PROJECT} \
         --region=${USER_GCP_REGION} \
@@ -119,7 +117,7 @@ jobs:
         --sdk_location apache-beam-${RELEASE_VER}.zip || true
     - name: Checking executions results
       run: |
-        echo $(bq --format=prettyjson head -n 10 ${KAFKA_TAXI_DF_DATASET}.xlang_kafka_taxi)          
+        bq --format=prettyjson head -n 10 ${KAFKA_TAXI_DF_DATASET}.xlang_kafka_taxi          
     - name: Remove BigQuery Dataset
       if: always()
       run: |
@@ -127,5 +125,3 @@ jobs:
         bq rm -f ${KAFKA_TAXI_DF_DATASET}
     #- name: Delete Kafka Cluster
     #  run: gcloud container clusters delete --project=${USER_GCP_PROJECT} --region=${USER_GCP_REGION} --async -q $KAFKA_CLUSTER_NAME
-    # #From this point, steps 7 to last can be implemented as independent jobs
-  # The ones that uses python_versions_to_validate should use matrix instead
