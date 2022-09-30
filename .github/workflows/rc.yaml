@@ -15,7 +15,7 @@ on:
         required: true
         default: "1"
 env: # This should be a set of github secrets
-  RC_TAG: "v${{github.event.inputs.RELEASE_VER}}}-RC${{github.event.inputs.RC_NUM}}"
+  RC_TAG: "v${{github.event.inputs.RELEASE_VER}}-RC${{github.event.inputs.RC_NUM}}"
   RELEASE_VER: ${{github.event.inputs.RELEASE_VER}}    
   USER_GCP_PROJECT: apache-beam-testing
   PYTHON_RC_DOWNLOAD_URL: https://dist.apache.org/repos/dist/dev/beam
