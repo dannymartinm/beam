@@ -309,8 +309,8 @@ jobs:
   
   remove_shared_pubsub:
     runs-on: [self-hosted,ubuntu-latest]
-    needs: [dataflow_runner_gamestats]
+    needs: [dataflow_runner_gamestats, generate_shared_pubsub]
     if: always()
     steps:
       - name: Deleting Shared Pub Sub
-        run: gcloud pubsub topics delete --project=${USER_GCP_PROJECT} ${SHARED_PUBSUB_TOPIC}
+        run: gcloud pubsub topics delete --project=${USER_GCP_PROJECT}  ${{needs.generate_shared_pubsub.outputs.name}}
