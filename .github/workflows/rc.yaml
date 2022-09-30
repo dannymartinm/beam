@@ -27,11 +27,13 @@ jobs:
 
   python_cross_validation:
     runs-on: [self-hosted,ubuntu-20.04]
+    strategy:
+      matrix: 
+        py_version: [3.8]
     steps:
     - name: Checkout code
       uses: actions/checkout@v3
-    - name: Common tasks
-      uses: ./.github/actions/common-rc-validation
+    
     - name: Verify ENV values
       run: |
         echo ""
@@ -50,28 +52,10 @@ jobs:
     - name: Install Python
       uses: actions/setup-python@v4
       with:
-        python-version: '3.8'
+        python-version: ${{matrix.py_version}}
         cache: 'pip' 
-    - name: Downloading Python Staging RC
-      run: |
-        echo ""
-        echo "====================Starting Python Cross-language Validations==============="
-  
-
-        echo "---------------------Downloading Python Staging RC----------------------------"
-        wget ${PYTHON_RC_DOWNLOAD_URL}/${RELEASE_VER}/python/apache-beam-${RELEASE_VER}.zip
-        wget ${PYTHON_RC_DOWNLOAD_URL}/${RELEASE_VER}/python/apache-beam-${RELEASE_VER}.zip.sha512
-        if [[ ! -f apache-beam-$RELEASE_VER.zip ]]; then
-          { echo "Fail to download Python Staging RC files." ;exit 1; }
-        fi
-
-        echo "--------------------------Verifying Hashes------------------------------------"
-        sha512sum -c apache-beam-${RELEASE_VER}.zip.sha512
-
-        `which pip` install --upgrade pip
-        `which pip` install --upgrade setuptools
-
-        KAFKA_CLUSTER_NAME=xlang-kafka-cluster-$RANDOM
+    - name: Setting python env
+      uses: ./.github/actions/common-rc-validation
 
     - name: Installing gcloud-auth-plugin
       run: sudo apt-get install google-cloud-sdk-gke-gcloud-auth-plugin
@@ -158,10 +142,6 @@ jobs:
     
     - name: Setting python env
       uses: ./.github/actions/common-rc-validation
-
-    - name: Installing gcloud-auth-plugin
-      run: sudo apt-get install google-cloud-sdk-gke-gcloud-auth-plugin
-
 
     - name: Setting Taxi Variables
       run: |
