@@ -26,8 +26,9 @@ jobs:
     runs-on: [self-hosted,ubuntu-20.04]
     steps:
     - id: generate_pub_sub_name
+    #TODO: Change to random once everything is working
       run: |
-        echo "SHARED_PUBSUB_TOPIC=leader_board-${GITHUB_ACTOR}-python-topic-$(date +%m%d)_$RANDOM" >> $GITHUB_ENV
+        echo "SHARED_PUBSUB_TOPIC=leader_board-${GITHUB_ACTOR}-python-topic-TEST" >> $GITHUB_ENV 
     - name: Sending PubSub name to env
       run: |
         pubsub=$SHARED_PUBSUB_TOPIC
@@ -98,7 +99,7 @@ jobs:
         echo "--------------------------Verifying Hashes------------------------------------"
         sha512sum -c apache-beam-${RELEASE_VER}.zip.sha512
     - name: Exporting Shared PubSub Topic
-      run: echo "SHARED_PUBSUB_TOPIC=${{needs.generate_shared_pubsub.outputs.SHARED_PUBSUB_TOPIC}}" >> $GITHUB_ENV
+      run: echo "SHARED_PUBSUB_TOPIC=leader_board-${GITHUB_ACTOR}-python-topic-TEST" >> $GITHUB_ENV
     - name: Updating Settings
       run: |
         mkdir .m2
