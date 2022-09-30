@@ -31,7 +31,7 @@ runs:
         echo "---------------------Downloading Python Staging RC----------------------------"
         wget ${PYTHON_RC_DOWNLOAD_URL}/${RELEASE_VER}/python/apache-beam-${RELEASE_VER}.zip
         wget ${PYTHON_RC_DOWNLOAD_URL}/${RELEASE_VER}/python/apache-beam-${RELEASE_VER}.zip.sha512
-    
+
     - name: Verifying Hashes
       shell: bash
       run: |

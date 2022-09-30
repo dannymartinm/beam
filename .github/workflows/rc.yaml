@@ -96,6 +96,8 @@ jobs:
         --output_topic projects/${USER_GCP_PROJECT}/topics/${SQL_TAXI_TOPIC} \
         --beam_services="{\":sdks:java:extensions:sql:expansion-service:shadowJar\": \"${SQL_EXPANSION_SERVICE_JAR}\"}" \
         --sdk_location apache-beam-${RELEASE_VER}.zip || true
+    - name: Checking Results
+      run: gcloud pubsub subscriptions pull --project=${USER_GCP_PROJECT} --limit=5 ${SQL_TAXI_SUBSCRIPTION}
     - name: Removing Pub Sub Topic
       if: always()
       run: | 
