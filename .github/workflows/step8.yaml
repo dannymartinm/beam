@@ -232,7 +232,43 @@ jobs:
   #         bq rm -f $LEADERBOARD_DF_DATASET
   #         gcloud pubsub topics delete --project=${USER_GCP_PROJECT} ${SHARED_PUBSUB_TOPIC}
       
-  direct_runner_gamestats:
+  # direct_runner_gamestats:
+  #   runs-on: [self-hosted,ubuntu-20.04]
+  #   strategy:
+  #     matrix:
+  #       py_version: [3.8]
+  #   needs: generate_shared_pubsub
+  #   steps:
+  #     - name: Checkout code
+  #       uses: actions/checkout@v3
+  #     - name: Install Python
+  #       uses: actions/setup-python@v4
+  #       with:
+  #         python-version: ${{matrix.py_version}}
+  #         cache: 'pip' # caching pip dependencies
+  #     - name: Set python env
+  #       uses: ./.github/actions/common-rc-validation
+  #     - name: Exporting Gamestates Direct Dataset
+  #       run: echo "GAMESTATS_DIRECT_DATASET=${GITHUB_ACTOR}_python_validations_$(date +%m%d)_$RANDOM" >> $GITHUB_ENV
+  #     - name: Creating Dataset
+  #       run: bq mk --project_id=${USER_GCP_PROJECT} ${GAMESTATS_DIRECT_DATASET}
+  #     - name: Starting Gamestats with DirectRunner
+  #       run: |
+  #         echo '*****************************************************';
+  #         echo '* Running GameStats with DirectRunner';
+  #         echo '*****************************************************';
+  #         timeout --preserve-status 1m python -m apache_beam.examples.complete.game.game_stats \
+  #         --project=${USER_GCP_PROJECT} \
+  #         --topic projects/${USER_GCP_PROJECT}/topics/${SHARED_PUBSUB_TOPIC} \
+  #         --dataset ${GAMESTATS_DIRECT_DATASET} \
+  #         --fixed_window_duration ${FIXED_WINDOW_DURATION} || true
+  #     - name: Removing Pub Sub Topic
+  #       if: always()
+  #       run: | 
+  #         bq rm -f $GAMESTATS_DIRECT_DATASET
+  #         gcloud pubsub topics delete --project=${USER_GCP_PROJECT} ${SHARED_PUBSUB_TOPIC}    
+
+  dataflow_runner_gamestats:
     runs-on: [self-hosted,ubuntu-20.04]
     strategy:
       matrix:
@@ -249,22 +285,26 @@ jobs:
       - name: Set python env
         uses: ./.github/actions/common-rc-validation
       - name: Exporting Gamestates Direct Dataset
-        run: echo "GAMESTATS_DIRECT_DATASET=${GITHUB_ACTOR}_python_validations_$(date +%m%d)_$RANDOM" >> $GITHUB_ENV
+        run: echo "GAMESTATS_DF_DATASET=${GITHUB_ACTOR}_python_validations_$(date +%m%d)_$RANDOM" >> $GITHUB_ENV
       - name: Creating Dataset
-        run: bq mk --project_id=${USER_GCP_PROJECT} ${GAMESTATS_DIRECT_DATASET}
+        run: bq mk --project_id=${USER_GCP_PROJECT} ${GAMESTATS_DF_DATASET}
       - name: Starting Gamestats with DirectRunner
         run: |
           echo '*****************************************************';
-          echo '* Running GameStats with DirectRunner';
+          echo '* Running GameStats with DataflowRunner';
           echo '*****************************************************';
           timeout --preserve-status 1m python -m apache_beam.examples.complete.game.game_stats \
           --project=${USER_GCP_PROJECT} \
+          --region=${USER_GCP_REGION} \
           --topic projects/${USER_GCP_PROJECT}/topics/${SHARED_PUBSUB_TOPIC} \
-          --dataset ${GAMESTATS_DIRECT_DATASET} \
+          --dataset ${GAMESTATS_DF_DATASET} \
+          --runner DataflowRunner \
+          --temp_location=${USER_GCS_BUCKET}/temp/ \
+          --sdk_location apache-beam-${RELEASE_VER}.zip \
           --fixed_window_duration ${FIXED_WINDOW_DURATION} || true
       - name: Removing Pub Sub Topic
         if: always()
         run: | 
-          bq rm -f $GAMESTATS_DIRECT_DATASET
+          bq rm -f $GAMESTATS_DF_DATASET
           gcloud pubsub topics delete --project=${USER_GCP_PROJECT} ${SHARED_PUBSUB_TOPIC}    
     
