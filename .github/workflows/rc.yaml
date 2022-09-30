@@ -27,12 +27,21 @@ jobs:
 
   sql_taxi_with_dataflow:
     runs-on: [self-hosted,ubuntu-20.04]
+    strategy:
+      matrix: 
+        py_version: [3.8]
     steps:
     - name: Checkout code
       uses: actions/checkout@v3
 
     - name: Install Kubectl 
       uses: azure/setup-kubectl@v3
+    
+    - name: Install Python
+      uses: actions/setup-python@v4
+      with:
+        python-version: ${{matrix.py_version}}
+        cache: 'pip' # caching pip dependencies
 
     - name: Setup Java JDK
       uses: actions/setup-java@v3.5.1
