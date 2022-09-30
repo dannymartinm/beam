@@ -24,3 +24,16 @@ runs:
     - name: Installing python SDK
       shell: bash
       run: pip install apache-beam-${RELEASE_VER}.zip[gcp]
+
+    - name: Donwloading Python RC
+      shell: bash
+      run: |
+        echo "---------------------Downloading Python Staging RC----------------------------"
+        wget ${PYTHON_RC_DOWNLOAD_URL}/${RELEASE_VER}/python/apache-beam-${RELEASE_VER}.zip
+        wget ${PYTHON_RC_DOWNLOAD_URL}/${RELEASE_VER}/python/apache-beam-${RELEASE_VER}.zip.sha512
+    
+    - name: Verifying Hashes
+      shell: bash
+      run: |
+        echo "--------------------------Verifying Hashes------------------------------------"
+        sha512sum -c apache-beam-${RELEASE_VER}.zip.sha512
