@@ -167,6 +167,15 @@ jobs:
         run: echo "LEADERBOARD_DIRECT_DATASET=${GITHUB_ACTOR}_python_validations_$(date +%m%d)_$RANDOM" >> $GITHUB_ENV
       - name: Creating Dataset
         run: bq mk --project_id=${USER_GCP_PROJECT} ${LEADERBOARD_DIRECT_DATASET}
+      - name: Starting Leaderboard with DirectRunner
+        run: |
+          echo '*****************************************************';
+          echo '* Running Python Leaderboard with DirectRunner';
+          echo '*****************************************************';
+          python -m apache_beam.examples.complete.game.leader_board \
+          --project=${USER_GCP_PROJECT} \
+          --topic projects/${USER_GCP_PROJECT}/topics/${SHARED_PUBSUB_TOPIC} \
+          --dataset ${LEADERBOARD_DIRECT_DATASET};
       - name: Removing Pub Sub Topic
         if: always()
         run: | 
