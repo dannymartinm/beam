@@ -163,7 +163,12 @@ jobs:
           cache: 'pip' # caching pip dependencies
       - name: Set python env
         uses: ./.github/actions/common-rc-validation
+      - name: Exporting leaderboard Dataset
+        run: echo "LEADERBOARD_DIRECT_DATASET=${GITHUB_ACTOR}_python_validations_$(date +%m%d)_$RANDOM" >> $GITHUB_ENV
+      - name: Creating Dataset
+        run: bq mk --project_id=${USER_GCP_PROJECT} ${LEADERBOARD_DIRECT_DATASET}
       - name: Removing Pub Sub Topic
         if: always()
         run: | 
+          bq rm -f $LEADERBOARD_DIRECT_DATASET
           gcloud pubsub topics delete --project=${USER_GCP_PROJECT} ${SHARED_PUBSUB_TOPIC} 
