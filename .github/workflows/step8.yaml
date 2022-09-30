@@ -187,10 +187,10 @@ jobs:
         run: |
           bq head -n 10 ${LEADERBOARD_DIRECT_DATASET}.leader_board_users
           bq head -n 10 ${LEADERBOARD_DIRECT_DATASET}.leader_board_teams
-      - name: Removing BigQuery Dataset
-        if: always()
-        run: | 
-          bq rm -f $LEADERBOARD_DIRECT_DATASET
+#      - name: Removing BigQuery Dataset
+#        if: always()
+#        run: | 
+#          bq rm -f $LEADERBOARD_DIRECT_DATASET
 
 
 
