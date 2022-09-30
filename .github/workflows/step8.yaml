@@ -34,10 +34,10 @@ jobs:
     - name: Sending PubSub name to env
     #TODO: Change to random once everything is working
       run: |
-        echo "SHARED_PUBSUB_TOPIC=leader_board-elink21-python-topic-TEST" >> $GITHUB_ENV 
+        echo "SHARED_PUBSUB_TOPIC=leader_board-${GITHUB_ACTOR}-python-topic-$(date +%m%d)_$RANDOM" >> $GITHUB_ENV 
     - id: generate_pubsub_name 
       run: |
-        echo "::set-output name=pubsub::leader_board-elink21-python-topic-TEST"
+        echo "::set-output name=pubsub::$SHARED_PUBSUB_TOPIC"
     - name: Creating Pub Sub Topics
       run: gcloud pubsub topics create --project=${USER_GCP_PROJECT} ${SHARED_PUBSUB_TOPIC}
 
