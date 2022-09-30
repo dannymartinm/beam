@@ -42,114 +42,99 @@ jobs:
       run: gcloud pubsub topics create --project=${USER_GCP_PROJECT} ${SHARED_PUBSUB_TOPIC}
 
 
-  # java_injector:
-  #   runs-on: [self-hosted,ubuntu-20.04]
-  #   needs: generate_shared_pubsub
-  #   steps:
-  #   - name: Checkout code
-  #     uses: actions/checkout@v3
-  #   - name: Common tasks
-  #     uses: ./.github/actions/common-rc-validation
-  #   - name: Verify ENV values
-  #     run: |
-  #       echo ""
-  #       echo "====================Checking Environment & Variables================="
-  #       echo ""
-  #       echo "running validations on release ${{github.event.inputs.RELEASE_VER}} RC${{github.event.inputs.RC_NUM}}."
-  #       echo "repo URL for this RC: $GIT_REPO_URL"
-    
+  java_injector:
+    runs-on: [self-hosted,ubuntu-20.04]
+    needs: generate_shared_pubsub
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v3
+    - name: Common tasks
+      uses: ./.github/actions/common-rc-validation
+    - name: Setup Maven Action
+      uses: s4u/setup-maven-action@v1.2.1
+      with:
+        java-version: 11
 
-  #   - name: Setup Maven Action
-  #     uses: s4u/setup-maven-action@v1.2.1
-  #     with:
-  #       java-version: 11
-
-  #   - name: Install Python
-  #     uses: actions/setup-python@v4
-  #     with:
-  #       python-version: '3.8'
-  #       cache: 'pip' # caching pip dependencies
-  #   - name: Downloading Python Staging RC
-  #     run: |
-  #       echo ""
-  #       echo "====================Starting Python Cross-language Validations==============="
+    - name: Install Python
+      uses: actions/setup-python@v4
+      with:
+        python-version: '3.8'
+        cache: 'pip' # caching pip dependencies
+    - name: Downloading Python Staging RC
+      run: |
+        echo ""
+        echo "====================Starting Python Cross-language Validations==============="
   
 
-  #       echo "---------------------Downloading Python Staging RC----------------------------"
-  #       wget ${PYTHON_RC_DOWNLOAD_URL}/${RELEASE_VER}/python/apache-beam-${RELEASE_VER}.zip
-  #       wget ${PYTHON_RC_DOWNLOAD_URL}/${RELEASE_VER}/python/apache-beam-${RELEASE_VER}.zip.sha512
-  #       if [[ ! -f apache-beam-$RELEASE_VER.zip ]]; then
-  #         { echo "Fail to download Python Staging RC files." ;exit 1; }
-  #       fi
+        echo "---------------------Downloading Python Staging RC----------------------------"
+        wget ${PYTHON_RC_DOWNLOAD_URL}/${RELEASE_VER}/python/apache-beam-${RELEASE_VER}.zip
+        wget ${PYTHON_RC_DOWNLOAD_URL}/${RELEASE_VER}/python/apache-beam-${RELEASE_VER}.zip.sha512
+        if [[ ! -f apache-beam-$RELEASE_VER.zip ]]; then
+          { echo "Fail to download Python Staging RC files." ;exit 1; }
+        fi
 
-  #       echo "--------------------------Verifying Hashes------------------------------------"
-  #       sha512sum -c apache-beam-${RELEASE_VER}.zip.sha512
+        echo "--------------------------Verifying Hashes------------------------------------"
+        sha512sum -c apache-beam-${RELEASE_VER}.zip.sha512
 
-  #       `which pip` install --upgrade pip
-  #       `which pip` install --upgrade setuptools
+        `which pip` install --upgrade pip
+        `which pip` install --upgrade setuptools
 
-  #   - name: Setting Python Environment
-  #     run: |
-  #       echo "--------------------------Installing Python SDK-------------------------------"
-  #       pip install --upgrade pip setuptools wheel
-  #       pip install apache-beam-${RELEASE_VER}.zip[gcp]
+    - name: Setting Python Environment
+      run: |
+        echo "--------------------------Installing Python SDK-------------------------------"
+        pip install --upgrade pip setuptools wheel
+        pip install apache-beam-${RELEASE_VER}.zip[gcp]
     
-  #   - name: Donwloading Python RC
-  #     run: |
-  #       echo "---------------------Downloading Python Staging RC----------------------------"
-  #       wget ${PYTHON_RC_DOWNLOAD_URL}/${RELEASE_VER}/python/apache-beam-${RELEASE_VER}.zip
-  #       wget ${PYTHON_RC_DOWNLOAD_URL}/${RELEASE_VER}/python/apache-beam-${RELEASE_VER}.zip.sha512
-  #   - name: Verifying Hashes
-  #     run: |
-  #       echo "--------------------------Verifying Hashes------------------------------------"
-  #       sha512sum -c apache-beam-${RELEASE_VER}.zip.sha512
-  #   - name: Exporting Shared PubSub Topic
-  #     run: echo "SHARED_PUBSUB_TOPIC=leader_board-${GITHUB_ACTOR}-python-topic-TEST" >> $GITHUB_ENV
-  #   - name: Updating Settings
-  #     run: |
-  #       mkdir .m2
-  #       cd .m2
-  #       touch settings.xml
-  #       echo "<settings>" >> settings.xml
-  #       echo "  <profiles>" >> settings.xml
-  #       echo "    <profile>" >> settings.xml
-  #       echo "      <id>release-repo</id>" >> settings.xml
-  #       echo "      <activation>" >> settings.xml
-  #       echo "        <activeByDefault>true</activeByDefault>" >> settings.xml
-  #       echo "      </activation>" >> settings.xml
-  #       echo "      <repositories>" >> settings.xml
-  #       echo "        <repository>" >> settings.xml
-  #       echo "          <id>Release ${RELEASE_VER} RC${{github.event.inputs.RC_NUM}}</id>" >> settings.xml
-  #       echo "          <name>Release ${RELEASE_VER} RC${{github.event.inputs.RC_NUM}}</name>" >> settings.xml
-  #       echo "          <url>${REPO_URL}</url>" >> settings.xml
-  #       echo "        </repository>" >> settings.xml
-  #       echo "      </repositories>" >> settings.xml
-  #       echo "    </profile>" >> settings.xml
-  #       echo "  </profiles>" >> settings.xml
-  #       echo "</settings>" >> settings.xml
-  #       cat settings.xml
-  #   - name: Generate Maven archetype
-  #     run: |
-  #       mvn archetype:generate \
-  #       -DarchetypeGroupId=org.apache.beam \
-  #       -DarchetypeArtifactId=beam-sdks-java-maven-archetypes-examples \
-  #       -DarchetypeVersion=2.41.0 \
-  #       -DgroupId=org.example \
-  #       -DartifactId=word-count-beam \
-  #       -Dversion="0.1" \
-  #       -Dpackage=org.apache.beam.examples \
-  #       -DinteractiveMode=false \
-  #       -DarchetypeCatalog=internal
-  #   - name: Running Pub/Sub Java injector
-  #     run: |
-  #       ls
-  #       cd word-count-beam
-  #       mvn compile exec:java -Dexec.mainClass=org.apache.beam.examples.complete.game.injector.Injector -Dexec.args="${USER_GCP_PROJECT} ${SHARED_PUBSUB_TOPIC} none";
-  #   - name: Removing Pub Sub Topic
-  #     if: always()
-  #     run: | 
-  #       gcloud pubsub topics delete --project=${USER_GCP_PROJECT} ${SHARED_PUBSUB_TOPIC}
-  
+    - name: Donwloading Python RC
+      run: |
+        echo "---------------------Downloading Python Staging RC----------------------------"
+        wget ${PYTHON_RC_DOWNLOAD_URL}/${RELEASE_VER}/python/apache-beam-${RELEASE_VER}.zip
+        wget ${PYTHON_RC_DOWNLOAD_URL}/${RELEASE_VER}/python/apache-beam-${RELEASE_VER}.zip.sha512
+    - name: Verifying Hashes
+      run: |
+        echo "--------------------------Verifying Hashes------------------------------------"
+        sha512sum -c apache-beam-${RELEASE_VER}.zip.sha512
+
+    - name: Updating Settings
+      run: |
+        mkdir .m2
+        cd .m2
+        touch settings.xml
+        echo "<settings>" >> settings.xml
+        echo "  <profiles>" >> settings.xml
+        echo "    <profile>" >> settings.xml
+        echo "      <id>release-repo</id>" >> settings.xml
+        echo "      <activation>" >> settings.xml
+        echo "        <activeByDefault>true</activeByDefault>" >> settings.xml
+        echo "      </activation>" >> settings.xml
+        echo "      <repositories>" >> settings.xml
+        echo "        <repository>" >> settings.xml
+        echo "          <id>Release ${RELEASE_VER} RC${{github.event.inputs.RC_NUM}}</id>" >> settings.xml
+        echo "          <name>Release ${RELEASE_VER} RC${{github.event.inputs.RC_NUM}}</name>" >> settings.xml
+        echo "          <url>${REPO_URL}</url>" >> settings.xml
+        echo "        </repository>" >> settings.xml
+        echo "      </repositories>" >> settings.xml
+        echo "    </profile>" >> settings.xml
+        echo "  </profiles>" >> settings.xml
+        echo "</settings>" >> settings.xml
+        cat settings.xml
+    - name: Generate Maven archetype
+      run: |
+        mvn archetype:generate \
+        -DarchetypeGroupId=org.apache.beam \
+        -DarchetypeArtifactId=beam-sdks-java-maven-archetypes-examples \
+        -DarchetypeVersion=2.41.0 \
+        -DgroupId=org.example \
+        -DartifactId=word-count-beam \
+        -Dversion="0.1" \
+        -Dpackage=org.apache.beam.examples \
+        -DinteractiveMode=false \
+        -DarchetypeCatalog=internal
+    - name: Running Pub/Sub Java injector
+      run: |
+        ls
+        cd word-count-beam
+        timeout --preserve-status 10m mvn compile exec:java -Dexec.mainClass=org.apache.beam.examples.complete.game.injector.Injector -Dexec.args="${USER_GCP_PROJECT} ${{needs.generate_shared_pubsub.outputs.name}} none || true" 
   
   
   
