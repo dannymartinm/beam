@@ -161,28 +161,8 @@ jobs:
         with:
           python-version: ${{matrix.py_version}}
           cache: 'pip' # caching pip dependencies
-      - name: Install wheel
-        run: pip install --upgrade pip setuptools wheel
-      - name: Downloading Python Staging RC
-        run: |
-          echo ""
-          echo "====================Starting Python Cross-language Validations==============="
-  
-
-          echo "---------------------Downloading Python Staging RC----------------------------"
-          wget ${PYTHON_RC_DOWNLOAD_URL}/${RELEASE_VER}/python/apache-beam-${RELEASE_VER}.zip
-          wget ${PYTHON_RC_DOWNLOAD_URL}/${RELEASE_VER}/python/apache-beam-${RELEASE_VER}.zip.sha512
-          if [[ ! -f apache-beam-$RELEASE_VER.zip ]]; then
-            { echo "Fail to download Python Staging RC files." ;exit 1; }
-          fi
-
-          echo "--------------------------Verifying Hashes------------------------------------"
-          sha512sum -c apache-beam-${RELEASE_VER}.zip.sha512
-
-          `which pip` install --upgrade pip
-          `which pip` install --upgrade setuptools
-      - name: Installing python SDK
-        run: pip install apache-beam-${RELEASE_VER}.zip[gcp] 
+      - name: Set python env
+        uses: ./.github/actions/common-rc-validation
       - name: Removing Pub Sub Topic
         if: always()
         run: | 

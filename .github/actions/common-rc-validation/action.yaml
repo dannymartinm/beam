@@ -3,10 +3,28 @@ description: Setup Common RC Variables and dependecies
 runs:
   using: composite
   steps:
-    - id: set_common_vars
+    - name: install-wheel
+      shell: bash
+      run: pip install --upgrade pip setuptools wheel
+    - name: Downloading Python Staging RC
       shell: bash
       run: |
-        echo "RC_TAG=v${{github.event.inputs.RELEASE_VER}}-RC${{github.event.inputs.RC_NUM}}" >>  $GITHUB_ENV
-        echo "RELEASE_BRANCH=releasev${{github.event.inputs.RELEASE_VER}}" >>  $GITHUB_ENV
-        echo "PYTHON_RC_DOWNLOAD_URL=https://dist.apache.org/repos/dist/dev/beam" >>  $GITHUB_ENV
-        echo "RELEASE_VER=${{github.event.inputs.RELEASE_VER}}" >> $GITHUB_ENV
+          echo ""
+          echo "====================Starting Python Cross-language Validations==============="
+  
+
+          echo "---------------------Downloading Python Staging RC----------------------------"
+          wget ${PYTHON_RC_DOWNLOAD_URL}/${RELEASE_VER}/python/apache-beam-${RELEASE_VER}.zip
+          wget ${PYTHON_RC_DOWNLOAD_URL}/${RELEASE_VER}/python/apache-beam-${RELEASE_VER}.zip.sha512
+          if [[ ! -f apache-beam-$RELEASE_VER.zip ]]; then
+            { echo "Fail to download Python Staging RC files." ;exit 1; }
+          fi
+
+          echo "--------------------------Verifying Hashes------------------------------------"
+          sha512sum -c apache-beam-${RELEASE_VER}.zip.sha512
+
+          `which pip` install --upgrade pip
+          `which pip` install --upgrade setuptools
+    - name: Installing python SDK
+      shell: bash
+      run: pip install apache-beam-${RELEASE_VER}.zip[gcp]
