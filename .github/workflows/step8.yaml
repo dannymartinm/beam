@@ -24,6 +24,8 @@ env: # This should be a set of github secrets
   SHARED_PUBSUB_TOPIC: leader_board-elink21-python-topic-TEST
   FIXED_WINDOW_DURATION: 20
 jobs:
+
+
   generate_shared_pubsub:
     outputs:
       SHARED_PUBSUB_TOPIC: ${{steps.generate_pub_sub_name.outputs.pubsub}}
@@ -32,11 +34,10 @@ jobs:
     - id: generate_pub_sub_name
     #TODO: Change to random once everything is working
       run: |
-        echo "SHARED_PUBSUB_TOPIC=leader_board-${GITHUB_ACTOR}-python-topic-TEST" >> $GITHUB_ENV 
+        echo "SHARED_PUBSUB_TOPIC=leader_board-elink21-python-topic-TEST" >> $GITHUB_ENV 
     - name: Sending PubSub name to env
       run: |
-        pubsub=$SHARED_PUBSUB_TOPIC
-        echo "::set-output name=pubsub::$pubsub"
+        echo "::set-output name=pubsub::leader_board-elink21-python-topic-TEST"
     - name: Creating Pub Sub Topics
       run: gcloud pubsub topics create --project=${USER_GCP_PROJECT} ${SHARED_PUBSUB_TOPIC}
 
@@ -182,11 +183,10 @@ jobs:
   #         --project=${USER_GCP_PROJECT} \
   #         --topic projects/${USER_GCP_PROJECT}/topics/${SHARED_PUBSUB_TOPIC} \
   #         --dataset ${LEADERBOARD_DIRECT_DATASET} || true
-  #     - name: Removing Pub Sub Topic
+  #     - name: Removing BigQuery Dataset
   #       if: always()
   #       run: | 
   #         bq rm -f $LEADERBOARD_DIRECT_DATASET
-  #         gcloud pubsub topics delete --project=${USER_GCP_PROJECT} ${SHARED_PUBSUB_TOPIC} 
 
 
 
@@ -226,12 +226,13 @@ jobs:
   #         --runner DataflowRunner \
   #         --temp_location=${USER_GCS_BUCKET}/temp/ \
   #         --sdk_location apache-beam-${RELEASE_VER}.zip || true
-  #     - name: Removing Pub Sub Topic
+  #     - name: Removing BigQuery Dataset
   #       if: always()
   #       run: | 
   #         bq rm -f $LEADERBOARD_DF_DATASET
-  #         gcloud pubsub topics delete --project=${USER_GCP_PROJECT} ${SHARED_PUBSUB_TOPIC}
       
+
+
   # direct_runner_gamestats:
   #   runs-on: [self-hosted,ubuntu-20.04]
   #   strategy:
@@ -262,11 +263,10 @@ jobs:
   #         --topic projects/${USER_GCP_PROJECT}/topics/${SHARED_PUBSUB_TOPIC} \
   #         --dataset ${GAMESTATS_DIRECT_DATASET} \
   #         --fixed_window_duration ${FIXED_WINDOW_DURATION} || true
-  #     - name: Removing Pub Sub Topic
+  #     - name: Removing BigQuery Dataset
   #       if: always()
   #       run: | 
   #         bq rm -f $GAMESTATS_DIRECT_DATASET
-  #         gcloud pubsub topics delete --project=${USER_GCP_PROJECT} ${SHARED_PUBSUB_TOPIC}    
 
   dataflow_runner_gamestats:
     runs-on: [self-hosted,ubuntu-20.04]
@@ -302,9 +302,15 @@ jobs:
           --temp_location=${USER_GCS_BUCKET}/temp/ \
           --sdk_location apache-beam-${RELEASE_VER}.zip \
           --fixed_window_duration ${FIXED_WINDOW_DURATION} || true
-      - name: Removing Pub Sub Topic
+      - name: Removing BigQuery Dataset
         if: always()
         run: | 
           bq rm -f $GAMESTATS_DF_DATASET
-          gcloud pubsub topics delete --project=${USER_GCP_PROJECT} ${SHARED_PUBSUB_TOPIC}    
-    
+  
+  remove_shared_pubsub:
+    runs-on: [self-hosted,ubuntu-latest]
+    needs: [dataflow_runner_gamestats]
+    if: always()
+    steps:
+      - name: Deleting Shared Pub Sub
+        run: gcloud pubsub topics delete --project=${USER_GCP_PROJECT} ${SHARED_PUBSUB_TOPIC}

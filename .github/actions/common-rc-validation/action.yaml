@@ -9,10 +9,6 @@ runs:
     - name: Downloading Python Staging RC
       shell: bash
       run: |
-          echo ""
-          echo "====================Starting Python Cross-language Validations==============="
-  
-
           echo "---------------------Downloading Python Staging RC----------------------------"
           wget ${PYTHON_RC_DOWNLOAD_URL}/${RELEASE_VER}/python/apache-beam-${RELEASE_VER}.zip
           wget ${PYTHON_RC_DOWNLOAD_URL}/${RELEASE_VER}/python/apache-beam-${RELEASE_VER}.zip.sha512
