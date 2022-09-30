@@ -296,7 +296,7 @@ jobs:
           timeout --preserve-status 1m python -m apache_beam.examples.complete.game.game_stats \
           --project=${USER_GCP_PROJECT} \
           --region=${USER_GCP_REGION} \
-          --topic projects/${USER_GCP_PROJECT}/topics/${SHARED_PUBSUB_TOPIC} \
+          --topic projects/${USER_GCP_PROJECT}/topics/${{needs.generate_shared_pubsub.outputs.name}} \
           --dataset ${GAMESTATS_DF_DATASET} \
           --runner DataflowRunner \
           --temp_location=${USER_GCS_BUCKET}/temp/ \
@@ -308,7 +308,7 @@ jobs:
           bq rm -f $GAMESTATS_DF_DATASET
   
   remove_shared_pubsub:
-    runs-on: [self-hosted,ubuntu-latest]
+    runs-on: [self-hosted,ubuntu-20.04]
     needs: [dataflow_runner_gamestats, generate_shared_pubsub]
     if: always()
     steps:
