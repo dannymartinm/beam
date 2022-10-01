@@ -285,6 +285,7 @@ jobs:
       matrix: 
         py_version: [3.8]
     needs: generate_shared_pubsub
+    if: always()
     steps:
       - name: Checkout code
         uses: actions/checkout@v3
@@ -295,7 +296,7 @@ jobs:
       - name: Set python env
         uses: ./.github/actions/common-rc-validation
       - name: Exporting leaderboard Dataset
-        run: echo "LEADERBOARD_DIRECT_DATASET=${GITHUB_ACTOR}_python_validations_$(date +%m%d)_$RANDOM_A" >> $GITHUB_ENV
+        run: echo "LEADERBOARD_DIRECT_DATASET=A${GITHUB_ACTOR}_python_validations_$(date +%m%d)_$RANDOM" >> $GITHUB_ENV
       - name: Creating Dataset
         run: bq mk --project_id=${USER_GCP_PROJECT} ${LEADERBOARD_DIRECT_DATASET}
       - name: Starting Leaderboard with DirectRunner
@@ -326,6 +327,7 @@ jobs:
       matrix:
         py_version: [3.8]
     needs: [generate_shared_pubsub, direct_runner_leaderboard]
+    if: always()
     steps:
       - name: Checkout code
         uses: actions/checkout@v3
@@ -336,7 +338,7 @@ jobs:
       - name: Set python env
         uses: ./.github/actions/common-rc-validation
       - name: Exporting Dataflow Dataset
-        run: echo "LEADERBOARD_DF_DATASET=${GITHUB_ACTOR}_python_validations_$(date +%m%d)_$RANDOM_B" >> $GITHUB_ENV
+        run: echo "LEADERBOARD_DF_DATASET=B${GITHUB_ACTOR}_python_validations_$(date +%m%d)_$RANDOM" >> $GITHUB_ENV
       - name: Creating Dataset
         run: bq mk --project_id=${USER_GCP_PROJECT} ${LEADERBOARD_DF_DATASET}
       - name: Starting Leaderboard with Dataflow
@@ -371,6 +373,7 @@ jobs:
       matrix:
         py_version: [3.8]
     needs: [generate_shared_pubsub, dataflow_runner_leaderboard]
+    if: always()
     steps:
       - name: Checkout code
         uses: actions/checkout@v3
@@ -382,7 +385,7 @@ jobs:
       - name: Set python env
         uses: ./.github/actions/common-rc-validation
       - name: Exporting Gamestates Direct Dataset
-        run: echo "GAMESTATS_DIRECT_DATASET=${GITHUB_ACTOR}_python_validations_$(date +%m%d)_$RANDOM" >> $GITHUB_ENV
+        run: echo "GAMESTATS_DIRECT_DATASET=$C{GITHUB_ACTOR}_python_validations_$(date +%m%d)_$RANDOM" >> $GITHUB_ENV
       - name: Creating Dataset
         run: bq mk --project_id=${USER_GCP_PROJECT} ${GAMESTATS_DIRECT_DATASET}
       - name: Starting Gamestats with DirectRunner
@@ -413,6 +416,7 @@ jobs:
       matrix:
         py_version: [3.8]
     needs: [generate_shared_pubsub, direct_runner_gamestats]
+    if: always()
     steps:
       - name: Checkout code
         uses: actions/checkout@v3
@@ -423,7 +427,7 @@ jobs:
       - name: Set python env
         uses: ./.github/actions/common-rc-validation
       - name: Exporting Gamestates Direct Dataset
-        run: echo "GAMESTATS_DF_DATASET=${GITHUB_ACTOR}_python_validations_$(date +%m%d)_$RANDOM" >> $GITHUB_ENV
+        run: echo "GAMESTATS_DF_DATASET=D${GITHUB_ACTOR}_python_validations_$(date +%m%d)_$RANDOM" >> $GITHUB_ENV
       - name: Creating Dataset
         run: bq mk --project_id=${USER_GCP_PROJECT} ${GAMESTATS_DF_DATASET}
       - name: Starting Gamestats with DirectRunner
