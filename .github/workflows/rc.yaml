@@ -224,9 +224,7 @@ jobs:
     steps:
     - name: Checkout code
       uses: actions/checkout@v3
-      with:
-        repository: apache/beam
-        ref: v2.42.0-RC1
+
     - name: Install Python
       uses: actions/setup-python@v4
       with:
@@ -239,7 +237,12 @@ jobs:
       with:
         java-version: 11
 
-    
+    - name: Checkout code
+      uses: actions/checkout@v3
+      with:
+        repository: apache/beam
+        ref: v2.42.0-RC1
+
     - name: Updating Settings
       run: |
         mkdir .m2
@@ -335,15 +338,18 @@ jobs:
     steps:
       - name: Checkout code
         uses: actions/checkout@v3
-        with:
-          repository: apache/beam
-          ref: v2.42.0-RC1
+        
       - name: Install Python
         uses: actions/setup-python@v4
         with:
           python-version: ${{matrix.py_version}}
       - name: Set python env
         uses: ./.github/actions/common-rc-validation
+      - name: Checkout code
+        uses: actions/checkout@v3
+        with:
+          repository: apache/beam
+          ref: v2.42.0-RC1
       - name: Exporting Dataflow Dataset
         run: echo "LEADERBOARD_DF_DATASET=B${GITHUB_ACTOR}_python_validations_$(date +%m%d)_$RANDOM" >> $GITHUB_ENV
       - name: Creating Dataset
