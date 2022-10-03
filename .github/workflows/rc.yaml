@@ -457,7 +457,7 @@ jobs:
           echo '*****************************************************';
           echo '* Running Python Leaderboard with DataflowRunner';
           echo '*****************************************************';
-          timeout --preserve-status 10m python -m apache_beam.examples.complete.game.leader_board \
+          timeout --preserve-status 20m python -m apache_beam.examples.complete.game.leader_board \
           --project=${USER_GCP_PROJECT} \
           --region=${USER_GCP_REGION} \
           --topic projects/${USER_GCP_PROJECT}/topics/${{needs.generate_shared_pubsub.outputs.name}} \
@@ -476,7 +476,6 @@ jobs:
           bq rm -f ${LEADERBOARD_DF_DATASET}.leader_board_teams
           bq rm -f $LEADERBOARD_DF_DATASET
       
-
 
   direct_runner_gamestats:
     runs-on: [self-hosted,ubuntu-20.04]
