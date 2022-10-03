@@ -538,7 +538,7 @@ jobs:
           echo '*****************************************************';
           echo '* Running GameStats with DirectRunner';
           echo '*****************************************************';
-          timeout --preserve-status 25m python -m apache_beam.examples.complete.game.game_stats \
+          timeout --preserve-status 40m python -m apache_beam.examples.complete.game.game_stats \
           --project=${USER_GCP_PROJECT} \
           --topic projects/${USER_GCP_PROJECT}/topics/${{needs.generate_shared_pubsub.outputs.name}} \
           --dataset ${GAMESTATS_DIRECT_DATASET} \
@@ -613,7 +613,7 @@ jobs:
           echo '*****************************************************';
           echo '* Running GameStats with DataflowRunner';
           echo '*****************************************************';
-          timeout --preserve-status 30m python -m apache_beam.examples.complete.game.game_stats \
+          timeout --preserve-status 45m python -m apache_beam.examples.complete.game.game_stats \
           --project=${USER_GCP_PROJECT} \
           --region=${USER_GCP_REGION} \
           --topic projects/${USER_GCP_PROJECT}/topics/${{needs.generate_shared_pubsub.outputs.name}} \
