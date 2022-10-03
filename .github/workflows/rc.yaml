@@ -275,8 +275,13 @@ jobs:
     - name: Updating Settings
       run: |
         cd ~
-        mkdir .m2
+        if [[ ! -d .m2 ]]; then
+          mkdir .m2
+        fi
         cd .m2
+        if [[ -f ~/.m2/settings.xml ]]; then
+          mv settings.xml /tmp/
+        fi
         touch settings.xml
         echo "<settings>" >> settings.xml
         echo "  <profiles>" >> settings.xml
