@@ -600,7 +600,7 @@ jobs:
   
   remove_shared_pubsub:
     runs-on: [self-hosted,ubuntu-20.04]
-    needs: [generate_shared_pubsub,  direct_runner_leaderboard]
+    needs: [generate_shared_pubsub,  direct_runner_gamestats]
     if: always()
     steps:
       - name: Deleting Shared Pub Sub
