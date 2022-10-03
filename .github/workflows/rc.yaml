@@ -14,15 +14,14 @@ on:
         description: RC number
         required: true
         default: "1"
-env: # This should be a set of github secrets
+env: 
   RC_TAG: "v${{github.event.inputs.RELEASE_VER}}-RC${{github.event.inputs.RC_NUM}}"
   RELEASE_VER: ${{github.event.inputs.RELEASE_VER}}    
-  REF: https://github.com/apache/beam/tree/v2.42.0-RC1
   USER_GCP_PROJECT: apache-beam-testing
   PYTHON_RC_DOWNLOAD_URL: https://dist.apache.org/repos/dist/dev/beam
   USER_GCP_REGION: us-central1
   USER_GCP_ZONE: us-central1-a
-  REPO_URL: https://repository.apache.org/content/repositories/orgapachebeam-1284
+  REPO_URL: https://repository.apache.org/content/repositories/orgapachebeam-1285
   FIXED_WINDOW_DURATION: 20
 jobs:
 
