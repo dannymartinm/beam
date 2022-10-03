@@ -224,25 +224,54 @@ jobs:
     steps:
     - name: Checkout code
       uses: actions/checkout@v3
-
+      with:
+        repository: apache/beam
+        ref: v2.42.0-RC1
     - name: Install Python
       uses: actions/setup-python@v4
       with:
         python-version: '3.8'
         cache: 'pip' # caching pip dependencies
-    - name: Setting python env 
-      uses: ./.github/actions/common-rc-validation
+    ########    
+    - name: install-wheel
+      shell: bash
+      run: pip install --upgrade pip setuptools wheel
+    - name: Downloading Python Staging RC
+      shell: bash
+      run: |
+          echo "---------------------Downloading Python Staging RC----------------------------"
+          wget ${PYTHON_RC_DOWNLOAD_URL}/${RELEASE_VER}/python/apache-beam-${RELEASE_VER}.zip
+          wget ${PYTHON_RC_DOWNLOAD_URL}/${RELEASE_VER}/python/apache-beam-${RELEASE_VER}.zip.sha512
+          if [[ ! -f apache-beam-$RELEASE_VER.zip ]]; then
+            { echo "Fail to download Python Staging RC files." ;exit 1; }
+          fi
+
+          echo "--------------------------Verifying Hashes------------------------------------"
+          sha512sum -c apache-beam-${RELEASE_VER}.zip.sha512
+
+          `which pip` install --upgrade pip
+          `which pip` install --upgrade setuptools
+    - name: Installing python SDK
+      shell: bash
+      run: pip install apache-beam-${RELEASE_VER}.zip[gcp]
+
+    - name: Donwloading Python RC
+      shell: bash
+      run: |
+        echo "---------------------Downloading Python Staging RC----------------------------"
+        wget ${PYTHON_RC_DOWNLOAD_URL}/${RELEASE_VER}/python/apache-beam-${RELEASE_VER}.zip
+        wget ${PYTHON_RC_DOWNLOAD_URL}/${RELEASE_VER}/python/apache-beam-${RELEASE_VER}.zip.sha512
+
+    - name: Verifying Hashes
+      shell: bash
+      run: |
+        echo "--------------------------Verifying Hashes------------------------------------"
+        sha512sum -c apache-beam-${RELEASE_VER}.zip.sha512
+    ########
     - name: Setup Maven Action
       uses: s4u/setup-maven-action@v1.2.1
       with:
         java-version: 11
-
-    - name: Checkout code
-      uses: actions/checkout@v3
-      with:
-        repository: apache/beam
-        ref: v2.42.0-RC1
-
     - name: Updating Settings
       run: |
         mkdir .m2
@@ -338,18 +367,51 @@ jobs:
     steps:
       - name: Checkout code
         uses: actions/checkout@v3
-        
+        with:
+          repository: apache/beam
+          ref: v2.42.0-RC1
+
       - name: Install Python
         uses: actions/setup-python@v4
         with:
           python-version: ${{matrix.py_version}}
-      - name: Set python env
-        uses: ./.github/actions/common-rc-validation
-      - name: Checkout code
-        uses: actions/checkout@v3
-        with:
-          repository: apache/beam
-          ref: v2.42.0-RC1
+      
+      ########    
+      - name: install-wheel
+        shell: bash
+        run: pip install --upgrade pip setuptools wheel
+      - name: Downloading Python Staging RC
+        shell: bash
+        run: |
+            echo "---------------------Downloading Python Staging RC----------------------------"
+            wget ${PYTHON_RC_DOWNLOAD_URL}/${RELEASE_VER}/python/apache-beam-${RELEASE_VER}.zip
+            wget ${PYTHON_RC_DOWNLOAD_URL}/${RELEASE_VER}/python/apache-beam-${RELEASE_VER}.zip.sha512
+            if [[ ! -f apache-beam-$RELEASE_VER.zip ]]; then
+              { echo "Fail to download Python Staging RC files." ;exit 1; }
+            fi
+
+            echo "--------------------------Verifying Hashes------------------------------------"
+            sha512sum -c apache-beam-${RELEASE_VER}.zip.sha512
+
+            `which pip` install --upgrade pip
+            `which pip` install --upgrade setuptools
+      - name: Installing python SDK
+        shell: bash
+        run: pip install apache-beam-${RELEASE_VER}.zip[gcp]
+
+      - name: Donwloading Python RC
+        shell: bash
+        run: |
+          echo "---------------------Downloading Python Staging RC----------------------------"
+          wget ${PYTHON_RC_DOWNLOAD_URL}/${RELEASE_VER}/python/apache-beam-${RELEASE_VER}.zip
+          wget ${PYTHON_RC_DOWNLOAD_URL}/${RELEASE_VER}/python/apache-beam-${RELEASE_VER}.zip.sha512
+
+      - name: Verifying Hashes
+        shell: bash
+        run: |
+          echo "--------------------------Verifying Hashes------------------------------------"
+          sha512sum -c apache-beam-${RELEASE_VER}.zip.sha512
+    ########
       - name: Exporting Dataflow Dataset
         run: echo "LEADERBOARD_DF_DATASET=B${GITHUB_ACTOR}_python_validations_$(date +%m%d)_$RANDOM" >> $GITHUB_ENV
       - name: Creating Dataset
