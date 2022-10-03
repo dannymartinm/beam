@@ -322,7 +322,6 @@ jobs:
       matrix: 
         py_version: [3.8]
     needs: generate_shared_pubsub
-    if: always()
     steps:
       - name: Checkout code
         uses: actions/checkout@v3
@@ -397,7 +396,6 @@ jobs:
       matrix:
         py_version: [3.8]
     needs: [generate_shared_pubsub]
-    if: always()
     steps:
       - name: Checkout code
         uses: actions/checkout@v3
@@ -482,7 +480,6 @@ jobs:
       matrix:
         py_version: [3.8]
     needs: [generate_shared_pubsub]
-    if: always()
     steps:
       - name: Checkout code
         uses: actions/checkout@v3
@@ -559,7 +556,6 @@ jobs:
       matrix:
         py_version: [3.8]
     needs: [generate_shared_pubsub]
-    if: always()
     steps:
       - name: Checkout code
         uses: actions/checkout@v3
