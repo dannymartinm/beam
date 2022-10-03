@@ -481,7 +481,7 @@ jobs:
     strategy:
       matrix:
         py_version: [3.8]
-    needs: [generate_shared_pubsub, dataflow_runner_leaderboard]
+    needs: [generate_shared_pubsub]
     if: always()
     steps:
       - name: Checkout code
