@@ -315,67 +315,20 @@ jobs:
   
   
 
-  # direct_runner_leaderboard:
-  #   runs-on: [self-hosted, ubuntu-20.04]
-  #   strategy:
-  #     matrix: 
-  #       py_version: [3.8]
-  #   needs: generate_shared_pubsub
-  #   if: always()
-  #   steps:
-  #     - name: Checkout code
-  #       uses: actions/checkout@v3
-  #     - name: Install Python
-  #       uses: actions/setup-python@v4
-  #       with:
-  #         python-version: ${{matrix.py_version}}
-  #     - name: Set python env
-  #       uses: ./.github/actions/common-rc-validation
-  #     - name: Exporting leaderboard Dataset
-  #       run: echo "LEADERBOARD_DIRECT_DATASET=A${GITHUB_ACTOR}_python_validations_$(date +%m%d)_$RANDOM" >> $GITHUB_ENV
-  #     - name: Creating Dataset
-  #       run: bq mk --project_id=${USER_GCP_PROJECT} ${LEADERBOARD_DIRECT_DATASET}
-  #     - name: Starting Leaderboard with DirectRunner
-  #       run: |
-  #         echo '*****************************************************';
-  #         echo '* Running Python Leaderboard with DirectRunner';
-  #         echo '*****************************************************';
-  #         timeout --preserve-status 5m python -m apache_beam.examples.complete.game.leader_board \
-  #         --project=${USER_GCP_PROJECT} \
-  #         --topic projects/${USER_GCP_PROJECT}/topics/${{needs.generate_shared_pubsub.outputs.name}} \
-  #         --dataset ${LEADERBOARD_DIRECT_DATASET} || true
-  #     - name: Checking results
-  #       run: |
-  #         bq head -n 10 ${LEADERBOARD_DIRECT_DATASET}.leader_board_users
-  #         bq head -n 10 ${LEADERBOARD_DIRECT_DATASET}.leader_board_teams
-  #     - name: Removing BigQuery Dataset
-  #       if: always()
-  #       run: | 
-  #         bq rm -f ${LEADERBOARD_DIRECT_DATASET}.leader_board_users
-  #         bq rm -f ${LEADERBOARD_DIRECT_DATASET}.leader_board_teams
-  #         bq rm -f $LEADERBOARD_DIRECT_DATASET
-
-
-          
-  dataflow_runner_leaderboard:
-    runs-on: [self-hosted,ubuntu-20.04]
+  direct_runner_leaderboard:
+    runs-on: [self-hosted, ubuntu-20.04]
     strategy:
-      matrix:
+      matrix: 
         py_version: [3.8]
-    needs: [generate_shared_pubsub]
+    needs: generate_shared_pubsub
     if: always()
     steps:
       - name: Checkout code
         uses: actions/checkout@v3
-        with:
-          repository: apache/beam
-          ref: v2.42.0-RC1
-
       - name: Install Python
         uses: actions/setup-python@v4
         with:
           python-version: ${{matrix.py_version}}
-      
       ########    
       - name: install-wheel
         shell: bash
@@ -412,33 +365,114 @@ jobs:
           echo "--------------------------Verifying Hashes------------------------------------"
           sha512sum -c apache-beam-${RELEASE_VER}.zip.sha512
     ########
-      - name: Exporting Dataflow Dataset
-        run: echo "LEADERBOARD_DF_DATASET=B${GITHUB_ACTOR}_python_validations_$(date +%m%d)_$RANDOM" >> $GITHUB_ENV
+      - name: Exporting leaderboard Dataset
+        run: echo "LEADERBOARD_DIRECT_DATASET=${GITHUB_ACTOR}_python_validations_$(date +%m%d)_$RANDOM" >> $GITHUB_ENV
       - name: Creating Dataset
-        run: bq mk --project_id=${USER_GCP_PROJECT} ${LEADERBOARD_DF_DATASET}
-      - name: Starting Leaderboard with Dataflow
+        run: bq mk --project_id=${USER_GCP_PROJECT} ${LEADERBOARD_DIRECT_DATASET}
+      - name: Starting Leaderboard with DirectRunner
         run: |
           echo '*****************************************************';
-          echo '* Running Python Leaderboard with DataflowRunner';
+          echo '* Running Python Leaderboard with DirectRunner';
           echo '*****************************************************';
-          timeout --preserve-status 10m python -m apache_beam.examples.complete.game.leader_board \
+          timeout --preserve-status 5m python -m apache_beam.examples.complete.game.leader_board \
           --project=${USER_GCP_PROJECT} \
-          --region=${USER_GCP_REGION} \
           --topic projects/${USER_GCP_PROJECT}/topics/${{needs.generate_shared_pubsub.outputs.name}} \
-          --dataset ${LEADERBOARD_DF_DATASET} \
-          --runner DataflowRunner \
-          --temp_location=${USER_GCS_BUCKET}/temp/ \
-          --sdk_location apache-beam-${RELEASE_VER}.zip || true
+          --dataset ${LEADERBOARD_DIRECT_DATASET} || true
       - name: Checking results
         run: |
-          bq head -n 10 ${LEADERBOARD_DF_DATASET}.leader_board_users
-          bq head -n 10 ${LEADERBOARD_DF_DATASET}.leader_board_teams
+          bq head -n 10 ${LEADERBOARD_DIRECT_DATASET}.leader_board_users
+          bq head -n 10 ${LEADERBOARD_DIRECT_DATASET}.leader_board_teams
       - name: Removing BigQuery Dataset
         if: always()
         run: | 
-          bq rm -f ${LEADERBOARD_DF_DATASET}.leader_board_users
-          bq rm -f ${LEADERBOARD_DF_DATASET}.leader_board_teams
-          bq rm -f $LEADERBOARD_DF_DATASET
+          bq rm -f ${LEADERBOARD_DIRECT_DATASET}.leader_board_users
+          bq rm -f ${LEADERBOARD_DIRECT_DATASET}.leader_board_teams
+          bq rm -f $LEADERBOARD_DIRECT_DATASET
+
+
+          
+  # dataflow_runner_leaderboard:
+  #   runs-on: [self-hosted,ubuntu-20.04]
+  #   strategy:
+  #     matrix:
+  #       py_version: [3.8]
+  #   needs: [generate_shared_pubsub]
+  #   if: always()
+  #   steps:
+  #     - name: Checkout code
+  #       uses: actions/checkout@v3
+  #       with:
+  #         repository: apache/beam
+  #         ref: v2.42.0-RC1
+
+  #     - name: Install Python
+  #       uses: actions/setup-python@v4
+  #       with:
+  #         python-version: ${{matrix.py_version}}
+      
+  #     ########    
+  #     - name: install-wheel
+  #       shell: bash
+  #       run: pip install --upgrade pip setuptools wheel
+  #     - name: Downloading Python Staging RC
+  #       shell: bash
+  #       run: |
+  #           echo "---------------------Downloading Python Staging RC----------------------------"
+  #           wget ${PYTHON_RC_DOWNLOAD_URL}/${RELEASE_VER}/python/apache-beam-${RELEASE_VER}.zip
+  #           wget ${PYTHON_RC_DOWNLOAD_URL}/${RELEASE_VER}/python/apache-beam-${RELEASE_VER}.zip.sha512
+  #           if [[ ! -f apache-beam-$RELEASE_VER.zip ]]; then
+  #             { echo "Fail to download Python Staging RC files." ;exit 1; }
+  #           fi
+
+  #           echo "--------------------------Verifying Hashes------------------------------------"
+  #           sha512sum -c apache-beam-${RELEASE_VER}.zip.sha512
+
+  #           `which pip` install --upgrade pip
+  #           `which pip` install --upgrade setuptools
+  #     - name: Installing python SDK
+  #       shell: bash
+  #       run: pip install apache-beam-${RELEASE_VER}.zip[gcp]
+
+  #     - name: Donwloading Python RC
+  #       shell: bash
+  #       run: |
+  #         echo "---------------------Downloading Python Staging RC----------------------------"
+  #         wget ${PYTHON_RC_DOWNLOAD_URL}/${RELEASE_VER}/python/apache-beam-${RELEASE_VER}.zip
+  #         wget ${PYTHON_RC_DOWNLOAD_URL}/${RELEASE_VER}/python/apache-beam-${RELEASE_VER}.zip.sha512
+
+  #     - name: Verifying Hashes
+  #       shell: bash
+  #       run: |
+  #         echo "--------------------------Verifying Hashes------------------------------------"
+  #         sha512sum -c apache-beam-${RELEASE_VER}.zip.sha512
+  #   ########
+  #     - name: Exporting Dataflow Dataset
+  #       run: echo "LEADERBOARD_DF_DATASET=${GITHUB_ACTOR}_python_validations_$(date +%m%d)_$RANDOM" >> $GITHUB_ENV
+  #     - name: Creating Dataset
+  #       run: bq mk --project_id=${USER_GCP_PROJECT} ${LEADERBOARD_DF_DATASET}
+  #     - name: Starting Leaderboard with Dataflow
+  #       run: |
+  #         echo '*****************************************************';
+  #         echo '* Running Python Leaderboard with DataflowRunner';
+  #         echo '*****************************************************';
+  #         timeout --preserve-status 10m python -m apache_beam.examples.complete.game.leader_board \
+  #         --project=${USER_GCP_PROJECT} \
+  #         --region=${USER_GCP_REGION} \
+  #         --topic projects/${USER_GCP_PROJECT}/topics/${{needs.generate_shared_pubsub.outputs.name}} \
+  #         --dataset ${LEADERBOARD_DF_DATASET} \
+  #         --runner DataflowRunner \
+  #         --temp_location=${USER_GCS_BUCKET}/temp/ \
+  #         --sdk_location apache-beam-${RELEASE_VER}.zip || true
+  #     - name: Checking results
+  #       run: |
+  #         bq head -n 10 ${LEADERBOARD_DF_DATASET}.leader_board_users
+  #         bq head -n 10 ${LEADERBOARD_DF_DATASET}.leader_board_teams
+  #     - name: Removing BigQuery Dataset
+  #       if: always()
+  #       run: | 
+  #         bq rm -f ${LEADERBOARD_DF_DATASET}.leader_board_users
+  #         bq rm -f ${LEADERBOARD_DF_DATASET}.leader_board_teams
+  #         bq rm -f $LEADERBOARD_DF_DATASET
       
 
 
@@ -460,7 +494,7 @@ jobs:
   #     - name: Set python env
   #       uses: ./.github/actions/common-rc-validation
   #     - name: Exporting Gamestates Direct Dataset
-  #       run: echo "GAMESTATS_DIRECT_DATASET=$C{GITHUB_ACTOR}_python_validations_$(date +%m%d)_$RANDOM" >> $GITHUB_ENV
+  #       run: echo "GAMESTATS_DIRECT_DATASET=${GITHUB_ACTOR}_python_validations_$(date +%m%d)_$RANDOM" >> $GITHUB_ENV
   #     - name: Creating Dataset
   #       run: bq mk --project_id=${USER_GCP_PROJECT} ${GAMESTATS_DIRECT_DATASET}
   #     - name: Starting Gamestats with DirectRunner
@@ -502,7 +536,7 @@ jobs:
   #     - name: Set python env
   #       uses: ./.github/actions/common-rc-validation
   #     - name: Exporting Gamestates Direct Dataset
-  #       run: echo "GAMESTATS_DF_DATASET=D${GITHUB_ACTOR}_python_validations_$(date +%m%d)_$RANDOM" >> $GITHUB_ENV
+  #       run: echo "GAMESTATS_DF_DATASET=${GITHUB_ACTOR}_python_validations_$(date +%m%d)_$RANDOM" >> $GITHUB_ENV
   #     - name: Creating Dataset
   #       run: bq mk --project_id=${USER_GCP_PROJECT} ${GAMESTATS_DF_DATASET}
   #     - name: Starting Gamestats with DirectRunner
@@ -532,7 +566,7 @@ jobs:
   
   remove_shared_pubsub:
     runs-on: [self-hosted,ubuntu-20.04]
-    needs: [generate_shared_pubsub, dataflow_runner_leaderboard]
+    needs: [generate_shared_pubsub,  direct_runner_leaderboard]
     if: always()
     steps:
       - name: Deleting Shared Pub Sub
