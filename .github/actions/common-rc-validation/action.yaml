@@ -1,4 +1,4 @@
-name: "Setup RC Variables"
+name: "Setup Python Env"
 description: Setup Common RC Variables and dependecies
 runs:
   using: composite
