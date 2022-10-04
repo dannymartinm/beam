@@ -197,7 +197,7 @@ jobs:
         pip install --upgrade pip setuptools wheel
         pip install apache-beam-${RELEASE_VER}.zip[gcp]
     - name: Waiting for Kafka cluster to be ready
-      run: kubectl wait --for=condition=Ready pod/kafka-0 --timeout=900s
+      run: kubectl wait --for=condition=Ready pod/kafka-0 --timeout=1200s
     - name: Start xlang Kafka Taxi with Dataflow Runner 
       run: |
         echo "BOOTSTRAP_SERVERS=$(kubectl get svc outside-0 -o jsonpath='{.status.loadBalancer.ingress[0].ip}'):32400" >> $GITHUB_ENV
