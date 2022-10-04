@@ -14,7 +14,7 @@ on:
         description: RC number
         required: true
         default: "1"
-      REPO_URL:
+      APACHE_CONTENTS_REPO:
         description: Apache Contents Repository
         required: true
         default: https://repository.apache.org/content/repositories/orgapachebeam-1285
@@ -45,7 +45,7 @@ env:
   PYTHON_RC_DOWNLOAD_URL: https://dist.apache.org/repos/dist/dev/beam
   USER_GCP_REGION: us-central1
   USER_GCP_ZONE: us-central1-a
-  REPO_URL: ${{github.event.inputs.REPO_URL}}
+  APACHE_CONTENTS_REPO: ${{github.event.inputs.APACHE_CONTENTS_REPO}}
   FIXED_WINDOW_DURATION: 20
 
 jobs:
@@ -61,8 +61,7 @@ jobs:
       uses: actions/checkout@v3
       with:
         repository: apache/beam
-        ref: ${{env.RC_TAG}}
-        
+        ref: ${{env.RC_TAG}}      
 
     - name: Install Kubectl 
       uses: azure/setup-kubectl@v3
@@ -108,7 +107,7 @@ jobs:
       run: |
         echo "SQL_TAXI_TOPIC=${GITHUB_ACTOR}_python_validations_$(date +%m%d)_$RANDOM" >> $GITHUB_ENV
         echo "SQL_TAXI_SUBSCRIPTION=${GITHUB_ACTOR}_python_validations_$(date +%m%d)_$RANDOM"  >> $GITHUB_ENV
-        echo "SQL_EXPANSION_SERVICE_JAR=${REPO_URL}/org/apache/beam/beam-sdks-java-extensions-sql-expansion-service/${RELEASE_VER}/beam-sdks-java-extensions-sql-expansion-service-${RELEASE_VER}.jar" >> $GITHUB_ENV
+        echo "SQL_EXPANSION_SERVICE_JAR=${APACHE_CONTENTS_REPO}/org/apache/beam/beam-sdks-java-extensions-sql-expansion-service/${RELEASE_VER}/beam-sdks-java-extensions-sql-expansion-service-${RELEASE_VER}.jar" >> $GITHUB_ENV
     - name: Creating Pub/Sub Topics
       run: |
         gcloud pubsub topics create --project=${USER_GCP_PROJECT} ${SQL_TAXI_TOPIC}
@@ -229,7 +228,7 @@ jobs:
       run: |
         echo "BOOTSTRAP_SERVERS=$(kubectl get svc outside-0 -o jsonpath='{.status.loadBalancer.ingress[0].ip}'):32400" >> $GITHUB_ENV
         echo "KAFKA_TAXI_DF_DATASET=${GITHUB_ACTOR}_python_validations_$(date +%m%d)_$RANDOM" >> $GITHUB_ENV
-        echo "KAFKA_EXPANSION_SERVICE_JAR=${REPO_URL}/org/apache/beam/beam-sdks-java-io-expansion-service/${RELEASE_VER}/beam-sdks-java-io-expansion-service-${RELEASE_VER}.jar" >> $GITHUB_ENV
+        echo "KAFKA_EXPANSION_SERVICE_JAR=${APACHE_CONTENTS}/org/apache/beam/beam-sdks-java-io-expansion-service/${RELEASE_VER}/beam-sdks-java-io-expansion-service-${RELEASE_VER}.jar" >> $GITHUB_ENV
     - name: Checking variables
       run: |
         echo $BOOTSTRAP_SERVERS
@@ -362,7 +361,7 @@ jobs:
         echo "        <repository>" >> settings.xml
         echo "          <id>Release ${RELEASE_VER} RC${{github.event.inputs.RC_NUM}}</id>" >> settings.xml
         echo "          <name>Release ${RELEASE_VER} RC${{github.event.inputs.RC_NUM}}</name>" >> settings.xml
-        echo "          <url>${REPO_URL}</url>" >> settings.xml
+        echo "          <url>${APACHE_CONTENTS_REPO}</url>" >> settings.xml
         echo "        </repository>" >> settings.xml
         echo "      </repositories>" >> settings.xml
         echo "    </profile>" >> settings.xml
@@ -386,7 +385,6 @@ jobs:
         ls
         cd word-count-beam
         timeout --preserve-status 55m mvn compile exec:java -Dexec.mainClass=org.apache.beam.examples.complete.game.injector.Injector -Dexec.args="${USER_GCP_PROJECT} ${{needs.generate_shared_pubsub.outputs.name}} none" || true 
-  
   
 
   direct_runner_leaderboard:
