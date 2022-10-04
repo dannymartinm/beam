@@ -1,4 +1,23 @@
-name: Run RC Validations
+# Licensed to the Apache Software Foundation (ASF) under one
+# or more contributor license agreements.  See the NOTICE file
+# distributed with this work for additional information
+# regarding copyright ownership.  The ASF licenses this file
+# to you under the Apache License, Version 2.0 (the
+# "License"); you may not use this file except in compliance
+# with the License.  You may obtain a copy of the License at
+#
+#   http://www.apache.org/licenses/LICENSE-2.0
+#
+# Unless required by applicable law or agreed to in writing,
+# software distributed under the License is distributed on an
+# "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+# KIND, either express or implied.  See the License for the
+# specific language governing permissions and limitations
+# under the License.
+
+# To learn more about GitHub Actions in Apache Beam check the CI.m
+
+name: Run RC Validation
 on:
   workflow_dispatch:
     inputs:
@@ -47,9 +66,38 @@ env:
   USER_GCP_ZONE: us-central1-a
   APACHE_CONTENTS_REPO: ${{github.event.inputs.APACHE_CONTENTS_REPO}}
   FIXED_WINDOW_DURATION: 20
-
 jobs:
-
+  python_release_candidate:
+    runs-on: [self-hosted, ubuntu-20.04]
+    permissions:
+      pull-requests: write
+      contents: write
+    env:
+      GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      RELEASE_BRANCH: "release-${{github.event.inputs.RELEASE_VER}}"
+      WORKING_BRANCH: "v${{github.event.inputs.RELEASE_VER}}-RC${{github.event.inputs.RC_NUM}}_validations"
+    steps:
+      - name: Check out code
+        uses: actions/checkout@v3
+        with:
+          ref: ${{ env.RC_TAG }}
+      - name: Setup GitHub CLI
+        uses: ./.github/actions/setup-gh-cli-linux
+      - name: Set git config
+        run: |
+          git config user.name $GITHUB_ACTOR
+          git config user.email actions@"$RUNNER_NAME".local
+      - name: Create Pull Request
+        run: |
+          git checkout -b ${{env.WORKING_BRANCH}} ${{ env.RC_TAG }} --quiet
+          touch empty_file.txt
+          git add empty_file.txt
+          git commit -m "Add empty file in order to create PR" --quiet
+          git push origin ${{env.WORKING_BRANCH}} --quiet
+          GITHUB_PR_URL=$(gh pr create -B ${{env.RELEASE_BRANCH}} -H ${{env.WORKING_BRANCH}} -t"[DO NOT MERGE] Run Python RC Validation Tests" -b "PR to run Python ReleaseCandidate Jenkins Job.")
+      - name: Comment on PR to Trigger Python ReleaseCandidate Test
+        run: |
+          gh pr comment "$GITHUB_PR_URL" --body "Run Python ReleaseCandidate"
   sql_taxi_with_dataflow:
     runs-on: [self-hosted,ubuntu-20.04]
     if: ${{github.event.inputs.RUN_SQL_TAXI_WITH_DATAFLOW == 'true'}}
@@ -464,8 +512,6 @@ jobs:
           bq rm -f ${LEADERBOARD_DIRECT_DATASET}.leader_board_users
           bq rm -f ${LEADERBOARD_DIRECT_DATASET}.leader_board_teams
           bq rm -f $LEADERBOARD_DIRECT_DATASET
-
-
   dataflow_runner_leaderboard:
     runs-on: [self-hosted,ubuntu-20.04]
     if: ${{github.event.inputs.RUN_DATAFLOW_RUNNER_TESTS=='true'}}
@@ -711,7 +757,6 @@ jobs:
           bq rm -f ${GAMESTATS_DF_DATASET}.game_stats_teams
           bq rm -f ${GAMESTATS_DF_DATASET}.game_stats_sessions 
           bq rm -f $GAMESTATS_DF_DATASET
-  
   remove_shared_pubsub:
     runs-on: [self-hosted,ubuntu-20.04]
     needs: [java_injector]
