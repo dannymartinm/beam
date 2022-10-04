@@ -80,6 +80,7 @@ jobs:
       - name: Check out code
         uses: actions/checkout@v3
         with:
+          repository: apache/beam
           ref: ${{ env.RC_TAG }}
       - id: setup-gh-cli-linux
         shell: bash
