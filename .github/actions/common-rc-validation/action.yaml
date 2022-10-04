@@ -1,5 +1,5 @@
 name: "Setup Python Env"
-description: Setup Common RC Variables and dependecies
+description: Setup Common RC Variables and dependencies
 runs:
   using: composite
   steps:
