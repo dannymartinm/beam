@@ -81,8 +81,16 @@ jobs:
         uses: actions/checkout@v3
         with:
           ref: ${{ env.RC_TAG }}
-      - name: Setup GitHub CLI
-        uses: ./.github/actions/setup-gh-cli-linux
+      - id: setup-gh-cli-linux
+        shell: bash
+        run: |
+          curl -fsSL https://cli.github.com/packages/githubcli-archive-keyring.gpg | sudo dd of=/usr/share/keyrings/githubcli-archive-keyring.gpg \
+          && sudo chmod go+r /usr/share/keyrings/githubcli-archive-keyring.gpg \
+          && echo "deb [arch=$(dpkg --print-architecture) signed-by=/usr/share/keyrings/githubcli-archive-keyring.gpg] https://cli.github.com/packages stable main" | sudo tee /etc/apt/sources.list.d/github-cli.list > /dev/null \
+          && sudo apt update \
+          && sudo apt install gh -y
+          gh --version- name: Setup GitHub CLI
+          uses: ./.github/actions/setup-gh-cli-linux
       - name: Set git config
         run: |
           git config user.name $GITHUB_ACTOR
@@ -757,6 +765,7 @@ jobs:
           bq rm -f ${GAMESTATS_DF_DATASET}.game_stats_teams
           bq rm -f ${GAMESTATS_DF_DATASET}.game_stats_sessions 
           bq rm -f $GAMESTATS_DF_DATASET
+  
   remove_shared_pubsub:
     runs-on: [self-hosted,ubuntu-20.04]
     needs: [java_injector]
