@@ -769,7 +769,7 @@ jobs:
   remove_shared_pubsub:
     runs-on: [self-hosted,ubuntu-20.04]
     needs: [java_injector, generate_shared_pubsub]
-    if: ${{github.event.inputs.RUN_DATAFLOW_RUNNER_TESTS=='true' || github.event.inputs.RUN_DIRECT_RUNNER_TESTS == 'true'}}
+    if: always()
     steps:
       - name: Deleting Shared Pub Sub
         run: gcloud pubsub topics delete --project=${USER_GCP_PROJECT}  ${{needs.generate_shared_pubsub.outputs.name}}
