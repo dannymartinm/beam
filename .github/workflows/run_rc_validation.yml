@@ -100,7 +100,7 @@ jobs:
           touch empty_file.txt
           git add empty_file.txt
           git commit -m "Add empty file in order to create PR" --quiet
-          git push origin ${{env.WORKING_BRANCH}} --quiet
+          git push --force origin ${{env.WORKING_BRANCH}} -f --quiet
           GITHUB_PR_URL=$(gh pr create -B ${{env.RELEASE_BRANCH}} -H ${{env.WORKING_BRANCH}} -t"[DO NOT MERGE] Run Python RC Validation Tests" -b "PR to run Python ReleaseCandidate Jenkins Job.")
       - name: Comment on PR to Trigger Python ReleaseCandidate Test
         run: |
