@@ -105,6 +105,7 @@ jobs:
       - name: Comment on PR to Trigger Python ReleaseCandidate Test
         run: |
           gh pr comment "$GITHUB_PR_URL" --body "Run Python ReleaseCandidate"
+  
   sql_taxi_with_dataflow:
     runs-on: [self-hosted,ubuntu-20.04]
     if: ${{github.event.inputs.RUN_SQL_TAXI_WITH_DATAFLOW == 'true'}}
@@ -439,7 +440,7 @@ jobs:
       run: |
         ls
         cd word-count-beam
-        timeout --preserve-status 55m mvn compile exec:java -Dexec.mainClass=org.apache.beam.examples.complete.game.injector.Injector -Dexec.args="${USER_GCP_PROJECT} ${{needs.generate_shared_pubsub.outputs.name}} none" || true 
+        timeout --preserve-status 50m mvn compile exec:java -Dexec.mainClass=org.apache.beam.examples.complete.game.injector.Injector -Dexec.args="${USER_GCP_PROJECT} ${{needs.generate_shared_pubsub.outputs.name}} none" || true 
   
 
   direct_runner_leaderboard:
@@ -746,7 +747,7 @@ jobs:
           echo '*****************************************************';
           echo '* Running GameStats with DataflowRunner';
           echo '*****************************************************';
-          timeout --preserve-status 50m python -m apache_beam.examples.complete.game.game_stats \
+          timeout --preserve-status 45m python -m apache_beam.examples.complete.game.game_stats \
           --project=${USER_GCP_PROJECT} \
           --region=${USER_GCP_REGION} \
           --topic projects/${USER_GCP_PROJECT}/topics/${{needs.generate_shared_pubsub.outputs.name}} \
