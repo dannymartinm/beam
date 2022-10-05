@@ -134,7 +134,7 @@ jobs:
         java-version: 11
 
     - name: Setting python env
-      uses: ./.github/actions/actions/common-rc-validation
+      uses: ./.github/actions/common-rc-validation
       
 
     - name: Setting Taxi Variables
@@ -204,7 +204,7 @@ jobs:
         cache: 'pip' 
 
     - name: Setting python env
-      uses: ./.github/actions/actions/common-rc-validation
+      uses: ./.github/actions/common-rc-validation
 
     - name: Installing gcloud-auth-plugin
       run: sudo apt-get install google-cloud-sdk-gke-gcloud-auth-plugin
@@ -301,7 +301,7 @@ jobs:
         python-version: '3.8'
     
     - name: Setting python env
-      uses: ./.github/actions/actions/common-rc-validation
+      uses: ./.github/actions/common-rc-validation
 
     - name: Setup Maven Action
       uses: s4u/setup-maven-action@v1.2.1
@@ -375,7 +375,7 @@ jobs:
           python-version: ${{matrix.py_version}}
       
       - name: Setting python env
-        uses: ./.github/actions/actions/common-rc-validation
+        uses: ./.github/actions/common-rc-validation
       
       - name: Exporting leaderboard Dataset
         run: echo "LEADERBOARD_DIRECT_DATASET=${GITHUB_ACTOR}_python_validations_$(date +%m%d)_$RANDOM" >> $GITHUB_ENV
@@ -421,7 +421,7 @@ jobs:
           python-version: ${{matrix.py_version}}
       
       - name: Setting python env
-        uses: ./.github/actions/actions/common-rc-validation
+        uses: ./.github/actions/common-rc-validation
       
       - name: Exporting Dataflow Dataset
         run: echo "LEADERBOARD_DF_DATASET=${GITHUB_ACTOR}_python_validations_$(date +%m%d)_$RANDOM" >> $GITHUB_ENV
@@ -471,7 +471,7 @@ jobs:
           python-version: ${{matrix.py_version}}
    
       - name: Setting python env
-        uses: ./.github/actions/actions/common-rc-validation
+        uses: ./.github/actions/common-rc-validation
       
       - name: Exporting Gamestates Direct Dataset
         run: echo "GAMESTATS_DIRECT_DATASET=${GITHUB_ACTOR}_python_validations_$(date +%m%d)_$RANDOM" >> $GITHUB_ENV
@@ -518,7 +518,7 @@ jobs:
           python-version: ${{matrix.py_version}}
       
       - name: Setting python env
-        uses: ./.github/actions/actions/common-rc-validation
+        uses: ./.github/actions/common-rc-validation
       
       - name: Exporting Gamestates Direct Dataset
         run: echo "GAMESTATS_DF_DATASET=${GITHUB_ACTOR}_python_validations_$(date +%m%d)_$RANDOM" >> $GITHUB_ENV
