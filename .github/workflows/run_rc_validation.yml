@@ -82,13 +82,7 @@ jobs:
         with:
           ref: ${{ env.RC_TAG }}
       - id: setup-gh-cli-linux
-        shell: bash
-        run: |
-          curl -fsSL https://cli.github.com/packages/githubcli-archive-keyring.gpg | sudo dd of=/usr/share/keyrings/githubcli-archive-keyring.gpg \
-          && sudo chmod go+r /usr/share/keyrings/githubcli-archive-keyring.gpg \
-          && echo "deb [arch=$(dpkg --print-architecture) signed-by=/usr/share/keyrings/githubcli-archive-keyring.gpg] https://cli.github.com/packages stable main" | sudo tee /etc/apt/sources.list.d/github-cli.list > /dev/null \
-          && sudo apt update \
-          && sudo apt install gh -y
+        uses: ./.github/actions/setup-gh-cli-linux
       - name: Set git config
         run: |
           git config user.name $GITHUB_ACTOR
@@ -99,7 +93,7 @@ jobs:
           touch empty_file.txt
           git add empty_file.txt
           git commit -m "Add empty file in order to create PR" --quiet
-          git push --force origin ${{env.WORKING_BRANCH}} -f --quiet
+          git push origin ${{env.WORKING_BRANCH}}  --quiet
           GITHUB_PR_URL=$(gh pr create -B ${{env.RELEASE_BRANCH}} -H ${{env.WORKING_BRANCH}} -t"[DO NOT MERGE] Run Python RC Validation Tests" -b "PR to run Python ReleaseCandidate Jenkins Job.")
       - name: Comment on PR to Trigger Python ReleaseCandidate Test
         run: |
