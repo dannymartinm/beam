@@ -114,8 +114,7 @@ jobs:
     steps:
     - name: Checkout code
       uses: actions/checkout@v3
-      with:
-       repository: apache/beam
+      with: 
        ref: ${{env.RC_TAG}}      
     
     - name: Install Python
@@ -177,7 +176,6 @@ jobs:
     - name: Checkout code
       uses: actions/checkout@v3
       with:
-        repository: apache/beam
         ref: ${{env.RC_TAG}}
     - name: Verify ENV values
       run: |
@@ -281,7 +279,6 @@ jobs:
     - name: Checkout code
       uses: actions/checkout@v3
       with:
-        repository: apache/beam
         ref: ${{env.RC_TAG}}
     - name: Install Python
       uses: actions/setup-python@v4
@@ -354,7 +351,6 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v3
         with:
-          repository: apache/beam
           ref: ${{env.RC_TAG}}
 
       - name: Install Python
@@ -400,7 +396,6 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v3
         with:
-          repository: apache/beam
           ref: ${{env.RC_TAG}}
 
       - name: Install Python
@@ -451,7 +446,6 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v3
         with:
-          repository: apache/beam
           ref: ${{env.RC_TAG}}
       - name: Install Python
         uses: actions/setup-python@v4
@@ -498,7 +492,6 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v3
         with:
-          repository: apache/beam
           ref: ${{env.RC_TAG}}
       - name: Install Python
         uses: actions/setup-python@v4
