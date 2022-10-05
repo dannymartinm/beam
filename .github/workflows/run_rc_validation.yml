@@ -114,12 +114,9 @@ jobs:
     steps:
     - name: Checkout code
       uses: actions/checkout@v3
-#      with:
-#        repository: apache/beam
-#        ref: ${{env.RC_TAG}}      
-
-    - name: Install Kubectl 
-      uses: azure/setup-kubectl@v3
+      with:
+       repository: apache/beam
+       ref: ${{env.RC_TAG}}      
     
     - name: Install Python
       uses: actions/setup-python@v4
@@ -179,9 +176,9 @@ jobs:
     steps:
     - name: Checkout code
       uses: actions/checkout@v3
-      # with:
-      #   repository: apache/beam
-      #   ref: ${{env.RC_TAG}}
+      with:
+        repository: apache/beam
+        ref: ${{env.RC_TAG}}
     - name: Verify ENV values
       run: |
         echo ""
@@ -201,7 +198,7 @@ jobs:
       uses: actions/setup-python@v4
       with:
         python-version: ${{matrix.py_version}}
-        cache: 'pip' 
+   
 
     - name: Setting python env
       uses: ./.github/actions/common-rc-validation
@@ -218,11 +215,6 @@ jobs:
         gcloud container clusters create --project=${USER_GCP_PROJECT} --region=${USER_GCP_REGION} --no-enable-ip-alias $KAFKA_CLUSTER_NAME
         kubectl apply -R -f .test-infra/kubernetes/kafka-cluster
     
-    - name: Setting Python Environment
-      run: |
-        echo "--------------------------Installing Python SDK-------------------------------"
-        pip install --upgrade pip setuptools wheel
-        pip install apache-beam-${RELEASE_VER}.zip[gcp]
     - name: Waiting for Kafka cluster to be ready
       run: kubectl wait --for=condition=Ready pod/kafka-0 --timeout=1200s
     - name: Start xlang Kafka Taxi with Dataflow Runner 
@@ -230,11 +222,7 @@ jobs:
         echo "BOOTSTRAP_SERVERS=$(kubectl get svc outside-0 -o jsonpath='{.status.loadBalancer.ingress[0].ip}'):32400" >> $GITHUB_ENV
         echo "KAFKA_TAXI_DF_DATASET=${GITHUB_ACTOR}_python_validations_$(date +%m%d)_$RANDOM" >> $GITHUB_ENV
         echo "KAFKA_EXPANSION_SERVICE_JAR=${APACHE_CONTENTS_REPO}/org/apache/beam/beam-sdks-java-io-expansion-service/${RELEASE_VER}/beam-sdks-java-io-expansion-service-${RELEASE_VER}.jar" >> $GITHUB_ENV
-    - name: Checking variables
-      run: |
-        echo $BOOTSTRAP_SERVERS
-        echo $KAFKA_TAXI_DF_DATASET
-        echo $KAFKA_EXPANSION_SERVICE_JAR
+
     - name: Creating BigQuery Dataset
       run: bq mk --project_id=${USER_GCP_PROJECT} ${KAFKA_TAXI_DF_DATASET}
     - name: Running Xlang Kafka Taxi with Dataflow Runner
@@ -292,9 +280,9 @@ jobs:
     steps:
     - name: Checkout code
       uses: actions/checkout@v3
-      # with:
-      #   repository: apache/beam
-      #   ref: ${{env.RC_TAG}}
+      with:
+        repository: apache/beam
+        ref: ${{env.RC_TAG}}
     - name: Install Python
       uses: actions/setup-python@v4
       with:
@@ -365,9 +353,9 @@ jobs:
     steps:
       - name: Checkout code
         uses: actions/checkout@v3
-        # with:
-        #   repository: apache/beam
-        #   ref: ${{env.RC_TAG}}
+        with:
+          repository: apache/beam
+          ref: ${{env.RC_TAG}}
 
       - name: Install Python
         uses: actions/setup-python@v4
@@ -377,7 +365,7 @@ jobs:
       - name: Setting python env
         uses: ./.github/actions/common-rc-validation
       
-      - name: Exporting leaderboard Dataset
+      - name: Exporting leaderboard Dataset Name
         run: echo "LEADERBOARD_DIRECT_DATASET=${GITHUB_ACTOR}_python_validations_$(date +%m%d)_$RANDOM" >> $GITHUB_ENV
       - name: Creating Dataset
         run: bq mk --project_id=${USER_GCP_PROJECT} ${LEADERBOARD_DIRECT_DATASET}
@@ -411,9 +399,9 @@ jobs:
     steps:
       - name: Checkout code
         uses: actions/checkout@v3
-        # with:
-        #   repository: apache/beam
-        #   ref: ${{env.RC_TAG}}
+        with:
+          repository: apache/beam
+          ref: ${{env.RC_TAG}}
 
       - name: Install Python
         uses: actions/setup-python@v4
@@ -423,7 +411,7 @@ jobs:
       - name: Setting python env
         uses: ./.github/actions/common-rc-validation
       
-      - name: Exporting Dataflow Dataset
+      - name: Exporting Dataflow Dataset Name
         run: echo "LEADERBOARD_DF_DATASET=${GITHUB_ACTOR}_python_validations_$(date +%m%d)_$RANDOM" >> $GITHUB_ENV
       - name: Creating Dataset
         run: bq mk --project_id=${USER_GCP_PROJECT} ${LEADERBOARD_DF_DATASET}
@@ -462,9 +450,9 @@ jobs:
     steps:
       - name: Checkout code
         uses: actions/checkout@v3
-        # with:
-        #   repository: apache/beam
-        #   ref: ${{env.RC_TAG}}
+        with:
+          repository: apache/beam
+          ref: ${{env.RC_TAG}}
       - name: Install Python
         uses: actions/setup-python@v4
         with:
@@ -473,7 +461,7 @@ jobs:
       - name: Setting python env
         uses: ./.github/actions/common-rc-validation
       
-      - name: Exporting Gamestates Direct Dataset
+      - name: Exporting Gamestates Direct Dataset Name
         run: echo "GAMESTATS_DIRECT_DATASET=${GITHUB_ACTOR}_python_validations_$(date +%m%d)_$RANDOM" >> $GITHUB_ENV
       - name: Creating Dataset
         run: bq mk --project_id=${USER_GCP_PROJECT} ${GAMESTATS_DIRECT_DATASET}
@@ -509,9 +497,9 @@ jobs:
     steps:
       - name: Checkout code
         uses: actions/checkout@v3
-        # with:
-        #   repository: apache/beam
-        #   ref: ${{env.RC_TAG}}
+        with:
+          repository: apache/beam
+          ref: ${{env.RC_TAG}}
       - name: Install Python
         uses: actions/setup-python@v4
         with:
@@ -520,7 +508,7 @@ jobs:
       - name: Setting python env
         uses: ./.github/actions/common-rc-validation
       
-      - name: Exporting Gamestates Direct Dataset
+      - name: Exporting Gamestates Direct Dataset Name
         run: echo "GAMESTATS_DF_DATASET=${GITHUB_ACTOR}_python_validations_$(date +%m%d)_$RANDOM" >> $GITHUB_ENV
       - name: Creating Dataset
         run: bq mk --project_id=${USER_GCP_PROJECT} ${GAMESTATS_DF_DATASET}
