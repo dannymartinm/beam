@@ -519,6 +519,7 @@ jobs:
           bq rm -f ${LEADERBOARD_DIRECT_DATASET}.leader_board_users
           bq rm -f ${LEADERBOARD_DIRECT_DATASET}.leader_board_teams
           bq rm -f $LEADERBOARD_DIRECT_DATASET
+  
   dataflow_runner_leaderboard:
     runs-on: [self-hosted,ubuntu-20.04]
     if: ${{github.event.inputs.RUN_DATAFLOW_RUNNER_TESTS=='true'}}
@@ -767,7 +768,7 @@ jobs:
   
   remove_shared_pubsub:
     runs-on: [self-hosted,ubuntu-20.04]
-    needs: [java_injector]
+    needs: [java_injector, generate_shared_pubsub]
     if: ${{github.event.inputs.RUN_DATAFLOW_RUNNER_TESTS=='true' || github.event.inputs.RUN_DIRECT_RUNNER_TESTS == 'true'}}
     steps:
       - name: Deleting Shared Pub Sub
