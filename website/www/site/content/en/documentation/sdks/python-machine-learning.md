@@ -41,7 +41,7 @@ Using the `Shared` class within the RunInference implementation makes it possibl
 
 ### Multi-model pipelines
 
-The RunInference API can be composed into multi-model pipelines. Multi-model pipelines can be useful for A/B testing or for building out ensembles made up of models that perform tokenization, sentence segmentation, part-of-speech tagging, named entity extraction, language detection, coreference resolution, and more.
+The RunInference API can be composed into multi-model pipelines. Multi-model pipelines can be useful for A/B testing or for building out cascade models made up of models that perform tokenization, sentence segmentation, part-of-speech tagging, named entity extraction, language detection, coreference resolution, and more.
 
 ## Modify a pipeline to use an ML model
 
@@ -83,6 +83,15 @@ You need to provide a path to a file that contains the pickled Scikit-learn mode
    `model_uri=<path_to_pickled_file>` and `model_file_type: <ModelFileType>`, where you can specify
    `ModelFileType.PICKLE` or `ModelFileType.JOBLIB`, depending on how the model was serialized.
 
+### Use custom models
+
+If you would like to use a model that isn't specified by one of the supported frameworks, the RunInference API is designed flexibly to allow you to use any custom machine learning models.
+You only need to create your own `ModelHandler` or `KeyedModelHandler` with logic to load your model and use it to run the inference.
+
+A simple example can be found in [this notebook](https://github.com/apache/beam/blob/master/examples/notebooks/beam-ml/run_custom_inference.ipynb).
+The `load_model` method shows how to load the model using a popular `spaCy` package while `run_inference` shows how to run the inference on a batch of examples.
+
+
 ### Use multiple models
 
 You can also use the RunInference transform to add multiple inference models to your pipeline.
@@ -98,7 +107,7 @@ with pipeline as p:
 
 Where `model_handler_A` and `model_handler_B` are the model handler setup code.
 
-#### Ensemble Pattern
+#### Cascade Pattern
 
 ```
 with pipeline as p:
@@ -115,7 +124,7 @@ When using multiple models in a single pipeline, different models may have diffe
 Resource hints allow you to provide information to a runner about the compute resource requirements for each step in your
 pipeline.
 
-For example, the following snippet extends the previous ensemble pattern with hints for each RunInference call
+For example, the following snippet extends the previous cascade pattern with hints for each RunInference call
 to specify RAM and hardware accelerator requirements:
 
 ```
