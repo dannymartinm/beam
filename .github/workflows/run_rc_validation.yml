@@ -553,3 +553,4 @@ jobs:
     steps:
       - name: Deleting Shared Pub Sub
         run: gcloud pubsub topics delete --project=${USER_GCP_PROJECT}  ${{needs.generate_shared_pubsub.outputs.name}}
+        
