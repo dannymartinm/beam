@@ -1,5 +1,14 @@
 name: "Setup Python Env"
 description: Setup Common RC Variables and dependencies
+inputs:
+  PYTHON_RC_DOWNLOAD_URL:
+    description: Python RC package URL
+    required: true
+    default: https://dist.apache.org/repos/dist/dev/beam
+  RELEASE_VER:
+    description: Release Version
+    required: true
+
 runs:
   using: composite
   steps:

@@ -108,8 +108,8 @@ jobs:
     steps:
     - name: Checkout code
       uses: actions/checkout@v3
-      with: 
-       ref: ${{env.RC_TAG}}      
+#      with: 
+#       ref: ${{env.RC_TAG}}      
     
     - name: Install Python
       uses: actions/setup-python@v4
@@ -125,7 +125,11 @@ jobs:
 
     - name: Setting python env
       uses: ./.github/actions/common-rc-validation
+      with:
+        RELEASE_VER: ${{env.RELEASE_VER}}
+        PYTHON_RC_DOWNLOAD_URL: ${{env.PYTHON_RC_DOWNLOAD_URL}}
       
+
 
     - name: Setting Taxi Variables
       run: |
