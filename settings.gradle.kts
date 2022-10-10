@@ -20,9 +20,7 @@
 plugins {
   id("com.gradle.enterprise") version "3.4.1" apply false
 }
-import androidx.build.gradle.gcpbuildcache.GcpBuildCache
-import androidx.build.gradle.gcpbuildcache.GcpBuildCacheServiceFactory
-import androidx.build.gradle.gcpbuildcache.ExportedKeyGcpCredentials
+
 
 // Plugins which require online access should not be enabled when running in offline mode.
 if (!gradle.startParameter.isOffline) {
@@ -46,15 +44,6 @@ if (isJenkinsBuild || isGithubActionsBuild) {
 }
 
 rootProject.name = "beam"
-
-buildCache {
-    registerBuildCacheService(GcpBuildCache::class, GcpBuildCacheServiceFactory::class)
-    remote(GcpBuildCache::class) {
-        projectId = "apache-beam-testing"
-        bucketName = "gradle-cache-tests"
-        isPush = true
-    }
-}
 
 include(":release")
 include(":release:go-licenses:go")
