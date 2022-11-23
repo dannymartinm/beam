@@ -25,11 +25,10 @@ on:
   push:
     branches: ['master', 'release-*']
     tags: ['v*']
-  pull_request_target:
+  pull_request:
     branches: ['master', 'release-*']
     tags: ['v*']
     paths: ['sdks/go/pkg/**', 'sdks/go.mod', 'sdks/go.sum']
-permissions: read-all
 jobs:
   build:
     runs-on: [self-hosted, ubuntu-20.04]
@@ -37,8 +36,6 @@ jobs:
     steps:
       - name: Check out code
         uses: actions/checkout@v3
-        with:
-          ref: ${{ github.event.pull_request.head.sha }}
       - uses: actions/setup-go@v3
         with:
           go-version: '1.18'

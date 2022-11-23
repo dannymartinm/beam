@@ -26,11 +26,10 @@ on:
   push:
     branches: ['master', 'release-*', 'javascript']
     tags: ['v*']
-  pull_request_target:
+  pull_request:
     branches: ['master', 'release-*', 'javascript']
     tags: ['v*']
     paths: ['sdks/typescript/**']
-permissions: read-all
 jobs:
   typescript_unit_tests:
     name: 'TypeScript Unit Tests'
@@ -45,7 +44,6 @@ jobs:
         with:
           persist-credentials: false
           submodules: recursive
-          ref: ${{ github.event.pull_request.head.sha }}
       - name: Install node
         uses: actions/setup-node@v3
         with:

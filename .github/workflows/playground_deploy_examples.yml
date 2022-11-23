@@ -15,7 +15,7 @@
 
 name: Collect And Deploy Playground Examples
 on:
-  pull_request_target:
+  pull_request:
     types:
       - closed
     branches: ['master']
@@ -25,7 +25,6 @@ env:
   BEAM_VERSION: 2.33.0
   K8S_NAMESPACE: playground-backend
   HELM_APP_NAME: playground-backend
-permissions: read-all
 jobs:
   check_examples:
     name: Check examples
@@ -35,8 +34,6 @@ jobs:
     steps:
       - name: Check out the repo
         uses: actions/checkout@v3
-        with:
-          ref: ${{ github.event.pull_request.head.sha }}
       - uses: actions/setup-python@v4
         with:
           python-version: '3.8'
@@ -74,8 +71,6 @@ jobs:
     steps:
       - name: Check out the repo
         uses: actions/checkout@v3
-        with:
-          ref: ${{ github.event.pull_request.head.sha }}
       - uses: actions/setup-python@v4
         with:
           python-version: '3.8'
