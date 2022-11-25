@@ -24,7 +24,7 @@ go 1.18
 
 require (
 	cloud.google.com/go/bigquery v1.42.0
-	cloud.google.com/go/datastore v1.8.0
+	cloud.google.com/go/datastore v1.9.0
 	cloud.google.com/go/profiler v0.3.0
 	cloud.google.com/go/pubsub v1.25.1
 	cloud.google.com/go/storage v1.27.0
@@ -47,8 +47,8 @@ require (
 	golang.org/x/sys v0.0.0-20220728004956-3c1f35247d10
 	golang.org/x/text v0.3.7
 	google.golang.org/api v0.99.0
-	google.golang.org/genproto v0.0.0-20221010155953-15ba04fc1c0e
-	google.golang.org/grpc v1.50.0
+	google.golang.org/genproto v0.0.0-20221014213838-99cd37c6964a
+	google.golang.org/grpc v1.50.1
 	google.golang.org/protobuf v1.28.1
 	gopkg.in/retry.v1 v1.0.3
 	gopkg.in/yaml.v2 v2.4.0
@@ -74,7 +74,7 @@ require (
 	github.com/golang/snappy v0.0.4 // indirect
 	github.com/google/pprof v0.0.0-20220412212628-83db2b799d1f // indirect
 	github.com/googleapis/enterprise-certificate-proxy v0.2.0 // indirect
-	github.com/googleapis/gax-go/v2 v2.5.1 // indirect
+	github.com/googleapis/gax-go/v2 v2.6.0 // indirect
 	github.com/inconshreveable/mousetrap v1.0.1 // indirect
 	github.com/klauspost/compress v1.13.1 // indirect
 	github.com/magiconair/properties v1.8.6 // indirect
